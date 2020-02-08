@@ -7,7 +7,7 @@
 chain_summary(obj, level = 0.95)
 }
 \arguments{
-\item{obj}{An restricted model chain output}
+\item{obj}{A matrix containing parameter's chains}
 }
 \value{
 Measures

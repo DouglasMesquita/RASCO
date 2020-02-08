@@ -2,7 +2,7 @@
 #'
 #' @description Summary measures for a(n) (un)restricted model
 #'
-#' @param obj An restricted model chain output
+#' @param obj A matrix containing parameter's chains
 #'
 #' @return Measures
 #'

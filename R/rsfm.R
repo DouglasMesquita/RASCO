@@ -2,6 +2,11 @@
 #'
 #' @description Fit a Restricted Spatial Frailty model
 #'
+#' @usage rsfm(data, time, time2 = NULL, status, covariates, intercept = TRUE, area = NULL,
+#'             model = NULL, W = NULL,
+#'             family, cure = FALSE, proj = "none", fast = TRUE, nsamp = 1000,
+#'             approach = "inla", ...)
+#'
 #' @param data data.frame
 #' @param time For right censored data, this is the follow up time. For interval data, this is the starting time for the interval.
 #' @param time2 Ending time for the interval censured data.

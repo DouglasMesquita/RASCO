@@ -2,30 +2,52 @@
 % Please edit documentation in R/rscm.R
 \name{rscm}
 \alias{rscm}
-\title{Restricted Shared Component Model}
+\title{Restricted Shared Component model}
 \usage{
-rscm(
-  data,
-  Y1,
-  Y2,
-  X1,
-  X2,
-  E1 = NULL,
-  E2 = NULL,
-  W,
-  neigh,
-  area,
-  proj = "none",
-  nsamp = 1000,
-  ...
-)
+rscm(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, W, neigh, area,
+            proj = "none", nsamp = 1000,
+            prior_gamma = c(0, 0.1), prior_prec = c(0.5, 0.05),
+            ...)
 }
 \arguments{
-\item{data}{data.frame}
+\item{data}{data.frame containing Y1, Y2, X1, X2}
+
+\item{Y1}{Y1 name}
+
+\item{Y2}{Y2 name}
+
+\item{X1}{X1 names}
+
+\item{X2}{X2 names}
+
+\item{E1}{Expected counts for Y1}
+
+\item{E2}{Expected counts for Y2}
+
+\item{W}{Adjacency matrix}
+
+\item{neigh}{Neighborhood structure}
+
+\item{area}{Areal variable name}
+
+\item{proj}{'none' or 'spock'}
+
+\item{nsamp}{Number of samples to return}
+
+\item{prior_gamma}{Prior (mean and precision) for the shared component coefficient. Default: N(0, 0.1).}
+
+\item{prior_prec}{Prior (shape, scale) for the precision parameters}
+
+\item{...}{Other parameters used in ?inla}
 }
 \value{
-Restricted model
+\item{$sample}{A sample of size nsamp for all parameters in the model}
+\item{$summary_fixed}{Summary measures for the coefficients}
+\item{$summary_hyperpar}{Summary measures for hyperparameters}
+\item{$summary_random}{Summary measures for random quantities}
+\item{$out}{INLA output}
+\item{$time}{Time elapsed for fitting the model}
 }
 \description{
-Fit a Restricted Shared Component Model
+Fit a Restricted Shared Component model for two diseases
 }

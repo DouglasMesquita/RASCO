@@ -4,24 +4,10 @@
 \alias{rsfm}
 \title{Restricted Spatial Frailty Model}
 \usage{
-rsfm(
-  data,
-  time,
-  time2 = NULL,
-  status,
-  covariates,
-  intercept = TRUE,
-  area = NULL,
-  model = NULL,
-  W = NULL,
-  family,
-  cure = FALSE,
-  proj = "none",
-  fast = TRUE,
-  nsamp = 1000,
-  approach = "inla",
-  ...
-)
+rsfm(data, time, time2 = NULL, status, covariates, intercept = TRUE, area = NULL,
+            model = NULL, W = NULL,
+            family, cure = FALSE, proj = "none", fast = TRUE, nsamp = 1000,
+            approach = "inla", ...)
 }
 \arguments{
 \item{data}{data.frame}

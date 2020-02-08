@@ -1,24 +1,49 @@
-#' @title Restricted Shared Component Model
+#' @title Restricted Shared Component model
 #'
-#' @description Fit a Restricted Shared Component Model
+#' @description Fit a Restricted Shared Component model for two diseases
 #'
-#' @param data data.frame
+#' @usage rscm(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, W, neigh, area,
+#'             proj = "none", nsamp = 1000,
+#'             prior_gamma = c(0, 0.1), prior_prec = c(0.5, 0.05),
+#'             ...)
 #'
-#' @return Restricted model
+#' @param data data.frame containing Y1, Y2, X1, X2
+#' @param Y1 Y1 name
+#' @param Y2 Y2 name
+#' @param X1 X1 names
+#' @param X2 X2 names
+#' @param E1 Expected counts for Y1
+#' @param E2 Expected counts for Y2
+#' @param W Adjacency matrix
+#' @param neigh Neighborhood structure
+#' @param area Areal variable name
+#' @param proj 'none' or 'spock'
+#' @param nsamp Number of samples to return
+#' @param prior_gamma Prior (mean and precision) for the shared component coefficient. Default: N(0, 0.1).
+#' @param prior_prec Prior (shape, scale) for the precision parameters
+#' @param ... Other parameters used in ?inla
+#'
+#' @return \item{$sample}{A sample of size nsamp for all parameters in the model}
+#' \item{$summary_fixed}{Summary measures for the coefficients}
+#' \item{$summary_hyperpar}{Summary measures for hyperparameters}
+#' \item{$summary_random}{Summary measures for random quantities}
+#' \item{$out}{INLA output}
+#' \item{$time}{Time elapsed for fitting the model}
 #'
 #' @export
 
 rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, W, neigh, area,
-                 proj = "none", nsamp = 1000, ...) {
+                 proj = "none", nsamp = 1000,
+                 prior_gamma = c(0, 0.1), prior_prec = c(0.5, 0.05), ...) {
   ##-- Time
   time_start <- Sys.time()
 
   ##-- Tests
-  if(missing(Y1)) stop("You must provide Y1 name")
-  if(missing(Y2)) stop("You must provide Y2 name")
-  if(missing(X1)) stop("You must provide X1 names")
-  if(missing(X2)) stop("You must provide X2 names")
-  if(missing(area)) stop("You must provide area name")
+  if(missing(Y1)) stop("You must provide the Y1 name")
+  if(missing(Y2)) stop("You must provide the Y2 name")
+  if(missing(X1)) stop("You must provide the X1 names")
+  if(missing(X2)) stop("You must provide the X2 names")
+  if(missing(area)) stop("You must provide the area name")
   if(!proj %in% c("none", "spock")) stop("proj must be 'none' or 'spock'")
 
   ##-- Setup INLA
@@ -89,21 +114,26 @@ rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, W, neigh, area,
   colnames(inla_list$X) <- c(paste(colnames(X1), 1, sep = "_"), paste(colnames(X2), 2, sep = "_"))
 
   ##-- Fit shared
-  param <- c(0.5, 0.05)
-  param_gamma <- c(0, 0.1)
-
   f_s <- Y ~ -1 + alpha1 + alpha2 + X +
-    f(psi, model = "besag", graph = Ws, hyper = list(prec = list(prior = "loggamma", param = param))) +
-    f(psi_gamma, copy = "psi", hyper = list(beta = list(fixed = FALSE, prior = "normal", param = param_gamma)), range = c(0, Inf)) +
-    f(phi1, model = "besag", graph = W1, hyper = list(prec = list(prior = "loggamma", param = param))) +
-    f(phi2, model = "besag", graph = W2, hyper = list(prec = list(prior = "loggamma", param = param)))
+    f(psi, model = "besag", graph = Ws, hyper = list(prec = list(prior = "loggamma",
+                                                                 param = prior_prec))) +
+    f(psi_gamma, copy = "psi", range = c(0, Inf), hyper = list(beta = list(fixed = FALSE,
+                                                                           prior = "normal",
+                                                                           param = prior_gamma))) +
+    f(phi1, model = "besag", graph = W1, hyper = list(prec = list(prior = "loggamma",
+                                                                  param = prior_prec))) +
+    f(phi2, model = "besag", graph = W2, hyper = list(prec = list(prior = "loggamma",
+                                                                  param = prior_prec)))
+
+  if(missing(control.inla)) control.inla <- list(strategy = "laplace") else control.inla$strategy <- "laplace"
+  if(missing(control.compute)) control.compute <- list(config = TRUE) else control.compute$config <- TRUE
 
   time_start_inla <- Sys.time()
   mod <- inla(formula = f_s,
               family = c("poisson", "poisson"),
               data = inla_list,
-              E = as.vector(E), control.inla = list(strategy = "laplace"),
-              control.compute = list(config = TRUE, waic = TRUE), ...)
+              E = as.vector(E), control.inla = control.inla,
+              control.compute = control.compute, ...)
   model_sample <- inla.posterior.sample(result = mod, n = nsamp, use.improved.mean = TRUE)
   hyperpar_samp <- inla.hyperpar.sample(result = mod, n = nsamp, improve.marginals = TRUE)
   time_end_inla <- Sys.time()

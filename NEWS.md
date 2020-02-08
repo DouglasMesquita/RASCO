@@ -1,3 +1,4 @@
-# RSR 0.0.5
+# RASCO 0.0.1
 
-* Creating a pattern for outputs
+* Restricted Spatial Frailty models - first version
+* Restricted Shared Component models - first version
