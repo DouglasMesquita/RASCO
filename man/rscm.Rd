@@ -10,7 +10,7 @@ rscm(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, W, neigh, area,
             ...)
 }
 \arguments{
-\item{data}{data.frame containing, at least, Y1, Y2, X1, X2}
+\item{data}{data.frame containing, at least, \code{Y1}, \code{Y2}, \code{X1}, \code{X2}}
 
 \item{Y1}{Y1 name in data}
 
@@ -31,6 +31,8 @@ rscm(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, W, neigh, area,
 \item{proj}{'none' or 'spock'}
 
 \item{nsamp}{Number of samples desired. Default = 1000}
+
+\item{family}{A vector with two families. Some allowed families are: poisson, nbinomial, zeroinflatedpoisson0, zeroinflatednbinomial0.}
 
 \item{prior_gamma}{Prior (mean and precision) for the shared component coefficient (log-scale). Default: N(0, 0.1).}
 
@@ -77,6 +79,7 @@ scm_inla <- rscm(data = data,
                  Y1 = "Y1", Y2 = "Y2",
                  X1 = c("X11", "X12"), X2 = c("X21", "X12"),
                  E1 = "E1", E2 = "E2",
+                 family = c("nbinomial", "zeroinflatedpoisson0"),
                  area = "reg", neigh = neigh_RJ,
                  prior_prec = c(0.5, 0.05), prior_gamma = c(0, 0.5),
                  proj = "none", nsamp = 1000)
@@ -85,6 +88,7 @@ rscm_inla <- rscm(data = data,
                   Y1 = "Y1", Y2 = "Y2",
                   X1 = c("X11", "X12"), X2 = c("X21", "X12"),
                   E1 = "E1", E2 = "E2",
+                  family = c("nbinomial", "zeroinflatedpoisson0"),
                   area = "reg", neigh = neigh_RJ,
                   prior_prec = c(0.5, 0.05), prior_gamma = c(0, 0.5),
                   proj = "spock", nsamp = 1000)

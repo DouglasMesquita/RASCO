@@ -7,7 +7,7 @@
 #'             prior_gamma = c(0, 0.1), prior_prec = c(0.5, 0.05),
 #'             ...)
 #'
-#' @param data data.frame containing, at least, Y1, Y2, X1, X2
+#' @param data data.frame containing, at least, \code{Y1}, \code{Y2}, \code{X1}, \code{X2}
 #' @param Y1 Y1 name in data
 #' @param Y2 Y2 name in data
 #' @param X1 X1 names in data
@@ -18,6 +18,7 @@
 #' @param area Areal variable name in data
 #' @param proj 'none' or 'spock'
 #' @param nsamp Number of samples desired. Default = 1000
+#' @param family A vector with two families. Some allowed families are: poisson, nbinomial, zeroinflatedpoisson0, zeroinflatednbinomial0.
 #' @param prior_gamma Prior (mean and precision) for the shared component coefficient (log-scale). Default: N(0, 0.1).
 #' @param prior_prec Prior (shape, scale) for the precision parameters
 #' @param ... Other parameters used in ?inla
@@ -50,6 +51,7 @@
 #'                  Y1 = "Y1", Y2 = "Y2",
 #'                  X1 = c("X11", "X12"), X2 = c("X21", "X12"),
 #'                  E1 = "E1", E2 = "E2",
+#'                  family = c("nbinomial", "zeroinflatedpoisson0"),
 #'                  area = "reg", neigh = neigh_RJ,
 #'                  prior_prec = c(0.5, 0.05), prior_gamma = c(0, 0.5),
 #'                  proj = "none", nsamp = 1000)
@@ -58,6 +60,7 @@
 #'                   Y1 = "Y1", Y2 = "Y2",
 #'                   X1 = c("X11", "X12"), X2 = c("X21", "X12"),
 #'                   E1 = "E1", E2 = "E2",
+#'                   family = c("nbinomial", "zeroinflatedpoisson0"),
 #'                   area = "reg", neigh = neigh_RJ,
 #'                   prior_prec = c(0.5, 0.05), prior_gamma = c(0, 0.5),
 #'                   proj = "spock", nsamp = 1000)
@@ -80,7 +83,7 @@
 #' @export
 
 rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh, area,
-                 proj = "none", nsamp = 1000,
+                 proj = "none", nsamp = 1000, family = c("poisson", "poisson"),
                  prior_gamma = c(0, 0.1), prior_prec = c(0.5, 0.05), ...) {
   ##-- Time
   time_start <- Sys.time()
@@ -178,7 +181,7 @@ rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh, area,
 
   time_start_inla <- Sys.time()
   mod <- inla(formula = f_s,
-              family = c("poisson", "poisson"),
+              family = family,
               data = inla_list,
               E = as.vector(E), control.inla = control.inla,
               control.compute = control.compute, ...)

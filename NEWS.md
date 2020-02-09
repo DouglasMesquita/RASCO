@@ -1,4 +1,4 @@
-# RASCO 0.0.1
+# RASCO 0.0.2
 
-* Restricted Spatial Frailty models - first version
-* Restricted Shared Component models - first version
+* Restricted Spatial Frailty models - with examples
+* Restricted Shared Component models - with examples
