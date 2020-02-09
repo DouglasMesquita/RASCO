@@ -3,11 +3,11 @@
 #' @description Fit a Restricted Spatial Frailty model using INLA
 #'
 #' @param f INLA formula ?inla.surv
-#' @param data data.frame
+#' @param data data.frame containing, at least, \code{time}, \code{status}, \code{covariates}, \code{area} list
 #' @param family 'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'
-#' @param cure Desired cure fraction
-#' @param proj 'none', 'rhz', 'hh' or 'spock'
-#' @param fast To use the reduction operator
+#' @param W Adjacency matrix
+#' @param proj 'none', 'rhz' or 'spock'
+#' @param fast Should we use the reduction operator?
 #' @param nsamp Sample size to use the projection approach
 #' @param ... Other parameters used in ?inla
 #'
@@ -18,12 +18,10 @@
 #'
 #' @export
 
-rsfm_inla <- function(f, data, family, cure = FALSE,
+rsfm_inla <- function(f, data, family, W = NULL,
                       proj = "none", fast = TRUE, nsamp = 1000, ...) {
   ##-- Time
   time_start <- Sys.time()
-
-  if(cure & family == "weibull") family <- "weibullcure"
 
   family <- switch(family,
                    "exponential" = "exponential.surv",

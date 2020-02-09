@@ -12,7 +12,6 @@ rsurv(
   hazard = "weibull",
   hazard_params = hazard_dft(),
   spatial = "ICAR",
-  W = NULL,
   neigh = NULL,
   tau = 1,
   confounding = "none",
@@ -40,8 +39,6 @@ rsurv(
 'lognormal' for an independent lognormal frailty,
 'ICAR' or 'BYM' for spatial structured models}
 
-\item{W}{Adjacency matrix}
-
 \item{neigh}{Neighborhood object}
 
 \item{tau}{Precision for ICAR and BYM models}
@@ -55,6 +52,8 @@ rsurv(
 \item{X}{Matrix of covariates. Default = NULL}
 
 \item{scale}{Scale X. TRUE or FALSE}
+
+\item{W}{Adjacency matrix}
 }
 \description{
 Generating data with spatial confounding

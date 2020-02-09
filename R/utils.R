@@ -272,7 +272,7 @@ update_inla_formula <- function(formula){
     for(i in seq_along(terms_f)){
       var_f[[i]] = eval(expr = parse(text = gsub(pattern = "^f\\(",
                                                  replacement = "INLA::f(",
-                                                 x = terms_labels[terms_f[i]])))
+                                                 x = terms_labels[terms_f[i]])), envir = parent.frame())
     }
 
     ##-- Restricted components

@@ -2,12 +2,9 @@
 #'
 #' @description Fit a Restricted Spatial Frailty model
 #'
-#' @usage rsfm(data, time, time2 = NULL, status, covariates, intercept = TRUE, area = NULL,
-#'             model = NULL, W = NULL,
-#'             family, cure = FALSE, proj = "none", fast = TRUE, nsamp = 1000,
-#'             approach = "inla", ...)
+#' @usage rsfm(data, time, status, covariates, area, model, family, proj = "none", ...)
 #'
-#' @param data data.frame
+#' @param data data.frame containing, at least, \code{time}, \code{status}, \code{covariates}, \code{area} list
 #' @param time For right censored data, this is the follow up time. For interval data, this is the starting time for the interval.
 #' @param time2 Ending time for the interval censured data.
 #' @param status The status indicator, 1 = observed event, 0 = right censored event, 2 = left censored event, 3 = interval censored event.
@@ -17,23 +14,62 @@
 #' @param model Spatial model adopted
 #' @param W Adjacency matrix
 #' @param family 'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'
-#' @param cure Cure fraction? TRUE or FALSE
 #' @param proj 'none', 'rhz', 'hh' or 'spock'
 #' @param fast To use the reduction operator
 #' @param nsamp Sample size to use the projection approach
 #' @param approach 'inla' or 'bugs'
 #' @param ... Other parameters used in ?inla or ?bugs
 #'
+#' @examples
+#' set.seed(1)
+#'
+#' ##-- Spatial structure
+#' data("neigh_RJ")
+#'
+#' ##-- Individuals and regions
+#' n_reg <- length(neigh_RJ)
+#' n_id <- sample(x = 3:5, size = n_reg, replace = T)
+#' coefs <- c(0.3, -0.3)
+#' tau <- 0.75 # Scale of spatial effect
+#'
+#' ##-- Data
+#' data <- rsurv(n_id = n_id,
+#'               coefs = coefs, cens = 0.5, scale = FALSE,
+#'               cens_type = "right", hazard = "weibull",
+#'               hazard_params = hazard_params <- list(weibull = list(alpha = 1.2, variant = 0)),
+#'               spatial = "ICAR",
+#'               neigh = neigh_RJ, tau = tau, confounding = "linear", proj = "none")
+#'
+#' ##-- Models
+#' weibull_inla <- rsfm(data = data, time = "L", status = "status",
+#'                      covariates = c("X1", "X2"), intercept = TRUE,
+#'                      family = "weibull", proj = "rhz", nsamp = 1000, approach = "inla")
+#'
+#' rsfm_inla <- rsfm(data = data, time = "L", status = "status", area = "reg",
+#'                   covariates = c("X1", "X2"), intercept = TRUE,
+#'                   model = "restricted_besag", neigh = neigh_RJ,
+#'                   family = "weibull", proj = "rhz", nsamp = 1000, approach = "inla")
+#'
+#' weibull_inla$unrestricted$summary_fixed
+#' rsfm_inla$unrestricted$summary_fixed
+#' rsfm_inla$restricted$summary_fixed
+#'
 #' @return Restricted model
 #'
 #' @export
 
 rsfm <- function(data, time, time2 = NULL, status, covariates, intercept = TRUE, area = NULL,
-                 model = NULL, W = NULL,
-                 family, cure = FALSE, proj = "none", fast = TRUE, nsamp = 1000,
+                 model = NULL, neigh = NULL,
+                 family, proj = "none", fast = TRUE, nsamp = 1000,
                  approach = "inla", ...) {
 
-  if(is.null(covariates)) stop("You must provide at least f or area")
+  if(is.null(covariates)) stop("You must provide at least one covariate")
+
+  if(!is.null(area)) {
+    W <- nb2mat(neighbours = poly2nb(neigh), style = "B")
+  } else {
+    W <- NULL
+  }
 
   ##-- INLA
   if(approach == "inla") {
@@ -41,7 +77,7 @@ rsfm <- function(data, time, time2 = NULL, status, covariates, intercept = TRUE,
     if(!intercept) f_fixed <- paste("-1 +", f_fixed)
 
     if(!is.null(area)) {
-      f_random <- sprintf("f(%s, model = '%s', graph = %s)", area, model, paste(substitute(W)))
+      f_random <- sprintf("f(%s, model = '%s', graph = %s)", area, model, "W")
       f_pred <- paste(f_fixed, f_random, sep = " + ")
     } else{
       f_pred <- f_fixed
@@ -52,7 +88,7 @@ rsfm <- function(data, time, time2 = NULL, status, covariates, intercept = TRUE,
     f <- sprintf("INLA::inla.surv(time = %s, time2 = %s, event = %s) ~ %s", time, time2, status, f_pred)
     f <- as.formula(f)
 
-    out <- rsfm_inla(f, data, family, cure = cure, proj = proj, fast = fast, nsamp = nsamp, ...)
+    out <- rsfm_inla(f, data, W = W, family, proj = proj, fast = fast, nsamp = nsamp, ...)
   }
 
   ##-- BUGS

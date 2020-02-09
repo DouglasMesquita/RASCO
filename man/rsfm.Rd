@@ -4,13 +4,10 @@
 \alias{rsfm}
 \title{Restricted Spatial Frailty Model}
 \usage{
-rsfm(data, time, time2 = NULL, status, covariates, intercept = TRUE, area = NULL,
-            model = NULL, W = NULL,
-            family, cure = FALSE, proj = "none", fast = TRUE, nsamp = 1000,
-            approach = "inla", ...)
+rsfm(data, time, status, covariates, area, model, family, proj = "none", ...)
 }
 \arguments{
-\item{data}{data.frame}
+\item{data}{data.frame containing, at least, \code{time}, \code{status}, \code{covariates}, \code{area} list}
 
 \item{time}{For right censored data, this is the follow up time. For interval data, this is the starting time for the interval.}
 
@@ -26,11 +23,7 @@ rsfm(data, time, time2 = NULL, status, covariates, intercept = TRUE, area = NULL
 
 \item{model}{Spatial model adopted}
 
-\item{W}{Adjacency matrix}
-
 \item{family}{'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'}
-
-\item{cure}{Cure fraction? TRUE or FALSE}
 
 \item{proj}{'none', 'rhz', 'hh' or 'spock'}
 
@@ -41,10 +34,47 @@ rsfm(data, time, time2 = NULL, status, covariates, intercept = TRUE, area = NULL
 \item{approach}{'inla' or 'bugs'}
 
 \item{...}{Other parameters used in ?inla or ?bugs}
+
+\item{W}{Adjacency matrix}
 }
 \value{
 Restricted model
 }
 \description{
 Fit a Restricted Spatial Frailty model
+}
+\examples{
+set.seed(1)
+
+##-- Spatial structure
+data("neigh_RJ")
+
+##-- Individuals and regions
+n_reg <- length(neigh_RJ)
+n_id <- sample(x = 3:5, size = n_reg, replace = T)
+coefs <- c(0.3, -0.3)
+tau <- 0.75 # Scale of spatial effect
+
+##-- Data
+data <- rsurv(n_id = n_id,
+              coefs = coefs, cens = 0.5, scale = FALSE,
+              cens_type = "right", hazard = "weibull",
+              hazard_params = hazard_params <- list(weibull = list(alpha = 1.2, variant = 0)),
+              spatial = "ICAR",
+              neigh = neigh_RJ, tau = tau, confounding = "linear", proj = "none")
+
+##-- Models
+weibull_inla <- rsfm(data = data, time = "L", status = "status",
+                     covariates = c("X1", "X2"), intercept = TRUE,
+                     family = "weibull", proj = "rhz", nsamp = 1000, approach = "inla")
+
+rsfm_inla <- rsfm(data = data, time = "L", status = "status", area = "reg",
+                  covariates = c("X1", "X2"), intercept = TRUE,
+                  model = "restricted_besag", neigh = neigh_RJ,
+                  family = "weibull", proj = "rhz", nsamp = 1000, approach = "inla")
+
+weibull_inla$unrestricted$summary_fixed
+rsfm_inla$unrestricted$summary_fixed
+rsfm_inla$restricted$summary_fixed
+
 }

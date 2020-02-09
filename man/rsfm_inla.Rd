@@ -8,7 +8,7 @@ rsfm_inla(
   f,
   data,
   family,
-  cure = FALSE,
+  W = NULL,
   proj = "none",
   fast = TRUE,
   nsamp = 1000,
@@ -18,15 +18,15 @@ rsfm_inla(
 \arguments{
 \item{f}{INLA formula ?inla.surv}
 
-\item{data}{data.frame}
+\item{data}{data.frame containing, at least, \code{time}, \code{status}, \code{covariates}, \code{area} list}
 
 \item{family}{'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'}
 
-\item{cure}{Desired cure fraction}
+\item{W}{Adjacency matrix}
 
-\item{proj}{'none', 'rhz', 'hh' or 'spock'}
+\item{proj}{'none', 'rhz' or 'spock'}
 
-\item{fast}{To use the reduction operator}
+\item{fast}{Should we use the reduction operator?}
 
 \item{nsamp}{Sample size to use the projection approach}
 

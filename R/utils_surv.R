@@ -27,7 +27,7 @@ rsurv <- function(n_id, coefs = c(0.1, 0.4, -0.3),
                   cens = 0, cens_type = "interval",
                   hazard = "weibull",
                   hazard_params = hazard_dft(),
-                  spatial = "ICAR", W = NULL, neigh = NULL, tau = 1,
+                  spatial = "ICAR", neigh = NULL, tau = 1,
                   confounding = "none", proj = "none", sd_x = 0,
                   X = NULL, scale = TRUE){
 
@@ -38,7 +38,7 @@ rsurv <- function(n_id, coefs = c(0.1, 0.4, -0.3),
     stop("It is a not valid hazard model. Please try: 'weibull', 'exponential' or 'pwe'")
   if(!(cens_type %in% c("right", "left", "interval")))
     stop("It is a not valid censoring scheme. Please try: 'right', 'left' or 'interval'")
-  if(is.null(W)) stop("You must to define W (adjacency matrix).")
+  if(is.null(neigh)) stop("You must to define neigh (SpatialPolygonsDataFrame object).")
   if(!confounding %in% c("none", "linear", "quadratic", "cubic")) stop("It is a not valid confounding specification. Please try: 'none', 'linear', 'quadratic', 'cubic'.")
 
   ##-- Appending lists ----
@@ -46,6 +46,7 @@ rsurv <- function(n_id, coefs = c(0.1, 0.4, -0.3),
 
   ##-- General objects ----
   frailty <- eps <- eps_eff <- eps_ort <- NA
+  W <- nb2mat(neighbours = poly2nb(neigh_RJ), style = "B")
 
   ##-- Individuals and regions ----
   n_reg <- nrow(W)
