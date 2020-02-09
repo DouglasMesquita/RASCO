@@ -11,15 +11,16 @@
 #' @param tau_1 Precision for ICAR specific for disease 2
 #' @param tau_s Precision for ICAR specific for shared component
 #' @param confounding 'none', 'linear', 'quadratic' or 'cubic'
-#' @param W Adjacency matrix
+#' @param neigh Neighborhood structure. A \code{SpatialPolygonsDataFrame} object
+#' @param scale Scale covariates? TRUE or FALSE
 #'
 #' @export
 
 rshared <- function(alpha_1 = 0, alpha_2 = 0, beta_1 = c(0.1, -0.1), beta_2 = c(0.1, -0.1), delta = 1,
                     tau_1 = 1, tau_2 = 1, tau_s = 1,
-                    confounding = 'none', W, scale = TRUE){
+                    confounding = 'none', neigh, scale = TRUE){
 
-  if(is.null(W)) stop("You must to define W (adjacency matrix).")
+  if(is.null(neigh)) stop("You must to define neigh (SpatialPolygonsDataFrame object).")
   if(!confounding %in% c("none", "linear", "quadratic", "cubic")) stop("It is a not valid confounding specification. Please try: 'none', 'linear', 'quadratic', 'cubic'.")
 
   ##-- Covariates
@@ -52,6 +53,8 @@ rshared <- function(alpha_1 = 0, alpha_2 = 0, beta_1 = c(0.1, -0.1), beta_2 = c(
   if(scale) X2 <- scale(X2)
 
   ##-- Spatial effects
+  W <- nb2mat(neighbours = poly2nb(neigh_RJ), style = "B")
+
   sc <- ricar(W = W, sig = 1/tau_s)
   s1 <- ricar(W = W, sig = 1/tau_1)
   s2 <- ricar(W = W, sig = 1/tau_2)

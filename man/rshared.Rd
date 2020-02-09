@@ -14,7 +14,7 @@ rshared(
   tau_2 = 1,
   tau_s = 1,
   confounding = "none",
-  W,
+  neigh,
   scale = TRUE
 )
 }
@@ -35,7 +35,9 @@ rshared(
 
 \item{confounding}{'none', 'linear', 'quadratic' or 'cubic'}
 
-\item{W}{Adjacency matrix}
+\item{neigh}{Neighborhood structure. A \code{SpatialPolygonsDataFrame} object}
+
+\item{scale}{Scale covariates? TRUE or FALSE}
 }
 \description{
 Generating data from Shared Component model

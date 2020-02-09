@@ -10,31 +10,29 @@ rscm(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, W, neigh, area,
             ...)
 }
 \arguments{
-\item{data}{data.frame containing Y1, Y2, X1, X2}
+\item{data}{data.frame containing, at least, Y1, Y2, X1, X2}
 
-\item{Y1}{Y1 name}
+\item{Y1}{Y1 name in data}
 
-\item{Y2}{Y2 name}
+\item{Y2}{Y2 name in data}
 
-\item{X1}{X1 names}
+\item{X1}{X1 names in data}
 
-\item{X2}{X2 names}
+\item{X2}{X2 names in data}
 
-\item{E1}{Expected counts for Y1}
+\item{E1}{Expected counts for Y1 in data}
 
-\item{E2}{Expected counts for Y2}
+\item{E2}{Expected counts for Y2 in data}
 
-\item{W}{Adjacency matrix}
+\item{neigh}{Neighborhood structure. A \code{SpatialPolygonsDataFrame} object}
 
-\item{neigh}{Neighborhood structure}
-
-\item{area}{Areal variable name}
+\item{area}{Areal variable name in data}
 
 \item{proj}{'none' or 'spock'}
 
-\item{nsamp}{Number of samples to return}
+\item{nsamp}{Number of samples desired. Default = 1000}
 
-\item{prior_gamma}{Prior (mean and precision) for the shared component coefficient. Default: N(0, 0.1).}
+\item{prior_gamma}{Prior (mean and precision) for the shared component coefficient (log-scale). Default: N(0, 0.1).}
 
 \item{prior_prec}{Prior (shape, scale) for the precision parameters}
 
@@ -50,4 +48,53 @@ rscm(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, W, neigh, area,
 }
 \description{
 Fit a Restricted Shared Component model for two diseases
+}
+\examples{
+library(spdep)
+
+set.seed(1)
+
+##-- Spatial structure
+data("neigh_RJ")
+
+##-- Parameters
+alpha_1 <- 0.5
+alpha_2 <- 0.1
+beta_1 <- c(-0.5, -0.2)
+beta_2 <- c(-0.8, -0.4)
+tau_s <- 1
+tau_1 <- tau_2 <- 10
+delta <- 1.5
+
+##-- Data
+data <- rshared(alpha_1 = alpha_1, alpha_2 = alpha_2, beta_1 = beta_1, beta_2 = beta_2, delta = delta,
+                tau_1 = tau_1, tau_2 = tau_2, tau_s = tau_s,
+                confounding = "linear",
+                neigh = neigh_RJ)
+
+##-- Models
+scm_inla <- rscm(data = data,
+                 Y1 = "Y1", Y2 = "Y2",
+                 X1 = c("X11", "X12"), X2 = c("X21", "X12"),
+                 E1 = "E1", E2 = "E2",
+                 area = "reg", neigh = neigh_RJ,
+                 prior_prec = c(0.5, 0.05), prior_gamma = c(0, 0.5),
+                 proj = "none", nsamp = 1000)
+
+rscm_inla <- rscm(data = data,
+                  Y1 = "Y1", Y2 = "Y2",
+                  X1 = c("X11", "X12"), X2 = c("X21", "X12"),
+                  E1 = "E1", E2 = "E2",
+                  area = "reg", neigh = neigh_RJ,
+                  prior_prec = c(0.5, 0.05), prior_gamma = c(0, 0.5),
+                  proj = "spock", nsamp = 1000)
+
+##-- Summary
+
+scm_inla$summary_fixed
+rscm_inla$summary_fixed
+
+scm_inla$summary_hyperpar
+rscm_inla$summary_hyperpar
+
 }

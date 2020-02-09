@@ -7,21 +7,68 @@
 #'             prior_gamma = c(0, 0.1), prior_prec = c(0.5, 0.05),
 #'             ...)
 #'
-#' @param data data.frame containing Y1, Y2, X1, X2
-#' @param Y1 Y1 name
-#' @param Y2 Y2 name
-#' @param X1 X1 names
-#' @param X2 X2 names
-#' @param E1 Expected counts for Y1
-#' @param E2 Expected counts for Y2
-#' @param W Adjacency matrix
-#' @param neigh Neighborhood structure
-#' @param area Areal variable name
+#' @param data data.frame containing, at least, Y1, Y2, X1, X2
+#' @param Y1 Y1 name in data
+#' @param Y2 Y2 name in data
+#' @param X1 X1 names in data
+#' @param X2 X2 names in data
+#' @param E1 Expected counts for Y1 in data
+#' @param E2 Expected counts for Y2 in data
+#' @param neigh Neighborhood structure. A \code{SpatialPolygonsDataFrame} object
+#' @param area Areal variable name in data
 #' @param proj 'none' or 'spock'
-#' @param nsamp Number of samples to return
-#' @param prior_gamma Prior (mean and precision) for the shared component coefficient. Default: N(0, 0.1).
+#' @param nsamp Number of samples desired. Default = 1000
+#' @param prior_gamma Prior (mean and precision) for the shared component coefficient (log-scale). Default: N(0, 0.1).
 #' @param prior_prec Prior (shape, scale) for the precision parameters
 #' @param ... Other parameters used in ?inla
+#'
+#' @examples
+#' library(spdep)
+#'
+#' set.seed(1)
+#'
+#' ##-- Spatial structure
+#' data("neigh_RJ")
+#'
+#' ##-- Parameters
+#' alpha_1 <- 0.5
+#' alpha_2 <- 0.1
+#' beta_1 <- c(-0.5, -0.2)
+#' beta_2 <- c(-0.8, -0.4)
+#' tau_s <- 1
+#' tau_1 <- tau_2 <- 10
+#' delta <- 1.5
+#'
+#' ##-- Data
+#' data <- rshared(alpha_1 = alpha_1, alpha_2 = alpha_2, beta_1 = beta_1, beta_2 = beta_2, delta = delta,
+#'                 tau_1 = tau_1, tau_2 = tau_2, tau_s = tau_s,
+#'                 confounding = "linear",
+#'                 neigh = neigh_RJ)
+#'
+#' ##-- Models
+#' scm_inla <- rscm(data = data,
+#'                  Y1 = "Y1", Y2 = "Y2",
+#'                  X1 = c("X11", "X12"), X2 = c("X21", "X12"),
+#'                  E1 = "E1", E2 = "E2",
+#'                  area = "reg", neigh = neigh_RJ,
+#'                  prior_prec = c(0.5, 0.05), prior_gamma = c(0, 0.5),
+#'                  proj = "none", nsamp = 1000)
+#'
+#' rscm_inla <- rscm(data = data,
+#'                   Y1 = "Y1", Y2 = "Y2",
+#'                   X1 = c("X11", "X12"), X2 = c("X21", "X12"),
+#'                   E1 = "E1", E2 = "E2",
+#'                   area = "reg", neigh = neigh_RJ,
+#'                   prior_prec = c(0.5, 0.05), prior_gamma = c(0, 0.5),
+#'                   proj = "spock", nsamp = 1000)
+#'
+#' ##-- Summary
+#'
+#' scm_inla$summary_fixed
+#' rscm_inla$summary_fixed
+#'
+#' scm_inla$summary_hyperpar
+#' rscm_inla$summary_hyperpar
 #'
 #' @return \item{$sample}{A sample of size nsamp for all parameters in the model}
 #' \item{$summary_fixed}{Summary measures for the coefficients}
@@ -32,7 +79,7 @@
 #'
 #' @export
 
-rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, W, neigh, area,
+rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh, area,
                  proj = "none", nsamp = 1000,
                  prior_gamma = c(0, 0.1), prior_prec = c(0.5, 0.05), ...) {
   ##-- Time
@@ -59,6 +106,7 @@ rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, W, neigh, area,
   n_covs2 <- ncol(X2)
   n_covss <- ncol(Xs)
 
+  W <- nb2mat(neighbours = poly2nb(neigh_RJ), style = "B")
   Ws <- W1 <- W2 <- W
 
   if(proj == "spock") {
@@ -125,8 +173,8 @@ rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, W, neigh, area,
     f(phi2, model = "besag", graph = W2, hyper = list(prec = list(prior = "loggamma",
                                                                   param = prior_prec)))
 
-  if(missing(control.inla)) control.inla <- list(strategy = "laplace") else control.inla$strategy <- "laplace"
-  if(missing(control.compute)) control.compute <- list(config = TRUE) else control.compute$config <- TRUE
+  if("control.inla" %in% names(list(...))) `<-`(control.inla$strategy, "laplace") else `<-`(control.inla, list(strategy = "laplace"))
+  if("control.compute" %in% names(list(...))) `<-`(control.compute$config, TRUE) else `<-`(control.compute, list(config = TRUE))
 
   time_start_inla <- Sys.time()
   mod <- inla(formula = f_s,
