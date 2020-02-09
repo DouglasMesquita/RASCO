@@ -27,18 +27,14 @@ install.packages("RASCO")
 devtools::install_github("DouglasMesquita/RASCO")
 ```
 
-## Shared component models
-
 ``` r
 library(RASCO)
+```
+
+## Restricted shared component models
+
+``` r
 library(spdep)
-#> Loading required package: sp
-#> Loading required package: spData
-#> To access larger datasets in this package, install the spDataLarge
-#> package with: `install.packages('spDataLarge',
-#> repos='https://nowosad.github.io/drat/', type='source')`
-#> Loading required package: sf
-#> Linking to GEOS 3.6.2, GDAL 2.2.3, PROJ 4.9.3
 
 set.seed(1)
 
@@ -80,20 +76,20 @@ rscm_inla <- rscm(data = data,
 ##-- Summary
 scm_inla$summary_fixed
 #>             mean    median       sd     lower     upper
-#> alpha1  0.487311  0.490186 0.051162  0.390259  0.586618
-#> alpha2  0.139328  0.138687 0.050037  0.047309  0.235870
-#> X11_1  -0.444688 -0.442888 0.072485 -0.586889 -0.305352
-#> X12_1  -0.563873 -0.572522 0.476051 -1.548699  0.327136
-#> X21_2  -0.795867 -0.795942 0.056983 -0.901921 -0.680412
-#> X12_2  -0.311263 -0.315459 0.222657 -0.728190  0.128891
+#> alpha1  0.488012  0.488569 0.048372  0.389522  0.574772
+#> alpha2  0.142272  0.141245 0.049397  0.044328  0.232808
+#> X11_1  -0.448335 -0.447102 0.070483 -0.580809 -0.309785
+#> X12_1  -0.530059 -0.507789 0.450775 -1.429520  0.334260
+#> X21_2  -0.795016 -0.794650 0.056349 -0.904521 -0.688811
+#> X12_2  -0.300217 -0.298368 0.219307 -0.710260  0.157520
 rscm_inla$summary_fixed
 #>             mean    median       sd     lower     upper
-#> alpha1  0.474940  0.475680 0.048930  0.361073  0.555738
-#> alpha2  0.140155  0.141711 0.050559  0.035038  0.230865
-#> X11_1  -0.441265 -0.439722 0.077226 -0.594094 -0.287478
-#> X12_1  -0.367949 -0.366770 0.102884 -0.575222 -0.157409
-#> X21_2  -0.742207 -0.743272 0.055695 -0.846905 -0.631465
-#> X12_2  -0.368564 -0.369143 0.059262 -0.480126 -0.248888
+#> alpha1  0.475652  0.476027 0.052161  0.376391  0.575305
+#> alpha2  0.141362  0.141404 0.048442  0.042682  0.231837
+#> X11_1  -0.438496 -0.439143 0.076733 -0.585092 -0.287717
+#> X12_1  -0.375071 -0.378957 0.106843 -0.580092 -0.167523
+#> X21_2  -0.740850 -0.738411 0.055293 -0.856597 -0.644021
+#> X12_2  -0.372616 -0.370667 0.059332 -0.496261 -0.263359
 
 scm_inla$summary_hyperpar
 #>                           mean    median        sd    lower     upper
@@ -118,10 +114,76 @@ We can notice that the restricted model corrects the variance inflation
 ``` r
 SVIF(rscm_inla, scm_inla)
 #>   parameter        VIF
-#> 1    alpha1  1.0933132
-#> 2    alpha2  0.9794575
-#> 3     X11_1  0.8809864
-#> 4     X12_1 21.4097345
-#> 5     X21_2  1.0467867
-#> 6     X12_2 14.1162746
+#> 1    alpha1  0.8599957
+#> 2    alpha2  1.0398172
+#> 3     X11_1  0.8437318
+#> 4     X12_1 17.8003072
+#> 5     X21_2  1.0385613
+#> 6     X12_2 13.6624005
+```
+
+## Restricted spatial frailty models
+
+``` r
+set.seed(1)
+
+##-- Spatial structure
+data("neigh_RJ")
+
+##-- Individuals and regions
+n_reg <- length(neigh_RJ)
+n_id <- sample(x = 3:5, size = n_reg, replace = T)
+coefs <- c(0.3, -0.3)
+tau <- 0.75 # Scale of spatial effect
+
+##-- Data
+data <- rsurv(n_id = n_id,
+              coefs = coefs, cens = 0.5, scale = FALSE,
+              cens_type = "right", hazard = "weibull",
+              hazard_params = hazard_params <- list(weibull = list(alpha = 1.2, variant = 0)),
+              spatial = "ICAR",
+              neigh = neigh_RJ, tau = tau, confounding = "linear", proj = "none")
+
+##-- Models
+weibull_inla <- rsfm(data = data, time = "L", status = "status",
+                     covariates = c("X1", "X2"), intercept = TRUE,
+                     family = "weibull", proj = "rhz", nsamp = 1000, approach = "inla")
+#> Warning in inla.surv.1(time, event, time2, truncation): 'time2' is ignored for
+#> data that are not interval censored
+
+rsfm_inla <- rsfm(data = data, time = "L", status = "status", area = "reg",
+                  covariates = c("X1", "X2"), intercept = TRUE,
+                  model = "restricted_besag", neigh = neigh_RJ,
+                  family = "weibull", proj = "rhz", nsamp = 1000, approach = "inla")
+#> Warning in inla.surv.1(time, event, time2, truncation): 'time2' is ignored for
+#> data that are not interval censored
+
+weibull_inla$unrestricted$summary_fixed
+#>                  mean    median       sd     lower     upper
+#> (Intercept) -0.615542 -0.614855 0.076730 -0.755362 -0.459974
+#> X1           0.230099  0.228612 0.074603  0.087270  0.374713
+#> X2          -0.942590 -0.938899 0.096096 -1.120827 -0.759549
+rsfm_inla$unrestricted$summary_fixed
+#>                  mean    median       sd     lower     upper
+#> (Intercept) -0.539812 -0.537958 0.080770 -0.697389 -0.385100
+#> X1           0.317940  0.317355 0.078439  0.168108  0.472043
+#> X2          -1.072193 -1.075586 0.352117 -1.781310 -0.416856
+rsfm_inla$restricted$summary_fixed
+#>                  mean    median       sd     lower     upper
+#> (Intercept) -0.508432 -0.508401 0.079677 -0.672593 -0.362172
+#> X1           0.332966  0.330292 0.075201  0.183030  0.481675
+#> X2          -1.288779 -1.289738 0.113797 -1.520087 -1.074102
+```
+
+``` r
+SVIF(weibull_inla$unrestricted, rsfm_inla$unrestricted)
+#>     parameter       VIF
+#> 1 (Intercept)  1.108077
+#> 2          X1  1.105482
+#> 3          X2 13.426517
+SVIF(weibull_inla$unrestricted, rsfm_inla$restricted)
+#>     parameter      VIF
+#> 1 (Intercept) 1.078290
+#> 2          X1 1.016096
+#> 3          X2 1.402333
 ```
