@@ -112,7 +112,7 @@ rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh, area = NULL,
   n_covs2 <- ncol(X2)
   n_covss <- ncol(Xs)
 
-  W <- nb2mat(neighbours = poly2nb(neigh_RJ), style = "B")
+  W <- nb2mat(neighbours = poly2nb(neigh), style = "B")
   Ws <- W1 <- W2 <- W
 
   if(proj == "spock" & !is.null(area)) {
