@@ -3,7 +3,7 @@
 #' @description Apply the SPOCK approach to transform the neighborhood matrix
 #'
 #' @param X covariate matrix
-#' @param map neighborhood pbject
+#' @param map neighborhood object
 #'
 #' @importFrom sp coordinates
 #' @importFrom spdep poly2nb nb2mat
