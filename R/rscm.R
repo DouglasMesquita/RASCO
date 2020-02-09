@@ -80,7 +80,7 @@
 #'
 #' @export
 
-rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh, area = NULL,
+rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh = NULL, area = NULL,
                  proj = "none", nsamp = 1000, family = c("poisson", "poisson"),
                  prior_gamma = c(0, 0.1), prior_prec = c(0.5, 0.05),
                  random_effects = list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE), ...) {
@@ -92,7 +92,6 @@ rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh, area = NULL,
   if(missing(Y2)) stop("You must provide the Y2 name")
   if(missing(X1)) stop("You must provide the X1 names")
   if(missing(X2)) stop("You must provide the X2 names")
-  if(missing(area)) stop("You must provide the area name")
   if(!proj %in% c("none", "spock")) stop("proj must be 'none' or 'spock'")
 
   shared <- random_effects$shared
@@ -112,10 +111,12 @@ rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh, area = NULL,
   n_covs2 <- ncol(X2)
   n_covss <- ncol(Xs)
 
-  W <- nb2mat(neighbours = poly2nb(neigh), style = "B")
-  Ws <- W1 <- W2 <- W
+  if(!is.null(neigh)) {
+    W <- nb2mat(neighbours = poly2nb(neigh), style = "B")
+    Ws <- W1 <- W2 <- W
+  }
 
-  if(proj == "spock" & !is.null(area)) {
+  if(proj == "spock" & !is.null(area) & !is.null(neigh)) {
     time_start_correction <- Sys.time()
 
     if(specific_1) {
@@ -159,11 +160,13 @@ rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh, area = NULL,
   inla_list$alpha1 <- rep(c(1, NA), each = n)          ##-- Intercept Y1
   inla_list$alpha2 <- rep(c(NA, 1), each = n)          ##-- Intercept Y2
 
-  inla_list$psi_gamma <- c(data[[area]], rep(NA, n))   ##-- gamma*psi
-  inla_list$psi <- c(rep(NA, n), data[[area]])         ##-- psi
+  if(!is.null(area)) {
+    inla_list$psi_gamma <- c(data[[area]], rep(NA, n))   ##-- gamma*psi
+    inla_list$psi <- c(rep(NA, n), data[[area]])         ##-- psi
 
-  inla_list$phi1 <- inla_list$psi_gamma                ##-- psi_1
-  inla_list$phi2 <- inla_list$psi                      ##-- psi_2
+    inla_list$phi1 <- inla_list$psi_gamma                ##-- psi_1
+    inla_list$phi2 <- inla_list$psi                      ##-- psi_2
+  }
 
   inla_list$X <- matrix(NA, nrow = 2*n, ncol = n_covs1 + n_covs2)
 
@@ -174,7 +177,7 @@ rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh, area = NULL,
   ##-- Fit shared
   f_s <- Y ~ -1 + alpha1 + alpha2 + X
 
-  if(!is.null(area)) {
+  if(!is.null(area) & !is.null(neigh)) {
     if(shared) {
       f_s <- update(f_s, ~ . + f(psi,
                                  model = "besag",
@@ -228,7 +231,7 @@ rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh, area = NULL,
 
   id_fixed <- paste0(c("alpha1", "alpha2", colnames(inla_list$X)), ":", 1)
 
-  if(!is.null(area)) {
+  if(!is.null(area) & !is.null(neigh)) {
     phi1 <- paste0("phi1:", 1:n)
     phi2 <- paste0("phi2:", 1:n)
     psi <- paste0("psi:", 1:n)
@@ -241,7 +244,7 @@ rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh, area = NULL,
 
   latent_sample <- c()
 
-  if(!is.null(area)) {
+  if(!is.null(area) & !is.null(neigh)) {
     if(specific_1) {
       phi1_sample <- do.call(args = lapply(model_sample, select_marginal, ids = phi1), what = "rbind")
       colnames(phi1_sample) <- phi1
