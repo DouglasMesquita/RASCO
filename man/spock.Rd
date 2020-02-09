@@ -9,7 +9,7 @@ spock(X, map)
 \arguments{
 \item{X}{covariate matrix}
 
-\item{map}{neighborhood pbject}
+\item{map}{neighborhood object}
 }
 \value{
 map_new new neighborhood object

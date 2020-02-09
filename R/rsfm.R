@@ -83,9 +83,12 @@ rsfm <- function(data, time, time2 = NULL, status, covariates, intercept = TRUE,
       f_pred <- f_fixed
     }
 
-    if(is.null(time2)) time2 <- "NULL"
+    if(is.null(time2)) {
+      f <- sprintf("INLA::inla.surv(time = %s, event = %s) ~ %s", time, status, f_pred)
+    } else {
+      f <- sprintf("INLA::inla.surv(time = %s, time2 = %s, event = %s) ~ %s", time, time2, status, f_pred)
+    }
 
-    f <- sprintf("INLA::inla.surv(time = %s, time2 = %s, event = %s) ~ %s", time, time2, status, f_pred)
     f <- as.formula(f)
 
     out <- rsfm_inla(f, data, W = W, family, proj = proj, fast = fast, nsamp = nsamp, ...)
