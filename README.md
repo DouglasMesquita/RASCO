@@ -76,20 +76,20 @@ rscm_inla <- rscm(data = data,
 ##-- Summary
 scm_inla$summary_fixed
 #>             mean    median       sd     lower     upper
-#> alpha1  0.488012  0.488569 0.048372  0.389522  0.574772
-#> alpha2  0.142272  0.141245 0.049397  0.044328  0.232808
-#> X11_1  -0.448335 -0.447102 0.070483 -0.580809 -0.309785
-#> X12_1  -0.530059 -0.507789 0.450775 -1.429520  0.334260
-#> X21_2  -0.795016 -0.794650 0.056349 -0.904521 -0.688811
-#> X12_2  -0.300217 -0.298368 0.219307 -0.710260  0.157520
+#> alpha1  0.485808  0.486907 0.049308  0.393981  0.585722
+#> alpha2  0.141786  0.141141 0.048648  0.043874  0.236382
+#> X11_1  -0.444426 -0.443760 0.072838 -0.574318 -0.292077
+#> X12_1  -0.546706 -0.547880 0.447061 -1.462246  0.234691
+#> X21_2  -0.795418 -0.793623 0.056772 -0.909419 -0.684178
+#> X12_2  -0.309800 -0.311300 0.214047 -0.717347  0.105813
 rscm_inla$summary_fixed
 #>             mean    median       sd     lower     upper
-#> alpha1  0.475652  0.476027 0.052161  0.376391  0.575305
-#> alpha2  0.141362  0.141404 0.048442  0.042682  0.231837
-#> X11_1  -0.438496 -0.439143 0.076733 -0.585092 -0.287717
-#> X12_1  -0.375071 -0.378957 0.106843 -0.580092 -0.167523
-#> X21_2  -0.740850 -0.738411 0.055293 -0.856597 -0.644021
-#> X12_2  -0.372616 -0.370667 0.059332 -0.496261 -0.263359
+#> alpha1  0.474276  0.473831 0.051229  0.377303  0.574355
+#> alpha2  0.140139  0.141570 0.049589  0.039709  0.231677
+#> X11_1  -0.439000 -0.443620 0.080179 -0.602212 -0.294677
+#> X12_1  -0.372206 -0.373594 0.105476 -0.585937 -0.172150
+#> X21_2  -0.741666 -0.741454 0.055699 -0.843687 -0.625826
+#> X12_2  -0.371649 -0.370018 0.059288 -0.485130 -0.256375
 
 scm_inla$summary_hyperpar
 #>                           mean    median        sd    lower     upper
@@ -114,12 +114,12 @@ We can notice that the restricted model corrects the variance inflation
 ``` r
 SVIF(rscm_inla, scm_inla)
 #>   parameter        VIF
-#> 1    alpha1  0.8599957
-#> 2    alpha2  1.0398172
-#> 3     X11_1  0.8437318
-#> 4     X12_1 17.8003072
-#> 5     X21_2  1.0385613
-#> 6     X12_2 13.6624005
+#> 1    alpha1  0.9264095
+#> 2    alpha2  0.9624081
+#> 3     X11_1  0.8252675
+#> 4     X12_1 17.9649605
+#> 5     X21_2  1.0388996
+#> 6     X12_2 13.0342093
 ```
 
 ## Restricted spatial frailty models
@@ -145,45 +145,41 @@ data <- rsurv(n_id = n_id,
               neigh = neigh_RJ, tau = tau, confounding = "linear", proj = "none")
 
 ##-- Models
-weibull_inla <- rsfm(data = data, time = "L", status = "status",
+weibull_inla <- rsfm(data = data, time = "L", status = "status", 
                      covariates = c("X1", "X2"), intercept = TRUE,
                      family = "weibull", proj = "rhz", nsamp = 1000, approach = "inla")
-#> Warning in inla.surv.1(time, event, time2, truncation): 'time2' is ignored for
-#> data that are not interval censored
 
 rsfm_inla <- rsfm(data = data, time = "L", status = "status", area = "reg",
                   covariates = c("X1", "X2"), intercept = TRUE,
                   model = "restricted_besag", neigh = neigh_RJ,
                   family = "weibull", proj = "rhz", nsamp = 1000, approach = "inla")
-#> Warning in inla.surv.1(time, event, time2, truncation): 'time2' is ignored for
-#> data that are not interval censored
 
 weibull_inla$unrestricted$summary_fixed
 #>                  mean    median       sd     lower     upper
-#> (Intercept) -0.615542 -0.614855 0.076730 -0.755362 -0.459974
-#> X1           0.230099  0.228612 0.074603  0.087270  0.374713
-#> X2          -0.942590 -0.938899 0.096096 -1.120827 -0.759549
+#> (Intercept) -0.611842 -0.608766 0.080801 -0.781361 -0.459660
+#> X1           0.228842  0.231904 0.077503  0.079518  0.382685
+#> X2          -0.942787 -0.947408 0.098957 -1.128245 -0.753624
 rsfm_inla$unrestricted$summary_fixed
 #>                  mean    median       sd     lower     upper
-#> (Intercept) -0.539812 -0.537958 0.080770 -0.697389 -0.385100
-#> X1           0.317940  0.317355 0.078439  0.168108  0.472043
-#> X2          -1.072193 -1.075586 0.352117 -1.781310 -0.416856
+#> (Intercept) -0.539970 -0.537901 0.081628 -0.704039 -0.383428
+#> X1           0.324066  0.326290 0.082192  0.170777  0.485429
+#> X2          -1.066690 -1.056746 0.356526 -1.785210 -0.374065
 rsfm_inla$restricted$summary_fixed
 #>                  mean    median       sd     lower     upper
-#> (Intercept) -0.508432 -0.508401 0.079677 -0.672593 -0.362172
-#> X1           0.332966  0.330292 0.075201  0.183030  0.481675
-#> X2          -1.288779 -1.289738 0.113797 -1.520087 -1.074102
+#> (Intercept) -0.508210 -0.505606 0.080053 -0.676535 -0.362712
+#> X1           0.338540  0.338542 0.079803  0.179878  0.488082
+#> X2          -1.288491 -1.294619 0.116528 -1.487207 -1.028042
 ```
 
 ``` r
 SVIF(weibull_inla$unrestricted, rsfm_inla$unrestricted)
 #>     parameter       VIF
-#> 1 (Intercept)  1.108077
-#> 2          X1  1.105482
-#> 3          X2 13.426517
+#> 1 (Intercept)  1.020575
+#> 2          X1  1.124662
+#> 3          X2 12.980439
 SVIF(weibull_inla$unrestricted, rsfm_inla$restricted)
-#>     parameter      VIF
-#> 1 (Intercept) 1.078290
-#> 2          X1 1.016096
-#> 3          X2 1.402333
+#>     parameter       VIF
+#> 1 (Intercept) 0.9815711
+#> 2          X1 1.0602332
+#> 3          X2 1.3866522
 ```
