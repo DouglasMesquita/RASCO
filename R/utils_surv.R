@@ -46,7 +46,7 @@ rsurv <- function(n_id, coefs = c(0.1, 0.4, -0.3),
 
   ##-- General objects ----
   frailty <- eps <- eps_eff <- eps_ort <- NA
-  W <- nb2mat(neighbours = poly2nb(neigh_RJ), style = "B")
+  W <- nb2mat(neighbours = poly2nb(neigh), style = "B")
 
   ##-- Individuals and regions ----
   n_reg <- nrow(W)
