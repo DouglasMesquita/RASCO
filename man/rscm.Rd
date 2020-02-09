@@ -4,10 +4,7 @@
 \alias{rscm}
 \title{Restricted Shared Component model}
 \usage{
-rscm(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, W, neigh, area,
-            proj = "none", nsamp = 1000,
-            prior_gamma = c(0, 0.1), prior_prec = c(0.5, 0.05),
-            ...)
+rscm(data, Y1, Y2, X1, X2, neigh, area, ...)
 }
 \arguments{
 \item{data}{data.frame containing, at least, \code{Y1}, \code{Y2}, \code{X1}, \code{X2}}
@@ -37,6 +34,8 @@ rscm(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, W, neigh, area,
 \item{prior_gamma}{Prior (mean and precision) for the shared component coefficient (log-scale). Default: N(0, 0.1).}
 
 \item{prior_prec}{Prior (shape, scale) for the precision parameters}
+
+\item{random_effects}{A list determining which effects should we include in the model. Default: list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE)}
 
 \item{...}{Other parameters used in ?inla}
 }

@@ -2,10 +2,7 @@
 #'
 #' @description Fit a Restricted Shared Component model for two diseases
 #'
-#' @usage rscm(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, W, neigh, area,
-#'             proj = "none", nsamp = 1000,
-#'             prior_gamma = c(0, 0.1), prior_prec = c(0.5, 0.05),
-#'             ...)
+#' @usage rscm(data, Y1, Y2, X1, X2, neigh, area, ...)
 #'
 #' @param data data.frame containing, at least, \code{Y1}, \code{Y2}, \code{X1}, \code{X2}
 #' @param Y1 Y1 name in data
@@ -21,6 +18,7 @@
 #' @param family A vector with two families. Some allowed families are: poisson, nbinomial, zeroinflatedpoisson0, zeroinflatednbinomial0.
 #' @param prior_gamma Prior (mean and precision) for the shared component coefficient (log-scale). Default: N(0, 0.1).
 #' @param prior_prec Prior (shape, scale) for the precision parameters
+#' @param random_effects A list determining which effects should we include in the model. Default: list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE)
 #' @param ... Other parameters used in ?inla
 #'
 #' @examples
@@ -82,9 +80,10 @@
 #'
 #' @export
 
-rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh, area,
+rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh, area = NULL,
                  proj = "none", nsamp = 1000, family = c("poisson", "poisson"),
-                 prior_gamma = c(0, 0.1), prior_prec = c(0.5, 0.05), ...) {
+                 prior_gamma = c(0, 0.1), prior_prec = c(0.5, 0.05),
+                 random_effects = list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE), ...) {
   ##-- Time
   time_start <- Sys.time()
 
@@ -95,6 +94,10 @@ rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh, area,
   if(missing(X2)) stop("You must provide the X2 names")
   if(missing(area)) stop("You must provide the area name")
   if(!proj %in% c("none", "spock")) stop("proj must be 'none' or 'spock'")
+
+  shared <- random_effects$shared
+  specific_1 <- random_effects$specific_1
+  specific_2 <- random_effects$specific_2
 
   ##-- Setup INLA
   Y <- data[, c(Y1, Y2)]
@@ -112,16 +115,20 @@ rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh, area,
   W <- nb2mat(neighbours = poly2nb(neigh_RJ), style = "B")
   Ws <- W1 <- W2 <- W
 
-  if(proj == "spock") {
+  if(proj == "spock" & !is.null(area)) {
     time_start_correction <- Sys.time()
 
-    neigh1 <- spock(X = as.matrix(cbind(1, X1)), map = neigh)
-    W1 <- spdep::nb2mat(neigh1, style = "B", zero.policy = TRUE)
+    if(specific_1) {
+      neigh1 <- spock(X = as.matrix(cbind(1, X1)), map = neigh)
+      W1 <- spdep::nb2mat(neigh1, style = "B", zero.policy = TRUE)
+    }
 
-    neigh2 <- spock(X = as.matrix(cbind(1, X2)), map = neigh)
-    W2 <- spdep::nb2mat(neigh2, style = "B", zero.policy = TRUE)
+    if(specific_2) {
+      neigh2 <- spock(X = as.matrix(cbind(1, X2)), map = neigh)
+      W2 <- spdep::nb2mat(neigh2, style = "B", zero.policy = TRUE)
+    }
 
-    if(ncol(Xs) > 0) {
+    if(shared) {
       neighs <- spock(X = as.matrix(cbind(1, Xs)), map = neigh)
       Ws <- spdep::nb2mat(neighs, style = "B", zero.policy = TRUE)
     }
@@ -165,16 +172,46 @@ rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh, area,
   colnames(inla_list$X) <- c(paste(colnames(X1), 1, sep = "_"), paste(colnames(X2), 2, sep = "_"))
 
   ##-- Fit shared
-  f_s <- Y ~ -1 + alpha1 + alpha2 + X +
-    f(psi, model = "besag", graph = Ws, hyper = list(prec = list(prior = "loggamma",
-                                                                 param = prior_prec))) +
-    f(psi_gamma, copy = "psi", range = c(0, Inf), hyper = list(beta = list(fixed = FALSE,
-                                                                           prior = "normal",
-                                                                           param = prior_gamma))) +
-    f(phi1, model = "besag", graph = W1, hyper = list(prec = list(prior = "loggamma",
-                                                                  param = prior_prec))) +
-    f(phi2, model = "besag", graph = W2, hyper = list(prec = list(prior = "loggamma",
-                                                                  param = prior_prec)))
+  f_s <- Y ~ -1 + alpha1 + alpha2 + X
+
+  if(!is.null(area)) {
+    if(shared) {
+      f_s <- update(f_s, ~ . + f(psi,
+                                 model = "besag",
+                                 graph = Ws,
+                                 hyper = list(prec =
+                                                list(prior = "loggamma",
+                                                     param = prior_prec))) +
+                      f(psi_gamma,
+                        copy = "psi",
+                        range = c(0, Inf),
+                        hyper = list(beta =
+                                       list(fixed = FALSE,
+                                            prior = "normal",
+                                            param = prior_gamma)))
+      )
+    }
+
+    if(specific_1) {
+      f_s <- update(f_s, ~ . + f(phi1,
+                                 model = "besag",
+                                 graph = W1,
+                                 hyper = list(prec =
+                                                list(prior = "loggamma",
+                                                     param = prior_prec)))
+      )
+    }
+
+    if(specific_2) {
+      f_s <- update(f_s, ~ . + f(phi2,
+                                 model = "besag",
+                                 graph = W2,
+                                 hyper = list(prec =
+                                                list(prior = "loggamma",
+                                                     param = prior_prec)))
+      )
+    }
+  }
 
   if("control.inla" %in% names(list(...))) `<-`(control.inla$strategy, "laplace") else `<-`(control.inla, list(strategy = "laplace"))
   if("control.compute" %in% names(list(...))) `<-`(control.compute$config, TRUE) else `<-`(control.compute, list(config = TRUE))
@@ -191,30 +228,49 @@ rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh, area,
 
   id_fixed <- paste0(c("alpha1", "alpha2", colnames(inla_list$X)), ":", 1)
 
-  phi1 <- paste0("phi1:", 1:n)
-  phi2 <- paste0("phi2:", 1:n)
-  psi <- paste0("psi:", 1:n)
-  psi_gamma <- paste0("psi_gamma:", 1:n)
-  gamma <- paste0("gamma:", 1)
+  if(!is.null(area)) {
+    phi1 <- paste0("phi1:", 1:n)
+    phi2 <- paste0("phi2:", 1:n)
+    psi <- paste0("psi:", 1:n)
+    psi_gamma <- paste0("psi_gamma:", 1:n)
+    gamma <- paste0("gamma:", 1)
+  }
 
   beta_samp <- do.call(args = lapply(model_sample, select_marginal, ids = id_fixed), what = "rbind")
   colnames(beta_samp) <- c("alpha1", "alpha2", colnames(inla_list$X))
-  phi1_sample <- do.call(args = lapply(model_sample, select_marginal, ids = phi1), what = "rbind")
-  colnames(phi1_sample) <- phi1
-  phi2_sample <- do.call(args = lapply(model_sample, select_marginal, ids = phi2), what = "rbind")
-  colnames(phi2_sample) <- phi2
-  psi_sample <- do.call(args = lapply(model_sample, select_marginal, ids = psi), what = "rbind")
-  colnames(psi_sample) <- psi
-  psi_gamma_sample <- do.call(args = lapply(model_sample, select_marginal, ids = psi_gamma), what = "rbind")
-  colnames(psi_gamma_sample) <- psi_gamma
-  delta_sample <- matrix(get_trans_samp(fun = sqrt, marg = mod$marginals.hyperpar$`Beta for psi_gamma`, n = nsamp, trunc = TRUE), ncol = 1)
-  colnames(delta_sample) <- "Delta"
-  psi_precision_sample <- hyperpar_samp[, "Precision for psi"]/hyperpar_samp[, "Beta for psi_gamma"]
-  hyperpar_samp <- cbind(hyperpar_samp, delta_sample, `Precision for psi SC` = psi_precision_sample)
 
-  latent_sample <- cbind(phi1_sample, phi2_sample, psi_sample, psi_gamma_sample)
+  latent_sample <- c()
 
-  sample <- cbind(hyperpar_samp, beta_samp, latent_sample)
+  if(!is.null(area)) {
+    if(specific_1) {
+      phi1_sample <- do.call(args = lapply(model_sample, select_marginal, ids = phi1), what = "rbind")
+      colnames(phi1_sample) <- phi1
+
+      latent_sample <- cbind(latent_sample, phi1_sample)
+    }
+    if(specific_2) {
+      phi2_sample <- do.call(args = lapply(model_sample, select_marginal, ids = phi2), what = "rbind")
+      colnames(phi2_sample) <- phi2
+
+      latent_sample <- cbind(latent_sample, phi2_sample)
+    }
+    if(shared) {
+      psi_sample <- do.call(args = lapply(model_sample, select_marginal, ids = psi), what = "rbind")
+      colnames(psi_sample) <- psi
+      psi_gamma_sample <- do.call(args = lapply(model_sample, select_marginal, ids = psi_gamma), what = "rbind")
+      colnames(psi_gamma_sample) <- psi_gamma
+      delta_sample <- matrix(get_trans_samp(fun = sqrt, marg = mod$marginals.hyperpar$`Beta for psi_gamma`, n = nsamp, trunc = TRUE), ncol = 1)
+      colnames(delta_sample) <- "Delta"
+      psi_precision_sample <- hyperpar_samp[, "Precision for psi"]/hyperpar_samp[, "Beta for psi_gamma"]
+
+      hyperpar_samp <- cbind(hyperpar_samp, delta_sample, `Precision for psi SC` = psi_precision_sample)
+      latent_sample <- cbind(latent_sample, psi_sample, psi_gamma_sample, psi_precision_sample)
+    }
+
+    sample <- cbind(hyperpar_samp, beta_samp, latent_sample)
+  } else {
+    sample <- cbind(hyperpar_samp, beta_samp)
+  }
 
   ##-- Time
   time_tab <- data.frame(INLA = as.numeric(difftime(time1 = time_end_inla, time2 = time_start_inla, units = "secs")),
@@ -226,7 +282,7 @@ rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh, area,
   out$sample <- sample
   out$summary_fixed <- chain_summary(obj = beta_samp)
   out$summary_hyperpar <- chain_summary(obj = hyperpar_samp)
-  out$summary_random <- chain_summary(obj = latent_sample)
+  if(is.null(area)) `<-`(out$summary_random, chain_summary(obj = latent_sample)) else `<-`(out$summary_random, NULL)
   out$out <- mod
 
   out$time <- time_tab
