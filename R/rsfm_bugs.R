@@ -2,6 +2,8 @@
 #'
 #' @description Fit a Restricted Spatial Frailty model using INLA
 #'
+#' @usage rsfm_inla(model, data, inits, parameters, covariates, area, proj, ...)
+#'
 #' @param model character with the text model
 #' @param data dataset
 #' @param inits initial values for the chain

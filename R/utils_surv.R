@@ -29,7 +29,7 @@ rsurv <- function(n_id, coefs = c(0.1, 0.4, -0.3),
                   hazard_params = hazard_dft(),
                   spatial = "ICAR", neigh = NULL, tau = 1,
                   confounding = "none", proj = "none", sd_x = 0,
-                  X = NULL, scale = TRUE){
+                  X = NULL, scale = TRUE) {
 
   ##-- Initial checking ----
   if(!(spatial %in% c("none", "gamma", "lognormal", "ICAR", "BYM")))
@@ -55,7 +55,7 @@ rsurv <- function(n_id, coefs = c(0.1, 0.4, -0.3),
 
   ##-- Spatial effects ----
   if((spatial %in% c("ICAR", "BYM") | confounding != "none")){
-    eps <- ricar(W = W, sig = sqrt(1/tau))
+    eps <- ricar(W = W, sig = 1/tau)
 
     if(is.null(X) & confounding != "none"){
       if(!is.null(neigh)){
@@ -151,6 +151,22 @@ rsurv <- function(n_id, coefs = c(0.1, 0.4, -0.3),
                      check.names = F)
 
   return(data)
+}
+
+#' @title surv
+#'
+#' @description Auxiliar function for survival models
+#'
+#' @param time Time until event (censure) or lower limit for interval censoring
+#' @param time2 Upper limit for interval censoring
+#' @param event The event indicator, 1 = observed event, 0 = right censored event, 2 = left censored event, 3 = interval censored event.
+
+surv <- function(time, time2 = NULL, event) {
+  time <- deparse(substitute(time))
+  time2 <- ifelse(!is.null(time2), deparse(substitute(time2)), character(0))
+  event <- deparse(substitute(event))
+
+  return(list(time = time, time2 = time2, event = event))
 }
 
 #' @title rsurv_none
@@ -453,3 +469,5 @@ hazard_dft <- function(){
 
   return(l_out)
 }
+
+

@@ -2,19 +2,15 @@
 #'
 #' @description Fit a Restricted Spatial Frailty model
 #'
-#' @usage rsfm(data, time, status, covariates, area, model, family, proj = "none", ...)
+#' @usage rsfm(data, formula, model, family, proj, ...)
 #'
-#' @param data data.frame containing, at least, \code{time}, \code{status}, \code{covariates}, \code{area} list
-#' @param time For right censored data, this is the follow up time. For interval data, this is the starting time for the interval.
-#' @param time2 Ending time for the interval censured data.
-#' @param status The status indicator, 1 = observed event, 0 = right censored event, 2 = left censored event, 3 = interval censored event.
-#' @param covariates Vector of covariates names
-#' @param intercept TRUE or FALSE
-#' @param area Column representing the region of each individual
-#' @param model Spatial model adopted
+#' @param data data.frame containing, at least, \code{time}, \code{event}, \code{covariates}, \code{area} list
+#' @param formula A formula in the format surv(time, time2, event) ~ X1 + X2
+#' @param area Column of data specifying the region of each individual
+#' @param model Spatial model adopted: "besag" or  "restricted_besag"
 #' @param W Adjacency matrix
 #' @param family 'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'
-#' @param proj 'none', 'rhz', 'hh' or 'spock'
+#' @param proj 'none', 'rhz' or 'spock'
 #' @param fast To use the reduction operator
 #' @param nsamp Sample size to use the projection approach
 #' @param approach 'inla' or 'bugs'
@@ -41,29 +37,32 @@
 #'               neigh = neigh_RJ, tau = tau, confounding = "linear", proj = "none")
 #'
 #' ##-- Models
-#' weibull_inla <- rsfm(data = data, time = "L", status = "status",
-#'                      covariates = c("X1", "X2"), intercept = TRUE,
-#'                      family = "weibull", proj = "rhz", nsamp = 1000, approach = "inla")
+#' weibull_inla <- rsfm(data = data,
+#'                      formula = surv(time = L, event = status) ~ X1 + X2,
+#'                      model = "none", family = "weibull",
+#'                      proj = "rhz", nsamp = 1000, approach = "inla")
 #'
-#' rsfm_inla <- rsfm(data = data, time = "L", status = "status", area = "reg",
-#'                   covariates = c("X1", "X2"), intercept = TRUE,
-#'                   model = "restricted_besag", neigh = neigh_RJ,
-#'                   family = "weibull", proj = "rhz", nsamp = 1000, approach = "inla")
+#' rsfm_inla <- rsfm(data = data, area = "reg",
+#'                   formula = surv(time = L, event = status) ~ X1 + X2,
+#'                   model = "restricted_besag", neigh = neigh_RJ, family = "weibull",
+#'                   proj = "rhz", nsamp = 1000, approach = "inla")
 #'
 #' weibull_inla$unrestricted$summary_fixed
 #' rsfm_inla$unrestricted$summary_fixed
 #' rsfm_inla$restricted$summary_fixed
 #'
-#' @return Restricted model
+#' @return \item{$unrestricted}{A list containing $sample, $summary_fixed, $summary_hyperpar, $summary_random, $out and $time}
+#' \item{$restricted}{A list containing $sample, $summary_fixed, $summary_hyperpar, $summary_random, $out and $time}
 #'
 #' @export
 
-rsfm <- function(data, time, time2 = NULL, status, covariates, intercept = TRUE, area = NULL,
+rsfm <- function(data,
+                 formula, area = NULL,
                  model = NULL, neigh = NULL,
                  family, proj = "none", fast = TRUE, nsamp = 1000,
                  approach = "inla", ...) {
 
-  if(is.null(covariates)) stop("You must provide at least one covariate")
+  if(is.null(formula)) stop("You must provide a formula for the fixed effects")
 
   if(!is.null(area)) {
     W <- nb2mat(neighbours = poly2nb(neigh), style = "B")
@@ -71,11 +70,10 @@ rsfm <- function(data, time, time2 = NULL, status, covariates, intercept = TRUE,
     W <- NULL
   }
 
+  f_fixed <- format(formula)
+
   ##-- INLA
   if(approach == "inla") {
-    f_fixed <- paste(covariates, collapse = " + ")
-    if(!intercept) f_fixed <- paste("-1 +", f_fixed)
-
     if(!is.null(area)) {
       f_random <- sprintf("f(%s, model = '%s', graph = %s)", area, model, "W")
       f_pred <- paste(f_fixed, f_random, sep = " + ")
@@ -83,12 +81,7 @@ rsfm <- function(data, time, time2 = NULL, status, covariates, intercept = TRUE,
       f_pred <- f_fixed
     }
 
-    if(is.null(time2)) {
-      f <- sprintf("INLA::inla.surv(time = %s, event = %s) ~ %s", time, status, f_pred)
-    } else {
-      f <- sprintf("INLA::inla.surv(time = %s, time2 = %s, event = %s) ~ %s", time, time2, status, f_pred)
-    }
-
+    f <- gsub(x = f_pred, pattern = "^surv\\(", replacement = "INLA::inla.surv(")
     f <- as.formula(f)
 
     out <- rsfm_inla(f, data, W = W, family, proj = proj, fast = fast, nsamp = nsamp, ...)
@@ -96,22 +89,24 @@ rsfm <- function(data, time, time2 = NULL, status, covariates, intercept = TRUE,
 
   ##-- BUGS
   if(approach == "bugs") {
-    data[[status]] <- ifelse(data[[status]] == 0, data[[time]], 0)
-    data[[time]][data[[status]] > 0] <- NA_real_
+    surv_elements <- eval(terms(formula)[[2]])
+
+    event <- surv_elements$event
+    time <- surv_elements$time
+
+    data[[event]] <- ifelse(data[[event]] == 0, data[[time]], 0)
+    data[[time]][data[[event]] > 0] <- NA_real_
 
     bugs_data <- list()
 
-    ##-- Time and status
+    ##-- Time and event
     bugs_data$t <- data[[time]]
-    bugs_data$status <- data[[status]]
+    bugs_data$event <- data[[event]]
 
     ##-- Fixed effects
     bugs_data$N <- nrow(data)
 
-    f_fixed <- paste('~', paste(covariates, collapse = " + "))
-    if(!intercept) f_fixed <- paste("-1 +", f_fixed)
-    df_covariates <- model.frame(formula = f_fixed, data = data)
-
+    df_covariates <- model.frame(formula = formula[-2], data = data)
     beta_names <- names(df_covariates)
 
     for(i in 1:length(beta_names)){
@@ -123,7 +118,7 @@ rsfm <- function(data, time, time2 = NULL, status, covariates, intercept = TRUE,
       bugs_data$n <- length(unique(data[[area]]))
       bugs_data$area <- data[[area]]
 
-      bugs_data$adj <- unlist(apply(X = W, MARGIN = 1, which))
+      bugs_data$adj <- unlist(apply(X = W == 1, MARGIN = 1, which))
       bugs_data$num <- colSums(W)
       bugs_data$weights <- 1 + 0*bugs_data$adj
     }
@@ -174,7 +169,7 @@ rsfm <- function(data, time, time2 = NULL, status, covariates, intercept = TRUE,
                            # Model:
                            ## Fixed effects:
                            for (i in 1 : N) {
-                               t[i] ~ dweib(alpha, mu[i]) I(status[i], );
+                               t[i] ~ dweib(alpha, mu[i]) I(event[i], );
                                log(mu[i]) <- %s;
                            }
 
@@ -191,6 +186,7 @@ rsfm <- function(data, time, time2 = NULL, status, covariates, intercept = TRUE,
 
     writeLines(text = text_model, con = model_file)
 
+    covariates <- all.vars(formula[-2])
     out <- rsfm_bugs(model = model_file, data = bugs_data, inits = inits, parameters = parameters, covariates = covariates, area = area,
                      proj = proj, fast = fast, nsamp = nsamp, ...)
   }

@@ -4,28 +4,20 @@
 \alias{rsfm}
 \title{Restricted Spatial Frailty Model}
 \usage{
-rsfm(data, time, status, covariates, area, model, family, proj = "none", ...)
+rsfm(data, formula, model, family, proj, ...)
 }
 \arguments{
-\item{data}{data.frame containing, at least, \code{time}, \code{status}, \code{covariates}, \code{area} list}
+\item{data}{data.frame containing, at least, \code{time}, \code{event}, \code{covariates}, \code{area} list}
 
-\item{time}{For right censored data, this is the follow up time. For interval data, this is the starting time for the interval.}
+\item{formula}{A formula in the format surv(time, time2, event) ~ X1 + X2}
 
-\item{time2}{Ending time for the interval censured data.}
+\item{area}{Column of data specifying the region of each individual}
 
-\item{status}{The status indicator, 1 = observed event, 0 = right censored event, 2 = left censored event, 3 = interval censored event.}
-
-\item{covariates}{Vector of covariates names}
-
-\item{intercept}{TRUE or FALSE}
-
-\item{area}{Column representing the region of each individual}
-
-\item{model}{Spatial model adopted}
+\item{model}{Spatial model adopted: "besag" or  "restricted_besag"}
 
 \item{family}{'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'}
 
-\item{proj}{'none', 'rhz', 'hh' or 'spock'}
+\item{proj}{'none', 'rhz' or 'spock'}
 
 \item{fast}{To use the reduction operator}
 
@@ -38,7 +30,8 @@ rsfm(data, time, status, covariates, area, model, family, proj = "none", ...)
 \item{W}{Adjacency matrix}
 }
 \value{
-Restricted model
+\item{$unrestricted}{A list containing $sample, $summary_fixed, $summary_hyperpar, $summary_random, $out and $time}
+\item{$restricted}{A list containing $sample, $summary_fixed, $summary_hyperpar, $summary_random, $out and $time}
 }
 \description{
 Fit a Restricted Spatial Frailty model
@@ -64,14 +57,15 @@ data <- rsurv(n_id = n_id,
               neigh = neigh_RJ, tau = tau, confounding = "linear", proj = "none")
 
 ##-- Models
-weibull_inla <- rsfm(data = data, time = "L", status = "status",
-                     covariates = c("X1", "X2"), intercept = TRUE,
-                     family = "weibull", proj = "rhz", nsamp = 1000, approach = "inla")
+weibull_inla <- rsfm(data = data,
+                     formula = surv(time = L, event = status) ~ X1 + X2,
+                     model = "none", family = "weibull",
+                     proj = "rhz", nsamp = 1000, approach = "inla")
 
-rsfm_inla <- rsfm(data = data, time = "L", status = "status", area = "reg",
-                  covariates = c("X1", "X2"), intercept = TRUE,
-                  model = "restricted_besag", neigh = neigh_RJ,
-                  family = "weibull", proj = "rhz", nsamp = 1000, approach = "inla")
+rsfm_inla <- rsfm(data = data, area = "reg",
+                  formula = surv(time = L, event = status) ~ X1 + X2,
+                  model = "restricted_besag", neigh = neigh_RJ, family = "weibull",
+                  proj = "rhz", nsamp = 1000, approach = "inla")
 
 weibull_inla$unrestricted$summary_fixed
 rsfm_inla$unrestricted$summary_fixed

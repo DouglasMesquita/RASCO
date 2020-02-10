@@ -2,6 +2,8 @@
 #'
 #' @description Fit a Restricted Spatial Frailty model using INLA
 #'
+#' @usage rsfm_inla(data, f, family, W, proj, ...)
+#'
 #' @param f INLA formula ?inla.surv
 #' @param data data.frame containing, at least, \code{time}, \code{status}, \code{covariates}, \code{area} list
 #' @param family 'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'
