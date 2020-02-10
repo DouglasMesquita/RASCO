@@ -10,6 +10,8 @@
 #'
 #' @return map_new new neighborhood object
 #'
+#' @importFrom stats dist
+#'
 #' @export
 
 spock <- function(X, map){

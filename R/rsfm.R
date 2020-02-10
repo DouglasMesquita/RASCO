@@ -2,13 +2,16 @@
 #'
 #' @description Fit a Restricted Spatial Frailty model
 #'
-#' @usage rsfm(data, formula, model, family, proj, ...)
+#' @usage rsfm(data, formula, area = NULL,
+#'             model = NULL, neigh = NULL,
+#'             family, proj = "none", fast = TRUE, nsamp = 1000,
+#'             approach = "inla", ...)
 #'
 #' @param data data.frame containing, at least, \code{time}, \code{event}, \code{covariates}, \code{area} list
 #' @param formula A formula in the format surv(time, time2, event) ~ X1 + X2
 #' @param area Column of data specifying the region of each individual
 #' @param model Spatial model adopted: "besag" or  "restricted_besag"
-#' @param W Adjacency matrix
+#' @param neigh Neighborhood structure. A \code{SpatialPolygonsDataFrame} object
 #' @param family 'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'
 #' @param proj 'none', 'rhz' or 'spock'
 #' @param fast To use the reduction operator
@@ -24,7 +27,7 @@
 #'
 #' ##-- Individuals and regions
 #' n_reg <- length(neigh_RJ)
-#' n_id <- sample(x = 3:5, size = n_reg, replace = T)
+#' n_id <- sample(x = 3:5, size = n_reg, replace = TRUE)
 #' coefs <- c(0.3, -0.3)
 #' tau <- 0.75 # Scale of spatial effect
 #'
@@ -56,8 +59,7 @@
 #'
 #' @export
 
-rsfm <- function(data,
-                 formula, area = NULL,
+rsfm <- function(data, formula, area = NULL,
                  model = NULL, neigh = NULL,
                  family, proj = "none", fast = TRUE, nsamp = 1000,
                  approach = "inla", ...) {

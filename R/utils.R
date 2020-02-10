@@ -9,7 +9,7 @@
 #'
 #' @export
 
-SVIF <- function(base_model, model){
+SVIF <- function(base_model, model) {
   fixed_names <- rownames(base_model$summary_fixed)
 
   vif <- (model$summary_fixed$sd^2)/(base_model$summary_fixed$sd^2)
@@ -32,7 +32,7 @@ SVIF <- function(base_model, model){
 #'
 #' @export
 
-SVRF <- function(base_model, model){
+SVRF <- function(base_model, model) {
   res <- SVIF(base_model = base_model, model = model)
   res$VIF <- 1- 1/res$VIF
 
@@ -52,7 +52,7 @@ SVRF <- function(base_model, model){
 #' @return Px Projection matrix
 #' Px_ort (I - Px)
 
-proj_mat <- function(X, groups = NULL, method = "rhz"){
+proj_mat <- function(X, groups = NULL, method = "rhz") {
   N <- nrow(X)
   if(is.null(groups)) groups <- 1:N
 
@@ -85,9 +85,11 @@ proj_mat <- function(X, groups = NULL, method = "rhz"){
 #' @param W Adjcency matrix
 #' @param sig Standard deviation
 #'
+#' @importFrom stats rnorm
+#'
 #' @return x
 
-ricar <- function(W, sig = 1){
+ricar <- function(W, sig = 1) {
   n <- ncol(W)
   num <- rowSums(W)
 
@@ -104,49 +106,37 @@ ricar <- function(W, sig = 1){
   return(as.vector(rnd))
 }
 
-#' @title Generate data from CAR model
+#' #' @title Generate data from CAR model
+#' #'
+#' #' @description Generate data from CAR model
+#' #'
+#' #' @param W Adjcency matrix
+#' #' @param sig Standard deviation
+#' #' @param rho Dependence parameter
+#' #'
+#' #' @return x
 #'
-#' @description Generate data from CAR model
+#' rcar <- function(W, sig, rho = 0.9999){
+#'   D <- diag(colSums(W))
+#'   Q <- sig*(D - rho*W)
+#'   sigma <- solve(Q)
 #'
-#' @param W Adjcency matrix
-#' @param sig Standard deviation
-#' @param rho Dependence parameter
-#'
-#' @return x
-
-rcar <- function(W, sig, rho = 0.9999){
-  D <- diag(colSums(W))
-  Q <- sig*(D - rho*W)
-  sigma <- solve(Q)
-
-  samp <- as.numeric(rmvnorm(n = 1, mean = rep(0, ncol(W)), sigma = sigma))
-  return(samp)
-}
+#'   samp <- as.numeric(rmvnorm(n = 1, mean = rep(0, ncol(W)), sigma = sigma))
+#'   return(samp)
+#' }
 
 #' @title select_marginal
 #'
 #' @description Select the desired marginals on a INLA models
+#'
+#' @param samp A sample from ?inla.posterior.sample
+#' @param ids Ids to restore
 
-select_marginal <- function(samp, ids){
+select_marginal <- function(samp, ids) {
   row_names <- row.names(samp$latent)
   samp <- c(samp$latent[row_names %in% ids])
 
   return(samp)
-}
-
-#' @title inla_stats
-#'
-#' @description Get inla statistics from a marginal
-
-inla_stats <- function(marginal){
-  z_stats <- inla.zmarginal(marginal = marginal, silent = TRUE)
-  e_stats <- inla.mmarginal(marginal = marginal)
-  kld_stat <- NA
-
-  summary_df <- data.frame(z_stats$"mean", z_stats$"sd", z_stats$"quant0.025", z_stats$"quant0.5", z_stats$"quant0.75", e_stats, kld_stat)
-  colnames(summary_df) <- c("mean", "sd", "0.025quant", "0.5quant", "0.975quant", "mode")
-
-  return(summary_df)
 }
 
 #' @title Append two lists
@@ -158,7 +148,7 @@ inla_stats <- function(marginal){
 #'
 #' @return x
 
-append_list <- function (x, y){
+append_list <- function (x, y) {
   xnames <- names(x)
   for (v in names(y)) {
     if(v %in% xnames && is.list(x[[v]]) && is.list(y[[v]])){
@@ -172,8 +162,15 @@ append_list <- function (x, y){
   return(x)
 }
 
-##-- Filters
-meang <- function(x, g, weighted = FALSE){
+#' @title meang
+#'
+#' @description Mean by groups
+#'
+#' @param x A numeric vector
+#' @param g Group indexes
+#' @param weighted TRUE for weighted mean
+
+meang <- function(x, g, weighted = FALSE) {
   if(weighted){
     res <- tapply(X = x, INDEX = g, FUN = function(x) mean(x)*length(x))
   } else{
@@ -183,8 +180,16 @@ meang <- function(x, g, weighted = FALSE){
   return(res)
 }
 
-##-- Reduction ----
-`%r%` <- function(x, g_index){
+#' @title Reduction operator
+#'
+#' @description Reduction operator
+#'
+#' @param x A numeric vector or a numeric matrix
+#' @param g_index Group indexes
+#'
+#' @export
+
+`%r%` <- function(x, g_index) {
 
   if(!(class(x) %in% c("numeric", "matrix"))) stop("x must be a vector or a matrix")
 
@@ -205,8 +210,14 @@ meang <- function(x, g, weighted = FALSE){
   return(reduction)
 }
 
-##-- Enlargement ----
-`%e%` <- function(x, g_index){
+#' @title Enlargement operator
+#'
+#' @description Enlargement operator
+#'
+#' @param x A numeric vector or a numeric matrix
+#' @param g_index Group indexes
+
+`%e%` <- function(x, g_index) {
 
   if(!(class(x) %in% c("numeric", "matrix"))) stop("x must be a vector or a matrix")
 
@@ -246,8 +257,15 @@ meang <- function(x, g, weighted = FALSE){
   return(enlargement)
 }
 
-##-- Updating INLA formula ----
-update_inla_formula <- function(formula){
+#' @title Updating INLA formula
+#'
+#' @description Updating INLA formula
+#'
+#' @param formula A formula to be updated to INLA format
+#'
+#' @importFrom stats terms.formula
+
+update_inla_formula <- function(formula) {
   ##-- Checking formula
   terms_formula <- terms.formula(formula, specials = c("f"), data = NULL)
   terms_labels <- attr(terms_formula, "term.labels")
@@ -257,7 +275,7 @@ update_inla_formula <- function(formula){
 
   ##-- Updating formula
   if(length(pos_restricted) > 0){
-    formula_char <- INLA:::inla.formula2character(formula)
+    formula_char <- format(formula)
     formula_char <- gsub(pattern = "restricted_besag", replacement = "besag", x = formula_char)
     formula_new <- as.formula(formula_char)
 

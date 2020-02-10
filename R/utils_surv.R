@@ -12,14 +12,15 @@
 #' 'gamma' for an independent gamma frailty,
 #' 'lognormal' for an independent lognormal frailty,
 #' 'ICAR' or 'BYM' for spatial structured models
-#' @param W Adjacency matrix
-#' @param neigh Neighborhood object
+#' @param neigh Neighborhood structure. A \code{SpatialPolygonsDataFrame} object
 #' @param tau Precision for ICAR and BYM models
 #' @param confounding 'none', 'linear', 'quadratic' or 'cubic'
 #' @param proj 'none', 'rhz', 'hh' or 'spock'
 #' @param sd_x Standard deviation to generating confounding
 #' @param X Matrix of covariates. Default = NULL
 #' @param scale Scale X. TRUE or FALSE
+#'
+#' @importFrom stats rnorm rgamma
 #'
 #' @export
 
@@ -196,6 +197,8 @@ rsurv_none <- function(times){
 #'
 #' @param times Vector with observed times
 #' @param cens Censoring fraction
+#'
+#' @importFrom stats runif
 
 rsurv_right <- function(times, cens){
   N <- length(times)
@@ -233,6 +236,8 @@ rsurv_right <- function(times, cens){
 #'
 #' @param times Vector with observed times
 #' @param cens Censoring fraction
+#'
+#' @importFrom stats runif
 
 rsurv_left <- function(times, cens){
   N <- length(times)
@@ -268,6 +273,8 @@ rsurv_left <- function(times, cens){
 #'
 #' @param times Vector with observed times
 #' @param cens Censoring fraction
+#'
+#' @importFrom stats rbinom median runif
 
 rsurv_interval <- function(times, cens){
   N <- length(times)
@@ -305,6 +312,8 @@ rsurv_interval <- function(times, cens){
 #'
 #' @param N Number of observations
 #' @param rate Rate's vector
+#'
+#' @importFrom stats rexp
 
 rexpsurv <- function(N, rate = rep(1, N)){
   times <- rexp(n = N, rate = rate)
@@ -346,6 +355,8 @@ cum_hexpsurv <- function(t, rate){
 #' @param alpha Alpha parameter
 #' @param lambda Lambda parameter
 #' @param variant Variant (0 or 1)
+#'
+#' @importFrom stats rweibull
 
 rweibullsurv <- function(N, alpha, lambda = rep(1, N), variant = 1){
   if(variant == 1){
@@ -393,6 +404,8 @@ cum_hweibullsurv <- function(t, alpha, lambda){
 #' @param effects Effects
 #' @param rates Exponential rates
 #' @param tgrid Time's grid
+#'
+#' @importFrom stats runif
 
 rpwesurv <- function(N, effects = rep(1, N), rates, tgrid){
   u <- runif(n = N, min = 0, max = 1)

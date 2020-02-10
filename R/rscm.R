@@ -2,15 +2,18 @@
 #'
 #' @description Fit a Restricted Shared Component model for two diseases
 #'
-#' @usage rscm(data, Y1, Y2, X1, X2, neigh, area, ...)
+#' @usage rscm(data, formula1, formula2, E1 = NULL, E2 = NULL, neigh = NULL, area = NULL,
+#'             proj = "none", nsamp = 1000, family = c("poisson", "poisson"),
+#'             prior_gamma = c(0, 0.1), prior_prec = c(0.5, 0.05),
+#'             random_effects = list(shared = TRUE,
+#'                                   specific_1 = TRUE,
+#'                                   specific_2 = TRUE), ...)
 #'
 #' @param data data.frame containing, at least, \code{Y1}, \code{Y2}, \code{X1}, \code{X2}
-#' @param Y1 Y1 name in data
-#' @param Y2 Y2 name in data
-#' @param X1 X1 names in data
-#' @param X2 X2 names in data
-#' @param E1 Expected counts for Y1 in data
-#' @param E2 Expected counts for Y2 in data
+#' @param formula1 Formula for the disease 1 fixed effects
+#' @param formula2 Formula for the disease 2 fixed effects
+#' @param E1 Expected counts for Y1 in data. Default = 1 for all sample units
+#' @param E2 Expected counts for Y2 in data. Default = 1 for all sample units
 #' @param neigh Neighborhood structure. A \code{SpatialPolygonsDataFrame} object
 #' @param area Areal variable name in data
 #' @param proj 'none' or 'spock'
@@ -39,32 +42,35 @@
 #' delta <- 1.5
 #'
 #' ##-- Data
-#' data <- rshared(alpha_1 = alpha_1, alpha_2 = alpha_2, beta_1 = beta_1, beta_2 = beta_2, delta = delta,
+#' data <- rshared(alpha_1 = alpha_1, alpha_2 = alpha_2,
+#'                 beta_1 = beta_1, beta_2 = beta_2,
+#'                 delta = delta,
 #'                 tau_1 = tau_1, tau_2 = tau_2, tau_s = tau_s,
 #'                 confounding = "linear",
 #'                 neigh = neigh_RJ)
 #'
 #' ##-- Models
 #' scm_inla <- rscm(data = data,
-#'                  Y1 = "Y1", Y2 = "Y2",
-#'                  X1 = c("X11", "X12"), X2 = c("X21", "X12"),
-#'                  E1 = "E1", E2 = "E2",
+#'                  formula1 = Y1 ~ X11 + X12,
+#'                  formula2 = Y2 ~ X21 + X12,
+#'                  E1 = E1, E2 = E2,
 #'                  family = c("nbinomial", "zeroinflatedpoisson0"),
 #'                  area = "reg", neigh = neigh_RJ,
 #'                  prior_prec = c(0.5, 0.05), prior_gamma = c(0, 0.5),
-#'                  proj = "none", nsamp = 1000)
+#'                  proj = "none", nsamp = 1000,
+#'                  random_effects = list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE))
 #'
 #' rscm_inla <- rscm(data = data,
-#'                   Y1 = "Y1", Y2 = "Y2",
-#'                   X1 = c("X11", "X12"), X2 = c("X21", "X12"),
-#'                   E1 = "E1", E2 = "E2",
+#'                   formula1 = Y1 ~ X11 + X12,
+#'                   formula2 = Y2 ~ X21 + X12,
+#'                   E1 = E1, E2 = E2,
 #'                   family = c("nbinomial", "zeroinflatedpoisson0"),
 #'                   area = "reg", neigh = neigh_RJ,
 #'                   prior_prec = c(0.5, 0.05), prior_gamma = c(0, 0.5),
-#'                   proj = "spock", nsamp = 1000)
+#'                   proj = "spock", nsamp = 1000,
+#'                   random_effects = list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE))
 #'
 #' ##-- Summary
-#'
 #' scm_inla$summary_fixed
 #' rscm_inla$summary_fixed
 #'
@@ -78,9 +84,11 @@
 #' \item{$out}{INLA output}
 #' \item{$time}{Time elapsed for fitting the model}
 #'
+#' @importFrom stats as.formula terms model.frame update
+#'
 #' @export
 
-rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh = NULL, area = NULL,
+rscm <- function(data, formula1, formula2, E1 = NULL, E2 = NULL, neigh = NULL, area = NULL,
                  proj = "none", nsamp = 1000, family = c("poisson", "poisson"),
                  prior_gamma = c(0, 0.1), prior_prec = c(0.5, 0.05),
                  random_effects = list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE), ...) {
@@ -88,18 +96,21 @@ rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh = NULL, area 
   time_start <- Sys.time()
 
   ##-- Tests
-  if(missing(Y1)) stop("You must provide the Y1 name")
-  if(missing(Y2)) stop("You must provide the Y2 name")
-  if(missing(X1)) stop("You must provide the X1 names")
-  if(missing(X2)) stop("You must provide the X2 names")
+  if(missing(formula1)) stop("You must provide the formula for disease 1")
+  if(missing(formula2)) stop("You must provide the formula for disease 2")
   if(!proj %in% c("none", "spock")) stop("proj must be 'none' or 'spock'")
+
+  random_effects <- append_list(list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE), random_effects)
 
   shared <- random_effects$shared
   specific_1 <- random_effects$specific_1
   specific_2 <- random_effects$specific_2
 
   ##-- Setup INLA
-  Y <- data[, c(Y1, Y2)]
+  Y <- data[, c(deparse(formula1[[2]]), deparse(formula2[[2]]))]
+
+  X1 <- all.vars(formula1[-2])
+  X2 <- all.vars(formula2[-2])
 
   covs_s <- union(X1, X2)
   X1 <- data[, X1, drop = FALSE]
@@ -139,15 +150,18 @@ rscm <- function(data, Y1, Y2, X1, X2, E1 = NULL, E2 = NULL, neigh = NULL, area 
     time_end_correction <- time_start_correction <- Sys.time()
   }
 
+  E1 <- substitute(E1)
+  E2 <- substitute(E2)
+
   if(is.null(E1)) {
     E1 <- rep(1, n)
   } else {
-    E1 <- data[, E1, drop = FALSE]
+    E1 <- data[, deparse(E1), drop = FALSE]
   }
   if(is.null(E2)) {
     E2 <- rep(1, n)
   } else {
-    E2 <- data[, E2, drop = FALSE]
+    E2 <- data[, deparse(E2), drop = FALSE]
   }
 
   E <- data.frame(E1 = E1, E2 = E2)

@@ -2,7 +2,13 @@
 #'
 #' @description Summary measures for a(n) (un)restricted model
 #'
+#' @usage chain_summary(obj, level)
+#'
 #' @param obj A matrix containing parameter's chains
+#' @param level Credibility level
+#'
+#' @importFrom coda HPDinterval as.mcmc
+#' @importFrom stats median sd
 #'
 #' @return Measures
 #'

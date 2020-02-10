@@ -8,11 +8,13 @@
 #' @param beta_2 Coefficients for disease 2
 #' @param delta Dependence on the shared component
 #' @param tau_1 Precision for ICAR specific for disease 1
-#' @param tau_1 Precision for ICAR specific for disease 2
+#' @param tau_2 Precision for ICAR specific for disease 2
 #' @param tau_s Precision for ICAR specific for shared component
 #' @param confounding 'none', 'linear', 'quadratic' or 'cubic'
 #' @param neigh Neighborhood structure. A \code{SpatialPolygonsDataFrame} object
 #' @param scale Scale covariates? TRUE or FALSE
+#'
+#' @importFrom stats rnorm rpois
 #'
 #' @export
 
@@ -80,6 +82,12 @@ rshared <- function(alpha_1 = 0, alpha_2 = 0, beta_1 = c(0.1, -0.1), beta_2 = c(
 #' @title get_trans_samp
 #'
 #' @description Generating a sample from the transformed marginal
+#'
+#' @param marg A marginal from a INLA model
+#' @param fun A transformation function
+#' @param n A number of samples desired
+#' @param trunc TRUE: x > 0
+#' @param method ?inla.tmarginal method
 
 get_trans_samp <- function(marg, fun, n = 1000, trunc = FALSE, method = "linear") {
 
@@ -94,6 +102,11 @@ get_trans_samp <- function(marg, fun, n = 1000, trunc = FALSE, method = "linear"
 #' @title gamma_prior
 #'
 #' @description Given mean and variance return a and b
+#'
+#' @param mean Mean of a desired gamma distribution (restore a and b)
+#' @param var Variance of a desired gamma distribution (restore a and b)
+#' @param a Shape of a desired gamma distribution (restore mean and variance)
+#' @param b Scale of a desired gamma distribution (restore mean and variance)
 
 gamma_prior <- function(mean, var, a = NULL, b = NULL){
   if(all(!is.null(c(a, b)))){

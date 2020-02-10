@@ -2,7 +2,8 @@
 #'
 #' @description Fit a Restricted Spatial Frailty model using INLA
 #'
-#' @usage rsfm_inla(data, f, family, W, proj, ...)
+#' @usage rsfm_inla(f, data, family, W = NULL,
+#'                  proj = "none", fast = TRUE, nsamp = 1000, ...)
 #'
 #' @param f INLA formula ?inla.surv
 #' @param data data.frame containing, at least, \code{time}, \code{status}, \code{covariates}, \code{area} list

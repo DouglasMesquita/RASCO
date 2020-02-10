@@ -2,13 +2,15 @@
 #'
 #' @description Fit a Restricted Spatial Frailty model using INLA
 #'
-#' @usage rsfm_inla(model, data, inits, parameters, covariates, area, proj, ...)
+#' @usage rsfm_bugs(model, data, inits, parameters, covariates, area,
+#'                  proj = "none", fast = TRUE, nsamp = 1000, burnin = 5000, thin = 10, ...)
 #'
 #' @param model character with the text model
 #' @param data dataset
 #' @param inits initial values for the chain
 #' @param parameters Vector of parameters to restore
 #' @param covariates Vector of covariates names
+#' @param area Column of data specifying the region of each individual
 #' @param proj 'none', 'rhz', 'hh' or 'spock'
 #' @param fast To use the reduction operator
 #' @param nsamp Sample size to use the projection approach
