@@ -81,20 +81,20 @@ rscm_inla <- rscm(data = data,
 ##-- Summary
 scm_inla$summary_fixed
 #>             mean    median       sd     lower     upper
-#> alpha1  0.488777  0.487693 0.049311  0.390932  0.579200
-#> alpha2  0.142209  0.141845 0.048368  0.045552  0.233823
-#> X11_1  -0.445002 -0.442557 0.072723 -0.578096 -0.295945
-#> X12_1  -0.544089 -0.548066 0.460966 -1.391055  0.408615
-#> X21_2  -0.794244 -0.793939 0.054391 -0.894604 -0.679798
-#> X12_2  -0.310322 -0.314814 0.222780 -0.787786  0.082211
+#> alpha1  0.488412  0.489477 0.048235  0.394513  0.579293
+#> alpha2  0.143232  0.142143 0.049261  0.050156  0.237546
+#> X11_1  -0.443722 -0.442796 0.073942 -0.588624 -0.295900
+#> X12_1  -0.562739 -0.563071 0.451748 -1.363277  0.399427
+#> X21_2  -0.794629 -0.794316 0.055399 -0.893619 -0.679871
+#> X12_2  -0.315873 -0.321550 0.218762 -0.756360  0.116906
 rscm_inla$summary_fixed
 #>             mean    median       sd     lower     upper
-#> alpha1  0.472144  0.472240 0.051107  0.366060  0.563171
-#> alpha2  0.139478  0.138595 0.047901  0.047550  0.234562
-#> X11_1  -0.443697 -0.443476 0.076266 -0.589910 -0.291900
-#> X12_1  -0.372233 -0.373023 0.108394 -0.569993 -0.149101
-#> X21_2  -0.740820 -0.739934 0.054355 -0.845104 -0.632694
-#> X12_2  -0.369958 -0.370070 0.059483 -0.485250 -0.252443
+#> alpha1  0.478246  0.479306 0.051048  0.379235  0.575073
+#> alpha2  0.142061  0.140984 0.048946  0.048625  0.236406
+#> X11_1  -0.441951 -0.443142 0.078288 -0.595883 -0.291657
+#> X12_1  -0.373009 -0.371430 0.103388 -0.563260 -0.170196
+#> X21_2  -0.742390 -0.742596 0.055199 -0.856003 -0.643758
+#> X12_2  -0.367838 -0.367043 0.060279 -0.476309 -0.243539
 
 scm_inla$summary_hyperpar
 #>                           mean    median        sd    lower     upper
@@ -114,17 +114,19 @@ rscm_inla$summary_hyperpar
 #> Precision for psi SC  0.503221  0.490751  0.099809 0.336539  0.703725
 ```
 
-We can notice that the restricted model corrects the variance inflation
+The *SVIF* function provides the coefficients variance ratio between two
+models. We can notice that the restricted model alleviates the variance
+inflation
 
 ``` r
 SVIF(rscm_inla, scm_inla)
 #>   parameter        VIF
-#> 1    alpha1  0.9309510
-#> 2    alpha2  1.0195936
-#> 3     X11_1  0.9092465
-#> 4     X12_1 18.0853660
-#> 5     X21_2  1.0013251
-#> 6     X12_2 14.0270605
+#> 1    alpha1  0.8928266
+#> 2    alpha2  1.0129127
+#> 3     X11_1  0.8920557
+#> 4     X12_1 19.0920344
+#> 5     X21_2  1.0072596
+#> 6     X12_2 13.1707860
 ```
 
 ## Restricted spatial frailty models
@@ -138,53 +140,54 @@ data("neigh_RJ")
 ##-- Individuals and regions
 n_reg <- length(neigh_RJ)
 n_id <- sample(x = 3:5, size = n_reg, replace = T)
-coefs <- c(0.3, -0.3)
+beta <- c(0.3, -0.3)
 tau <- 0.75 # Scale of spatial effect
 
 ##-- Data
 data <- rsurv(n_id = n_id,
-              coefs = coefs, cens = 0.5, scale = FALSE,
+              coefs = beta, cens = 0.5, scale = FALSE,
               cens_type = "right", hazard = "weibull",
               hazard_params = hazard_params <- list(weibull = list(alpha = 1.2, variant = 0)),
               spatial = "ICAR",
               neigh = neigh_RJ, tau = tau, confounding = "linear", proj = "none")
 
 ##-- Models
-weibull_inla <- rsfm(data = data, time = "L", status = "status", 
-                     covariates = c("X1", "X2"), intercept = TRUE,
-                     family = "weibull", proj = "rhz", nsamp = 1000, approach = "inla")
+weibull_inla <- rsfm(data = data,
+                     formula = surv(time = L, event = status) ~ X1 + X2,
+                     model = "none", family = "weibull",
+                     proj = "rhz", nsamp = 1000, approach = "inla")
 
-rsfm_inla <- rsfm(data = data, time = "L", status = "status", area = "reg",
-                  covariates = c("X1", "X2"), intercept = TRUE,
-                  model = "restricted_besag", neigh = neigh_RJ,
-                  family = "weibull", proj = "rhz", nsamp = 1000, approach = "inla")
+rsfm_inla <- rsfm(data = data, area = "reg",
+                  formula = surv(time = L, event = status) ~ X1 + X2,
+                  model = "restricted_besag", neigh = neigh_RJ, family = "weibull",
+                  proj = "rhz", nsamp = 1000, approach = "inla")
 
 weibull_inla$unrestricted$summary_fixed
 #>                  mean    median       sd     lower     upper
-#> (Intercept) -0.617524 -0.617350 0.078713 -0.761019 -0.458617
-#> X1           0.227056  0.231913 0.071525  0.079568  0.357547
-#> X2          -0.937586 -0.940347 0.101809 -1.112742 -0.711154
+#> (Intercept) -0.631158 -0.631809 0.077973 -0.770568 -0.472022
+#> X1           0.218495  0.215794 0.074147  0.067264  0.351719
+#> X2          -0.953558 -0.957676 0.100043 -1.140607 -0.735529
 rsfm_inla$unrestricted$summary_fixed
 #>                  mean    median       sd     lower     upper
-#> (Intercept) -0.540431 -0.539675 0.083703 -0.701963 -0.368178
-#> X1           0.319638  0.323012 0.081655  0.165675  0.478105
-#> X2          -1.054561 -1.047469 0.359264 -1.786012 -0.409842
+#> (Intercept) -0.545976 -0.544101 0.080899 -0.704822 -0.385425
+#> X1           0.325475  0.329555 0.085392  0.156862  0.492125
+#> X2          -1.114874 -1.106152 0.391321 -1.954553 -0.401492
 rsfm_inla$restricted$summary_fixed
 #>                  mean    median       sd     lower     upper
-#> (Intercept) -0.508318 -0.508820 0.082508 -0.681266 -0.350496
-#> X1           0.333549  0.335730 0.077672  0.178660  0.476266
-#> X2          -1.290920 -1.287474 0.115016 -1.517228 -1.071286
+#> (Intercept) -0.511915 -0.510954 0.079607 -0.676323 -0.364322
+#> X1           0.340865  0.340927 0.082559  0.178246  0.504190
+#> X2          -1.362622 -1.362327 0.117976 -1.582961 -1.117825
 ```
 
 ``` r
 SVIF(weibull_inla$unrestricted, rsfm_inla$unrestricted)
 #>     parameter       VIF
-#> 1 (Intercept)  1.130809
-#> 2          X1  1.303316
-#> 3          X2 12.452457
+#> 1 (Intercept)  1.076460
+#> 2          X1  1.326317
+#> 3          X2 15.300052
 SVIF(weibull_inla$unrestricted, rsfm_inla$restricted)
 #>     parameter      VIF
-#> 1 (Intercept) 1.098751
-#> 2          X1 1.179270
-#> 3          X2 1.276275
+#> 1 (Intercept) 1.042351
+#> 2          X1 1.239772
+#> 3          X2 1.390637
 ```
