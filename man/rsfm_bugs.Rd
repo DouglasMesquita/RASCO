@@ -4,7 +4,8 @@
 \alias{rsfm_bugs}
 \title{Restricted Spatial Frailty Model in BUGS}
 \usage{
-rsfm_inla(model, data, inits, parameters, covariates, area, proj, ...)
+rsfm_bugs(model, data, inits, parameters, covariates, area,
+                 proj = "none", fast = TRUE, nsamp = 1000, burnin = 5000, thin = 10, ...)
 }
 \arguments{
 \item{model}{character with the text model}
@@ -16,6 +17,8 @@ rsfm_inla(model, data, inits, parameters, covariates, area, proj, ...)
 \item{parameters}{Vector of parameters to restore}
 
 \item{covariates}{Vector of covariates names}
+
+\item{area}{Column of data specifying the region of each individual}
 
 \item{proj}{'none', 'rhz', 'hh' or 'spock'}
 

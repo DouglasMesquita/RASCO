@@ -39,7 +39,7 @@ rsurv(
 'lognormal' for an independent lognormal frailty,
 'ICAR' or 'BYM' for spatial structured models}
 
-\item{neigh}{Neighborhood object}
+\item{neigh}{Neighborhood structure. A \code{SpatialPolygonsDataFrame} object}
 
 \item{tau}{Precision for ICAR and BYM models}
 
@@ -52,8 +52,6 @@ rsurv(
 \item{X}{Matrix of covariates. Default = NULL}
 
 \item{scale}{Scale X. TRUE or FALSE}
-
-\item{W}{Adjacency matrix}
 }
 \description{
 Generating data with spatial confounding

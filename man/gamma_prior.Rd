@@ -6,6 +6,15 @@
 \usage{
 gamma_prior(mean, var, a = NULL, b = NULL)
 }
+\arguments{
+\item{mean}{Mean of a desired gamma distribution (restore a and b)}
+
+\item{var}{Variance of a desired gamma distribution (restore a and b)}
+
+\item{a}{Shape of a desired gamma distribution (restore mean and variance)}
+
+\item{b}{Scale of a desired gamma distribution (restore mean and variance)}
+}
 \description{
 Given mean and variance return a and b
 }

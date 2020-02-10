@@ -29,7 +29,9 @@ rshared(
 
 \item{delta}{Dependence on the shared component}
 
-\item{tau_1}{Precision for ICAR specific for disease 2}
+\item{tau_1}{Precision for ICAR specific for disease 1}
+
+\item{tau_2}{Precision for ICAR specific for disease 2}
 
 \item{tau_s}{Precision for ICAR specific for shared component}
 

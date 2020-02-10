@@ -4,7 +4,12 @@
 \alias{rscm}
 \title{Restricted Shared Component model}
 \usage{
-rscm(data, Y1, Y2, X1, X2, neigh, area, ...)
+rscm(data, formula1, formula2, E1 = NULL, E2 = NULL, neigh = NULL, area = NULL,
+            proj = "none", nsamp = 1000, family = c("poisson", "poisson"),
+            prior_gamma = c(0, 0.1), prior_prec = c(0.5, 0.05),
+            random_effects = list(shared = TRUE,
+                                  specific_1 = TRUE,
+                                  specific_2 = TRUE), ...)
 }
 \arguments{
 \item{data}{data.frame containing, at least, \code{Y1}, \code{Y2}, \code{X1}, \code{X2}}
@@ -64,7 +69,9 @@ tau_1 <- tau_2 <- 10
 delta <- 1.5
 
 ##-- Data
-data <- rshared(alpha_1 = alpha_1, alpha_2 = alpha_2, beta_1 = beta_1, beta_2 = beta_2, delta = delta,
+data <- rshared(alpha_1 = alpha_1, alpha_2 = alpha_2,
+                beta_1 = beta_1, beta_2 = beta_2,
+                delta = delta,
                 tau_1 = tau_1, tau_2 = tau_2, tau_s = tau_s,
                 confounding = "linear",
                 neigh = neigh_RJ)

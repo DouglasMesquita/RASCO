@@ -6,6 +6,31 @@
 \usage{
 select_marginal(samp, ids)
 }
+\arguments{
+\item{samp}{A sample from ?inla.posterior.sample}
+
+\item{ids}{Ids to restore}
+}
 \description{
 Select the desired marginals on a INLA models
+}
+\details{
+#' @title Generate data from CAR model
+#'
+#' @description Generate data from CAR model
+#'
+#' @param W Adjcency matrix
+#' @param sig Standard deviation
+#' @param rho Dependence parameter
+#'
+#' @return x
+
+rcar <- function(W, sig, rho = 0.9999){
+  D <- diag(colSums(W))
+  Q <- sig*(D - rho*W)
+  sigma <- solve(Q)
+
+  samp <- as.numeric(rmvnorm(n = 1, mean = rep(0, ncol(W)), sigma = sigma))
+  return(samp)
+}
 }

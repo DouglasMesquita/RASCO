@@ -4,10 +4,12 @@
 \alias{chain_summary}
 \title{Summary measures for a(n) (un)restricted model}
 \usage{
-chain_summary(obj, level = 0.95)
+chain_summary(obj, level)
 }
 \arguments{
 \item{obj}{A matrix containing parameter's chains}
+
+\item{level}{Credibility level}
 }
 \value{
 Measures

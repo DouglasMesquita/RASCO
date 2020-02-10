@@ -4,7 +4,8 @@
 \alias{rsfm_inla}
 \title{Restricted Spatial Frailty Model in INLA}
 \usage{
-rsfm_inla(data, f, family, W, proj, ...)
+rsfm_inla(f, data, family, W = NULL,
+                 proj = "none", fast = TRUE, nsamp = 1000, ...)
 
 rsfm_inla(
   f,

@@ -4,7 +4,10 @@
 \alias{rsfm}
 \title{Restricted Spatial Frailty Model}
 \usage{
-rsfm(data, formula, model, family, proj, ...)
+rsfm(data, formula, area = NULL,
+            model = NULL, neigh = NULL,
+            family, proj = "none", fast = TRUE, nsamp = 1000,
+            approach = "inla", ...)
 }
 \arguments{
 \item{data}{data.frame containing, at least, \code{time}, \code{event}, \code{covariates}, \code{area} list}
@@ -14,6 +17,8 @@ rsfm(data, formula, model, family, proj, ...)
 \item{area}{Column of data specifying the region of each individual}
 
 \item{model}{Spatial model adopted: "besag" or  "restricted_besag"}
+
+\item{neigh}{Neighborhood structure. A \code{SpatialPolygonsDataFrame} object}
 
 \item{family}{'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'}
 
@@ -26,8 +31,6 @@ rsfm(data, formula, model, family, proj, ...)
 \item{approach}{'inla' or 'bugs'}
 
 \item{...}{Other parameters used in ?inla or ?bugs}
-
-\item{W}{Adjacency matrix}
 }
 \value{
 \item{$unrestricted}{A list containing $sample, $summary_fixed, $summary_hyperpar, $summary_random, $out and $time}
@@ -44,7 +47,7 @@ data("neigh_RJ")
 
 ##-- Individuals and regions
 n_reg <- length(neigh_RJ)
-n_id <- sample(x = 3:5, size = n_reg, replace = T)
+n_id <- sample(x = 3:5, size = n_reg, replace = TRUE)
 coefs <- c(0.3, -0.3)
 tau <- 0.75 # Scale of spatial effect
 
