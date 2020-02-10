@@ -4,20 +4,7 @@
 \alias{rsfm_bugs}
 \title{Restricted Spatial Frailty Model in BUGS}
 \usage{
-rsfm_bugs(
-  model,
-  data,
-  inits,
-  parameters,
-  covariates,
-  area,
-  proj = "none",
-  fast = TRUE,
-  nsamp = 1000,
-  burnin = 5000,
-  thin = 10,
-  ...
-)
+rsfm_inla(model, data, inits, parameters, covariates, area, proj, ...)
 }
 \arguments{
 \item{model}{character with the text model}
