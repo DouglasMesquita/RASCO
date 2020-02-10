@@ -9,17 +9,13 @@ rscm(data, Y1, Y2, X1, X2, neigh, area, ...)
 \arguments{
 \item{data}{data.frame containing, at least, \code{Y1}, \code{Y2}, \code{X1}, \code{X2}}
 
-\item{Y1}{Y1 name in data}
+\item{formula1}{Formula for the disease 1 fixed effects}
 
-\item{Y2}{Y2 name in data}
+\item{formula2}{Formula for the disease 2 fixed effects}
 
-\item{X1}{X1 names in data}
+\item{E1}{Expected counts for Y1 in data. Default = 1 for all sample units}
 
-\item{X2}{X2 names in data}
-
-\item{E1}{Expected counts for Y1 in data}
-
-\item{E2}{Expected counts for Y2 in data}
+\item{E2}{Expected counts for Y2 in data. Default = 1 for all sample units}
 
 \item{neigh}{Neighborhood structure. A \code{SpatialPolygonsDataFrame} object}
 
@@ -75,25 +71,26 @@ data <- rshared(alpha_1 = alpha_1, alpha_2 = alpha_2, beta_1 = beta_1, beta_2 = 
 
 ##-- Models
 scm_inla <- rscm(data = data,
-                 Y1 = "Y1", Y2 = "Y2",
-                 X1 = c("X11", "X12"), X2 = c("X21", "X12"),
-                 E1 = "E1", E2 = "E2",
+                 formula1 = Y1 ~ X11 + X12,
+                 formula2 = Y2 ~ X21 + X12,
+                 E1 = E1, E2 = E2,
                  family = c("nbinomial", "zeroinflatedpoisson0"),
                  area = "reg", neigh = neigh_RJ,
                  prior_prec = c(0.5, 0.05), prior_gamma = c(0, 0.5),
-                 proj = "none", nsamp = 1000)
+                 proj = "none", nsamp = 1000,
+                 random_effects = list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE))
 
 rscm_inla <- rscm(data = data,
-                  Y1 = "Y1", Y2 = "Y2",
-                  X1 = c("X11", "X12"), X2 = c("X21", "X12"),
-                  E1 = "E1", E2 = "E2",
+                  formula1 = Y1 ~ X11 + X12,
+                  formula2 = Y2 ~ X21 + X12,
+                  E1 = E1, E2 = E2,
                   family = c("nbinomial", "zeroinflatedpoisson0"),
                   area = "reg", neigh = neigh_RJ,
                   prior_prec = c(0.5, 0.05), prior_gamma = c(0, 0.5),
-                  proj = "spock", nsamp = 1000)
+                  proj = "spock", nsamp = 1000,
+                  random_effects = list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE))
 
 ##-- Summary
-
 scm_inla$summary_fixed
 rscm_inla$summary_fixed
 
