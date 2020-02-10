@@ -15,7 +15,7 @@ Imports:
     spdep
 Suggests:
     covr
-Remotes: https://inla.r-inla-download.org/R/stable
+Remotes: url::https://inla.r-inla-download.org/R/stable
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
