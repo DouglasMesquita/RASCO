@@ -7,7 +7,14 @@ Maintainer: Douglas R. M. Azevedo <douglasrm.azevedo@gmail.com>
 Description: This package allow the application of several restricted models for
     generalized linear regressions and survival analysis under spatial confounding.
 Depends: R (>= 3.5.0)
-Imports: INLA, R2OpenBUGS, coda, sp, spdep
+Imports: 
+    INLA, 
+    R2OpenBUGS, 
+    coda, 
+    sp, 
+    spdep
+Suggests:
+    covr
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
