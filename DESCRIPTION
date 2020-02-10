@@ -8,7 +8,6 @@ Description: This package allow the application of several restricted models for
     generalized linear regressions and survival analysis under spatial confounding.
 Depends: R (>= 3.5.0)
 Imports:
-    INLA,
     R2OpenBUGS, 
     coda, 
     sp, 
