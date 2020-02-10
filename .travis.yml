@@ -10,7 +10,7 @@ r_check_args: "--no-build-vignettes"
 
 before_install:
   - sudo apt-get -y install libudunits2-dev
-  - sudo apt-get -y install libgdal1i
+  - sudo apt-get -y install libgdal1 libgdal1-dev
 
 after_success:
   - Rscript -e 'library(covr); codecov()'
