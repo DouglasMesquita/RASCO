@@ -16,7 +16,7 @@
 #' @param proj 'none', 'rhz' or 'spock'
 #' @param fast To use the reduction operator
 #' @param nsamp Sample size to use the projection approach
-#' @param approach 'inla' or 'bugs'
+#' @param approach 'inla' or 'mcmc'
 #' @param ... Other parameters used in ?inla or ?bugs
 #'
 #' @examples
@@ -90,7 +90,7 @@ rsfm <- function(data, formula, area = NULL,
   }
 
   ##-- BUGS
-  if(approach == "bugs") {
+  if(approach == "mcmc") {
     surv_elements <- eval(terms(formula)[[2]])
 
     event <- surv_elements$event

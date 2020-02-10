@@ -28,7 +28,7 @@ rsfm(data, formula, area = NULL,
 
 \item{nsamp}{Sample size to use the projection approach}
 
-\item{approach}{'inla' or 'bugs'}
+\item{approach}{'inla' or 'mcmc'}
 
 \item{...}{Other parameters used in ?inla or ?bugs}
 }
