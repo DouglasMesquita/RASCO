@@ -2,7 +2,7 @@
 #'
 #' @description Fit a Restricted Spatial Frailty model using INLA
 #'
-#' @usage rsfm_bugs(model, data, inits, parameters, covariates, area,
+#' @usage rsfm_mcmc(model, data, inits, parameters, covariates, area,
 #'                  proj = "none", fast = TRUE, nsamp = 1000, burnin = 5000, thin = 10, ...)
 #'
 #' @param model character with the text model
@@ -22,18 +22,18 @@
 #'
 #' @importFrom R2OpenBUGS bugs
 
-rsfm_bugs <- function(model, data, inits, parameters, covariates, area,
+rsfm_mcmc <- function(model, data, inits, parameters, covariates, area,
                       proj = "none", fast = TRUE, nsamp = 1000, burnin = 5000, thin = 10, ...){
   ##-- Time
   time_start <- Sys.time()
 
   ##-- Model
-  time_start_bugs <- Sys.time()
+  time_start_mcmc <- Sys.time()
   mod <- R2OpenBUGS::bugs(data = data, inits = inits,
                           model.file = model,
                           parameters.to.save = parameters,
                           n.chains = 1, n.iter = burnin + nsamp*thin, n.burnin = burnin, n.thin = thin)
-  time_end_bugs <- Sys.time()
+  time_end_mcmc <- Sys.time()
 
   sample <- as.data.frame(mod$sims.list)
   sample <- sample[, -ncol(sample)]
@@ -104,7 +104,7 @@ rsfm_bugs <- function(model, data, inits, parameters, covariates, area,
     sample_ast <- NULL
   }
 
-  time_tab <- data.frame(BUGS = as.numeric(difftime(time1 = time_end_bugs, time2 = time_start_bugs, units = "secs")),
+  time_tab <- data.frame(MCMC = as.numeric(difftime(time1 = time_end_mcmc, time2 = time_start_mcmc, units = "secs")),
                          correction = as.numeric(difftime(time1 = time_end_correction, time2 = time_start_correction, units = "secs")),
                          total = as.numeric(difftime(time1 = Sys.time(), time2 = time_start, units = "secs")))
 

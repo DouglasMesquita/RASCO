@@ -99,30 +99,30 @@ rsfm <- function(data, formula,
     data[[event]] <- ifelse(data[[event]] == 0, data[[time]], 0)
     data[[time]][data[[event]] > 0] <- NA_real_
 
-    bugs_data <- list()
+    mcmc_data <- list()
 
     ##-- Time and event
-    bugs_data$t <- data[[time]]
-    bugs_data$event <- data[[event]]
+    mcmc_data$t <- data[[time]]
+    mcmc_data$event <- data[[event]]
 
     ##-- Fixed effects
-    bugs_data$N <- nrow(data)
+    mcmc_data$N <- nrow(data)
 
     df_covariates <- model.frame(formula = formula[-2], data = data)
     beta_names <- names(df_covariates)
 
     for(i in 1:length(beta_names)){
-      bugs_data[[beta_names[i]]] <- df_covariates[[beta_names[i]]]
+      mcmc_data[[beta_names[i]]] <- df_covariates[[beta_names[i]]]
     }
 
     ##-- Random effects
     if(!is.null(area)){
-      bugs_data$n <- length(unique(data[[area]]))
-      bugs_data$area <- data[[area]]
+      mcmc_data$n <- length(unique(data[[area]]))
+      mcmc_data$area <- data[[area]]
 
-      bugs_data$adj <- unlist(apply(X = W == 1, MARGIN = 1, which))
-      bugs_data$num <- colSums(W)
-      bugs_data$weights <- 1 + 0*bugs_data$adj
+      mcmc_data$adj <- unlist(apply(X = W == 1, MARGIN = 1, which))
+      mcmc_data$num <- colSums(W)
+      mcmc_data$weights <- 1 + 0*mcmc_data$adj
     }
 
     ##-- Make model
@@ -189,7 +189,7 @@ rsfm <- function(data, formula,
     writeLines(text = text_model, con = model_file)
 
     covariates <- all.vars(formula[-2])
-    out <- rsfm_bugs(model = model_file, data = bugs_data, inits = inits, parameters = parameters, covariates = covariates, area = area,
+    out <- rsfm_mcmc(model = model_file, data = mcmc_data, inits = inits, parameters = parameters, covariates = covariates, area = area,
                      proj = proj, fast = fast, nsamp = nsamp, ...)
   }
 
