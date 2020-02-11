@@ -16,9 +16,8 @@ before_install:
   - sudo apt-get -y install xorg
   - sudo apt-get -y install libx11-dev
   - sudo apt-get -y install libglu1-mesa-dev
-  - sudo apt-get -y install libc6-dev
   - Rscript -e 'install.packages("devtools", repos = "http://cran.rstudio.com")'
-  - R CMD INSTALL -l https://inla.r-inla-download.org/Linux-builds/Ubuntu-16.04.6%20LTS%20(Xenial%20Xerus)/Version_20.01.25/64bit.tgz
+  - Rscript -e 'install.packages("INLA", repos=c(getOption("repos"), INLA="https://inla.r-inla-download.org/R/stable"), dep=TRUE)'
 
 after_success:
   - Rscript -e 'library(covr); codecov()'
