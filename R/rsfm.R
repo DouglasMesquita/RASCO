@@ -59,8 +59,8 @@
 #'
 #' @export
 
-rsfm <- function(data, formula, area = NULL,
-                 model = NULL, neigh = NULL,
+rsfm <- function(data, formula,
+                 area = NULL, model = NULL, neigh = NULL,
                  family, proj = "none", fast = TRUE, nsamp = 1000,
                  approach = "inla", ...) {
 

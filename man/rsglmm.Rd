@@ -4,8 +4,8 @@
 \alias{rsglmm}
 \title{Restricted Spatial Generalized Linear Mixed model}
 \usage{
-rsglmm(data, Y, covariates, intercept = TRUE, area = NULL,
-              neigh = NULL,
+rsglmm(data, formula,
+              area = NULL, model = NULL, neigh = NULL,
               family, proj = "none", nsamp = 1000,
               approach = "inla", ...)
 }
@@ -14,4 +14,43 @@ Restricted model
 }
 \description{
 Fit a Restricted Spatial Generalized Linear Mixed model
+}
+\examples{
+set.seed(1)
+
+##-- Spatial structure
+data("neigh_RJ")
+
+beta <- c(-0.5, -0.2)
+tau <- 1
+
+##-- Data ----
+family <- "binomial"
+data <- rglmm(beta = beta, tau = tau, family = family,
+              confounding = "none", neigh = neigh_RJ,
+              scale = TRUE)
+
+##-- Models ----
+sglm_mod <- rsglmm(data = data, formula = Y ~ X1 + X2,
+                   family = family,
+                   proj = "none", nsamp = 1000)
+
+sglmm_mod <- rsglmm(data = data, formula = Y ~ X1 + X2,
+                    area = "reg", model = "besag", neigh = neigh_RJ,
+                    family = family,
+                    proj = "none", nsamp = 1000)
+
+rglmm_mod <- rsglmm(data = data, formula = Y ~ X1 + X2,
+                    area = "reg", model = "restricted_besag", neigh = neigh_RJ,
+                    family = family,
+                    proj = "rhz", nsamp = 1000)
+
+sglm_mod$unrestricted$summary_fixed
+sglmm_mod$unrestricted$summary_fixed
+rglmm_mod$unrestricted$summary_fixed
+rglmm_mod$restricted$summary_fixed
+
+sglm_mod$unrestricted$summary_hyperpar
+sglmm_mod$unrestricted$summary_hyperpar
+
 }
