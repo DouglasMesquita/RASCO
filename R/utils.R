@@ -272,6 +272,8 @@ update_inla_formula <- function(formula) {
   terms_f <- attr(terms_formula, "specials")$f - 1
 
   pos_restricted <- grep(x = terms_labels, pattern = "restricted")
+  pos_unrestricted <- grep(x = terms_labels,
+                           pattern = "(\\s|=)(iid|besag|besag2|besagproper|besagproper2)")
 
   ##-- Updating formula
   if(length(pos_restricted) > 0){
@@ -293,15 +295,26 @@ update_inla_formula <- function(formula) {
                                                  x = terms_labels[terms_f[i]])), envir = parent.frame())
     }
 
-    ##-- Restricted components
+    ##-- Restricted and unrestricted components
     list_models <- lapply(var_f, "[", c("label", "model", "n"))
+
     list_restricted <- list_models[terms_f %in% pos_restricted]
     var_restricted <- unlist(lapply(list_restricted, FUN = "[[", "label"))
     size_restricted <- unlist(lapply(list_restricted, FUN = "[[", "n"))
+
+    list_unrestricted <- list_models[terms_f %in% pos_unrestricted]
+    var_unrestricted <- unlist(lapply(list_unrestricted, FUN = "[[", "label"))
+    size_unrestricted <- unlist(lapply(list_unrestricted, FUN = "[[", "n"))
   } else{
     var_restricted <- NULL
     size_restricted <- NULL
+    var_unrestricted <- NULL
+    size_unrestricted <- NULL
   }
 
-  return(list(formula = formula_new, var_restricted = var_restricted, size_restricted = size_restricted))
+  return(list(formula = formula_new,
+              var_restricted = var_restricted,
+              vars_unrestricted = var_unrestricted,
+              size_restricted = size_restricted,
+              size_unrestricted = size_unrestricted))
 }
