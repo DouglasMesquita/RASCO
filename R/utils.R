@@ -273,7 +273,7 @@ update_inla_formula <- function(formula) {
 
   pos_restricted <- grep(x = terms_labels, pattern = "restricted")
   pos_unrestricted <- grep(x = terms_labels,
-                           pattern = "(\\s|=)(iid|besag|besag2|besagproper|besagproper2)")
+                           pattern = "\"(iid|besag|besag2|besagproper|besagproper2)")
 
   ##-- Updating formula
   if(length(pos_restricted) > 0){

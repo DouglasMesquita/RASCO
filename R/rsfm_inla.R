@@ -129,11 +129,10 @@ rsfm_inla <- function(f, data, family, W = NULL,
     }
 
     W_ast <- t(W_ast)
+    W_ast_u <- W_samp_u
 
     colnames(W_ast) <- colnames(W_samp_r)
     colnames(Z_ast) <- paste("Z", 1:ncol(Z_ast), sep = "_")
-
-    W_ast_u <- W_samp_u
 
     time_end_correction <- Sys.time()
   } else {
@@ -164,7 +163,8 @@ rsfm_inla <- function(f, data, family, W = NULL,
                                                       colnames(Z_ast))
     if(length(reg_name_u) == 0) names(sample_ast) <- c(colnames(hyperpar_samp),
                                                        fixed_vars,
-                                                       colnames(W_samp_r))
+                                                       colnames(W_samp_r),
+                                                       colnames(Z_ast))
   } else {
     sample_ast <- NULL
   }
