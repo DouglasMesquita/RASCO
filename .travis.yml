@@ -5,8 +5,10 @@ sudo: required
 cache: packages
 warnings_are_errors: false
 
-os: linux
-  dist: bionic
+jobs:
+  include:
+    - os: linux
+      dist: bionic
 
 r_build_args: "--no-build-vignettes"
 r_check_args: "--no-build-vignettes"
