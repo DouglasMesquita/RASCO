@@ -1,4 +1,5 @@
-# RASCO 0.0.2
+# RASCO 0.0.3
 
-* Restricted Spatial Frailty models - with examples
-* Restricted Shared Component models - with examples
+* Restricted Spatial Frailty models using formula instead of column names as before
+* Restricted Spatial Generalized Linear Mixed models is now available
+
