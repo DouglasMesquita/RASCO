@@ -5,21 +5,21 @@
 \title{Restricted Spatial Generalized Linear Mixed model in INLA}
 \usage{
 rsglmm_inla(
-  f,
   data,
+  formula,
   family,
   W = NULL,
-  proj = "none",
-  nsamp = 1000,
   E = NULL,
   n = NULL,
+  proj = "none",
+  nsamp = 1000,
   ...
 )
 }
 \arguments{
-\item{f}{INLA formula ?inla.surv}
-
 \item{data}{data.frame containing, at least, \code{time}, \code{status}, \code{covariates}, \code{area} list}
+
+\item{formula}{INLA formula ?inla.surv}
 
 \item{family}{'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'}
 

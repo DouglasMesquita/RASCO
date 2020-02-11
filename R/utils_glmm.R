@@ -11,6 +11,7 @@
 #' @param control_family A list with, at least, a \code{invlink}
 #'
 #' @importFrom stats rnorm rpois rbinom
+#' @importFrom sp coordinates
 #'
 #' @export
 
@@ -30,7 +31,7 @@ rglmm <- function(beta = c(0.1, -0.1), tau = 1, family = "gaussian",
   X <- matrix(rnorm(n = ncov*n, mean = 0, sd = 1), ncol = ncov)
 
   if(confounding != "none"){
-    conf <- coordinates(neigh)[, 1]
+    conf <- sp::coordinates(neigh)[, 1]
 
     X[, ncov] <- switch(confounding,
                         "linear" = conf,

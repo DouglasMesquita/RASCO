@@ -52,32 +52,52 @@
 rsglmm <- function(data, formula,
                    area = NULL, model = NULL, neigh = NULL,
                    family, proj = "none", nsamp = 1000,
-                   approach = "inla", ...) {
+                   approach = "inla",
+                   E = NULL, n = NULL,
+                   ...) {
 
   if(missing(formula)) stop("You must provide the formula")
   if(!proj %in% c("none", "rhz", "spock")) stop("proj must be 'none', 'rhz' or 'spock'")
 
+  f_fixed <- format(formula)
+
   if(!is.null(area)) {
-    W <- nb2mat(neighbours = poly2nb(neigh), style = "B")
+    if(proj == "spock" & grepl(x = model, pattern = "restricted")) {
+      X <- model.matrix(object = formula[-2], data = data)
+
+      if(nrow(X) > length(neigh)) {
+        message(sprintf("SPOCK still con't deal with different lengths of X and %s. Setting proj = 'rhz' instead. \n", area))
+        proj <- 'rhz'
+        W <- nb2mat(neighbours = poly2nb(neigh), style = "B")
+      } else{
+        neigh <- spock(X = X, map = neigh)
+        W <- nb2mat(neighbours = neigh, style = "B")
+      }
+    } else {
+      W <- nb2mat(neighbours = poly2nb(neigh), style = "B")
+    }
   } else {
     W <- NULL
   }
 
-  f_fixed <- format(formula)
-
   ##-- INLA
   if(approach == "inla") {
     if(!is.null(area)) {
-      f_random <- sprintf("f(%s, model = '%s', graph = %s)", area, model, "W")
+      f_random <- sprintf("f(%s,
+                             model = '%s',
+                             graph = %s,
+                             hyper = list(prec = list(prior = 'loggamma',
+                                                      param = c(0.5, 0.0005))))",
+                          area, model, "W")
       f_pred <- paste(f_fixed, f_random, sep = " + ")
     } else{
       f_pred <- f_fixed
     }
 
-    f <- gsub(x = f_pred, pattern = "^surv\\(", replacement = "INLA::inla.surv(")
-    f <- as.formula(f)
+    formula <- gsub(x = f_pred, pattern = "^surv\\(", replacement = "INLA::inla.surv(")
+    formula <- as.formula(formula)
 
-    out <- rsglmm_inla(f, data, W = W, family, proj = proj, nsamp = nsamp, ...)
+    out <- rsglmm_inla(data = data, formula = formula, W = W, family, proj = proj, nsamp = nsamp, E = E, n = n, ...)
   }
 
   ##-- BUGS
