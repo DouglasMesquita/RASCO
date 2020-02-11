@@ -5,7 +5,7 @@ warnings_are_errors: false
 compiler:
   - gcc
 os:
-- linux
+  - linux
 
 r_build_args: "--no-build-vignettes"
 r_check_args: "--no-build-vignettes"
@@ -16,6 +16,7 @@ before_install:
   - sudo apt-get -y install xorg
   - sudo apt-get -y install libx11-dev
   - sudo apt-get -y install libglu1-mesa-dev
+  - sudo apt-get -y install libc6-dev
   - Rscript -e 'install.packages("devtools", repos = "http://cran.rstudio.com")'
   - Rscript -e 'install.packages("INLA", repos=c(getOption("repos"), INLA="https://inla.r-inla-download.org/R/stable"), dep=TRUE)'
 
