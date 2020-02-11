@@ -83,10 +83,10 @@ rsfm <- function(data, formula,
       f_pred <- f_fixed
     }
 
-    f <- gsub(x = f_pred, pattern = "^surv\\(", replacement = "INLA::inla.surv(")
-    f <- as.formula(f)
+    formula <- gsub(x = f_pred, pattern = "^surv\\(", replacement = "INLA::inla.surv(")
+    formula <- as.formula(formula)
 
-    out <- rsfm_inla(f, data, W = W, family, proj = proj, fast = fast, nsamp = nsamp, ...)
+    out <- rsfm_inla(data = data, formula = formula, W = W, family, proj = proj, fast = fast, nsamp = nsamp, ...)
   }
 
   ##-- BUGS

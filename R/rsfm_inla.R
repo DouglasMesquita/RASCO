@@ -2,11 +2,11 @@
 #'
 #' @description Fit a Restricted Spatial Frailty model using INLA
 #'
-#' @usage rsfm_inla(f, data, family, W = NULL,
+#' @usage rsfm_inla(data, formula, family, W = NULL,
 #'                  proj = "none", fast = TRUE, nsamp = 1000, ...)
 #'
-#' @param f INLA formula ?inla.surv
 #' @param data data.frame containing, at least, \code{time}, \code{status}, \code{covariates}, \code{area} list
+#' @param formula INLA formula ?inla.surv
 #' @param family 'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'
 #' @param W Adjacency matrix
 #' @param proj 'none', 'rhz' or 'spock'
@@ -21,7 +21,7 @@
 #'
 #' @export
 
-rsfm_inla <- function(f, data, family, W = NULL,
+rsfm_inla <- function(data, formula, family, W = NULL,
                       proj = "none", fast = TRUE, nsamp = 1000, ...) {
   ##-- TODO:
   ##---- more than one random effect
@@ -41,9 +41,9 @@ rsfm_inla <- function(f, data, family, W = NULL,
                    stop(family, "family is not implemented."))
 
   ##-- Updating formula
-  inla_formula <- update_inla_formula(formula = f)
+  inla_formula <- update_inla_formula(formula = formula)
 
-  f <- inla_formula$formula
+  formula <- inla_formula$formula
 
   reg_name_r <- inla_formula$var_restricted
   reg_size_r <- inla_formula$size_restricted
@@ -53,7 +53,7 @@ rsfm_inla <- function(f, data, family, W = NULL,
 
   ##-- Model
   time_start_inla <- Sys.time()
-  mod <- inla(formula = f, data = data, family = family,
+  mod <- inla(formula = formula, data = data, family = family,
               control.compute = list(config = TRUE), ...)
 
   model_sample <- inla.posterior.sample(result = mod, n = nsamp, use.improved.mean = TRUE)

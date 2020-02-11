@@ -4,13 +4,13 @@
 \alias{rsfm_inla}
 \title{Restricted Spatial Frailty Model in INLA}
 \usage{
-rsfm_inla(f, data, family, W = NULL,
+rsfm_inla(data, formula, family, W = NULL,
                  proj = "none", fast = TRUE, nsamp = 1000, ...)
 }
 \arguments{
-\item{f}{INLA formula ?inla.surv}
-
 \item{data}{data.frame containing, at least, \code{time}, \code{status}, \code{covariates}, \code{area} list}
+
+\item{formula}{INLA formula ?inla.surv}
 
 \item{family}{'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'}
 
