@@ -8,12 +8,14 @@ warnings_are_errors: false
 r_build_args: "--no-build-vignettes"
 r_check_args: "--no-build-vignettes"
 
+os: linux
+  dist: bionic
+
 before_install:
   - sudo apt-get -y install libudunits2-dev
   - sudo apt-get -y install libgdal-dev
   - sudo apt-get -y install libgfortran4
   - Rscript -e 'install.packages("INLA", repos=c(getOption("repos"), INLA="https://inla.r-inla-download.org/R/testing"), dep=TRUE)'
-  - Rscript -e 'INLA:::inla.dynload.workaround()'
 
 after_success:
   - Rscript -e 'library(covr); codecov()'
