@@ -21,6 +21,7 @@
 #' @param scale Scale X. TRUE or FALSE
 #'
 #' @importFrom stats rnorm rgamma
+#' @importFrom sp coordinates
 #'
 #' @export
 
@@ -60,7 +61,7 @@ rsurv <- function(n_id, coefs = c(0.1, 0.4, -0.3),
 
     if(is.null(X) & confounding != "none"){
       if(!is.null(neigh)){
-        conf_var <- scale(rnorm(n = N, rowSums(coordinates(neigh)[pos_reg, ]), sd = sd_x))
+        conf_var <- scale(rnorm(n = N, rowSums(sp::coordinates(neigh)[pos_reg, ]), sd = sd_x))
       } else{
         conf_var <- rnorm(n = N, mean = eps[pos_reg], sd = sd_x)
       }

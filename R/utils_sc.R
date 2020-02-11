@@ -15,6 +15,7 @@
 #' @param scale Scale covariates? TRUE or FALSE
 #'
 #' @importFrom stats rnorm rpois
+#' @importFrom sp coordinates
 #'
 #' @export
 
@@ -35,7 +36,7 @@ rshared <- function(alpha_1 = 0, alpha_2 = 0, beta_1 = c(0.1, -0.1), beta_2 = c(
   X2 <- matrix(rnorm(n = ncov2*n, mean = 0, sd = 1), ncol = ncov2)
 
   if(confounding != "none"){
-    conf <- coordinates(neigh)[, 1]
+    conf <- sp::coordinates(neigh)[, 1]
 
     X1[, ncov1] <- switch(confounding,
                           "linear" = conf,

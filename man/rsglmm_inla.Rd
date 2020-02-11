@@ -4,7 +4,17 @@
 \alias{rsglmm_inla}
 \title{Restricted Spatial Generalized Linear Mixed model in INLA}
 \usage{
-rsglmm_inla(f, data, family, W = NULL, proj = "none", nsamp = 1000, ...)
+rsglmm_inla(
+  f,
+  data,
+  family,
+  W = NULL,
+  proj = "none",
+  nsamp = 1000,
+  E = NULL,
+  n = NULL,
+  ...
+)
 }
 \arguments{
 \item{f}{INLA formula ?inla.surv}
