@@ -11,6 +11,7 @@ r_check_args: "--no-build-vignettes"
 before_install:
   - sudo apt-get -y install libudunits2-dev
   - sudo apt-get -y install libgdal-dev
+  - sudo apt-get -y install libgfortran4
   - Rscript -e 'install.packages("INLA", repos=c(getOption("repos"), INLA="https://inla.r-inla-download.org/R/testing"), dep=TRUE)'
   - Rscript -e 'INLA:::inla.dynload.workaround()'
 
