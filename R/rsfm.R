@@ -189,7 +189,9 @@ rsfm <- function(data, formula,
     writeLines(text = text_model, con = model_file)
 
     covariates <- all.vars(formula[-2])
-    out <- rsfm_mcmc(model = model_file, data = mcmc_data, inits = inits, parameters = parameters, covariates = covariates, area = area,
+    out <- rsfm_mcmc(model = model_file, data = mcmc_data,
+                     inits = inits, parameters = parameters,
+                     covariates = covariates, area = area,
                      proj = proj, fast = fast, nsamp = nsamp, ...)
   }
 

@@ -181,7 +181,7 @@ rsglmm_inla <- function(data, formula, family, W = NULL,
   out$unrestricted$summary_fixed <- chain_summary(obj = beta_samp)
   out$unrestricted$summary_hyperpar <- chain_summary(obj = hyperpar_samp)
   out$unrestricted$summary_random <- chain_summary(obj = cbind(W_samp_r, W_samp_u))
-  out$unrestricted$out <- mod
+  out$out <- mod
 
   out$restricted <- list()
   out$restricted$sample <- sample_ast
