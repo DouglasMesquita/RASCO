@@ -8,12 +8,10 @@ warnings_are_errors: false
 r_build_args: "--no-build-vignettes"
 r_check_args: "--no-build-vignettes"
 
-r_packages:
-  - https://inla.r-inla-download.org/R/testing/src/contrib/INLA_19.12.10.tar.gz
-
 before_install:
   - sudo apt-get -y install libudunits2-dev
   - sudo apt-get -y install libgdal-dev
+  - Rscript -e 'install.packages("INLA", repos=c(getOption("repos"), INLA="https://inla.r-inla-download.org/R/testing"), dep=TRUE)'
 
 after_success:
   - Rscript -e 'library(covr); codecov()'
