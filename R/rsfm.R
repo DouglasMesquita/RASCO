@@ -90,6 +90,7 @@ rsfm <- function(data, formula, family,
                  ...) {
 
   if(is.null(formula)) stop("You must provide a formula for the fixed effects")
+  if(!proj %in% c("none", "rhz")) stop("proj must be 'none' or 'rhz'")
 
   if(!is.null(area)) {
     W <- nb2mat(neighbours = poly2nb(neigh), style = "B")

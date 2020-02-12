@@ -1,4 +1,4 @@
-test_that("rscm_options", {
+test_that("rscm options", {
   library(spdep)
 
   set.seed(123456)
@@ -51,6 +51,7 @@ test_that("rscm_options", {
                       area = "reg", neigh = neigh_RJ,
                       proj = "spock")
 
+  testthat::skip_on_appveyor()
   testthat::expect_equal(object = simple_model$summary_hyperpar, NULL)
   testthat::expect_equal(object = rownames(zip_model$summary_random), NULL)
   testthat::expect_equal(object = rownames(zip_model$summary_hyperpar), "zero-probability parameter for zero-inflated poisson_0[2]")
@@ -68,6 +69,14 @@ test_that("rscm_options", {
   testthat::expect_error(
     rscm(data = data,
          formula1 = Y1 ~ X11 + X12,
+         family = c("poisson", "poisson"),
+         E1 = E1, E2 = E2,
+         area = "reg", neigh = neigh_RJ,
+         proj = "spock", priors = list(prior_prec = c(0.5, 0.005)))
+  )
+  testthat::expect_error(
+    rscm(data = data,
+         formula2 = Y2 ~ X21 + X12,
          family = c("poisson", "poisson"),
          E1 = E1, E2 = E2,
          area = "reg", neigh = neigh_RJ,

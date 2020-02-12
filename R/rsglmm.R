@@ -104,7 +104,10 @@ rsglmm <- function(data, formula, family,
 
   if(missing(formula)) stop("You must provide the formula")
   if(!proj %in% c("none", "rhz", "hh", "spock")) stop("proj must be 'none', 'rhz', 'hh' or 'spock'")
-  if(proj == "hh" & approach == "inla") message("hh is only implemented in INLA. Changing approach to 'inla'\n")
+  if(proj == "hh" & approach == "inla") {
+    message("hh is only implemented in MCMC. Changing approach to 'mcmc'")
+    approach <- 'mcmc'
+  }
 
   f_fixed <- format(formula)
 
@@ -113,7 +116,7 @@ rsglmm <- function(data, formula, family,
       X <- model.matrix(object = formula[-2], data = data)
 
       if(nrow(X) > length(neigh)) {
-        message(sprintf("SPOCK still con't deal with different lengths of X and %s. Setting proj = 'rhz' instead. \n", area))
+        message(sprintf("SPOCK still can't deal with different lengths of X and %s. Setting proj = 'rhz' instead.", area))
         proj <- 'rhz'
         W <- nb2mat(neighbours = poly2nb(neigh), style = "B")
       } else{
@@ -125,6 +128,12 @@ rsglmm <- function(data, formula, family,
     }
   } else {
     W <- NULL
+  }
+
+  if(!is.null(area) && (nrow(W) < nrow(data) & proj == 'hh')) {
+    message(sprintf("hh still can't deal with different lengths of X and %s. Setting proj = 'rhz' and approach = 'inla' instead.", area))
+    proj <- "rhz"
+    approach <- 'inla'
   }
 
   ##-- INLA
@@ -149,7 +158,7 @@ rsglmm <- function(data, formula, family,
 
   ##-- BUGS
   if(approach == "mcmc") {
-    if(proj != "hh") message("Just hh method is available for now. Changing proj to 'hh' \n")
+    if(proj != "hh") message("Just hh method is available for now. Changing proj to 'hh'")
     proj <- 'hh'
 
     if(family == "nbinomial") family <- "negbinomial"
