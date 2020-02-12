@@ -9,7 +9,8 @@
 status](https://travis-ci.org/DouglasMesquita/RASCO.svg?branch=master)](https://travis-ci.org/DouglasMesquita/RASCO)
 [![AppVeyor build
 status](https://ci.appveyor.com/api/projects/status/github/DouglasMesquita/RASCO?branch=master&svg=true)](https://ci.appveyor.com/project/DouglasMesquita/RASCO)
-<!-- [![Codecov test coverage](https://codecov.io/gh/DouglasMesquita/FLAMES/branch/master/graph/badge.svg)](https://codecov.io/gh/DouglasMesquita/FLAMES?branch=master) -->
+[![Codecov test
+coverage](https://codecov.io/gh/DouglasMesquita/RASCO/branch/master/graph/badge.svg)](https://codecov.io/gh/DouglasMesquita/RASCO?branch=master)
 <!-- badges: end -->
 
 ## Overview
@@ -72,24 +73,24 @@ rglmm_mod <- rsglmm(data = data, formula = Y ~ X1 + X2,
 
 sglm_mod$unrestricted$summary_fixed
 #>                  mean    median       sd     lower    upper
-#> (Intercept)  0.287840  0.286986 0.088930  0.128059 0.466437
-#> X1          -0.107546 -0.107553 0.087970 -0.270789 0.068594
-#> X2           0.424493  0.421990 0.089728  0.243294 0.599016
+#> (Intercept)  0.290110  0.292490 0.093569  0.100859 0.455292
+#> X1          -0.111292 -0.112162 0.084320 -0.278974 0.048427
+#> X2           0.428306  0.426124 0.093354  0.259872 0.622916
 sglmm_mod$unrestricted$summary_fixed
 #>                  mean    median       sd     lower    upper
-#> (Intercept)  0.195514  0.200821 0.107322 -0.026039 0.389527
-#> X1          -0.103671 -0.099070 0.091310 -0.291783 0.058065
-#> X2           0.550647  0.533660 0.263821  0.026987 1.104850
+#> (Intercept)  0.187974  0.192661 0.111995 -0.020120 0.426281
+#> X1          -0.099619 -0.100398 0.093043 -0.289350 0.075949
+#> X2           0.550247  0.525210 0.259846  0.084583 1.094470
 rglmm_mod$unrestricted$summary_fixed
 #>                  mean    median       sd     lower    upper
-#> (Intercept)  0.194461  0.197492 0.114990 -0.032533 0.420285
-#> X1          -0.104303 -0.105881 0.093481 -0.299888 0.070544
-#> X2           0.548703  0.519262 0.274365  0.049196 1.143555
+#> (Intercept)  0.195614  0.198452 0.109912 -0.027891 0.398912
+#> X1          -0.105183 -0.105355 0.092058 -0.275318 0.088454
+#> X2           0.576132  0.547001 0.267208  0.063450 1.136711
 rglmm_mod$restricted$summary_fixed
 #>                  mean    median       sd     lower    upper
-#> (Intercept)  0.194461  0.197492 0.114990 -0.032533 0.420285
-#> X1          -0.120101 -0.120904 0.087624 -0.296421 0.048025
-#> X2           0.428989  0.430657 0.101304  0.227754 0.618744
+#> (Intercept)  0.195614  0.198452 0.109912 -0.027891 0.398912
+#> X1          -0.119478 -0.122081 0.085638 -0.282163 0.049612
+#> X2           0.433391  0.436773 0.100427  0.227558 0.613935
 
 sglmm_mod$unrestricted$summary_hyperpar
 #>                       mean   median       sd   lower    upper
@@ -104,8 +105,8 @@ inflation
 SVIF(rglmm_mod$restricted, rglmm_mod$unrestricted)
 #>     parameter      VIF
 #> 1 (Intercept) 1.000000
-#> 2          X1 1.138153
-#> 3          X2 7.335069
+#> 2          X1 1.155553
+#> 3          X2 7.079424
 ```
 
 ## Restricted shared component models
@@ -159,20 +160,20 @@ rscm_mod <- rscm(data = data,
 ##-- Summary
 scm_mod$summary_fixed
 #>             mean    median       sd     lower     upper
-#> alpha1  0.491486  0.491392 0.052139  0.384812  0.587316
-#> alpha2  0.110576  0.109214 0.052267  0.015981  0.219435
-#> X11_1  -0.471922 -0.470421 0.094502 -0.646395 -0.277691
-#> X12_1  -0.603204 -0.598649 0.506690 -1.496355  0.479589
-#> X21_2  -0.899790 -0.898724 0.053795 -1.003211 -0.791118
-#> X12_2  -0.361042 -0.356485 0.226431 -0.795899  0.105931
+#> alpha1  0.488101  0.489665 0.053849  0.388463  0.599593
+#> alpha2  0.108551  0.109165 0.050546  0.009578  0.205503
+#> X11_1  -0.476797 -0.476222 0.095401 -0.653551 -0.283833
+#> X12_1  -0.582682 -0.596267 0.507903 -1.591821  0.375221
+#> X21_2  -0.900741 -0.900096 0.055479 -1.012364 -0.797356
+#> X12_2  -0.350218 -0.346017 0.221059 -0.840420  0.035665
 rscm_mod$summary_fixed
 #>             mean    median       sd     lower     upper
-#> alpha1  0.527391  0.527986 0.049138  0.429674  0.621838
-#> alpha2  0.116545  0.115311 0.052402  0.007486  0.211752
-#> X11_1  -0.556035 -0.557181 0.095442 -0.733661 -0.366424
-#> X12_1  -0.256408 -0.257747 0.112656 -0.465997 -0.016378
-#> X21_2  -0.933321 -0.932266 0.050189 -1.034959 -0.833360
-#> X12_2  -0.138244 -0.139146 0.054773 -0.256340 -0.038614
+#> alpha1  0.526091  0.525487 0.050711  0.433985  0.622907
+#> alpha2  0.116017  0.116075 0.053132  0.011229  0.216486
+#> X11_1  -0.552423 -0.554767 0.095959 -0.729508 -0.370794
+#> X12_1  -0.254576 -0.255629 0.107115 -0.478685 -0.064111
+#> X21_2  -0.934883 -0.935380 0.049972 -1.046773 -0.847449
+#> X12_2  -0.139080 -0.137913 0.055438 -0.242766 -0.032737
 
 scm_mod$summary_hyperpar
 #>                           mean    median       sd    lower     upper
@@ -195,12 +196,12 @@ rscm_mod$summary_hyperpar
 ``` r
 SVIF(rscm_mod, scm_mod)
 #>   parameter        VIF
-#> 1    alpha1  1.1258757
-#> 2    alpha2  0.9948542
-#> 3     X11_1  0.9803992
-#> 4     X12_1 20.2290744
-#> 5     X21_2  1.1488590
-#> 6     X12_2 17.0898681
+#> 1    alpha1  1.1275893
+#> 2    alpha2  0.9050264
+#> 3     X11_1  0.9884038
+#> 4     X12_1 22.4833474
+#> 5     X21_2  1.2325478
+#> 6     X12_2 15.9001527
 ```
 
 ## Restricted spatial frailty models
@@ -236,30 +237,30 @@ rsfm_mod <- rsfm(data = data, area = "reg",
 
 weibull_mod$unrestricted$summary_fixed
 #>                  mean    median       sd     lower     upper
-#> (Intercept) -0.459192 -0.459147 0.074733 -0.614491 -0.320534
-#> X1           0.369517  0.369172 0.072660  0.219651  0.505794
-#> X2          -0.651012 -0.652905 0.085803 -0.815979 -0.482628
+#> (Intercept) -0.458985 -0.456183 0.074568 -0.616267 -0.325996
+#> X1           0.368564  0.369362 0.073571  0.227852  0.504217
+#> X2          -0.652584 -0.653087 0.085142 -0.821409 -0.495560
 rsfm_mod$unrestricted$summary_fixed
 #>                  mean    median       sd     lower     upper
-#> (Intercept) -0.434588 -0.431110 0.077017 -0.585203 -0.280597
-#> X1           0.369686  0.367476 0.074903  0.220007  0.514144
-#> X2          -0.673414 -0.676832 0.236477 -1.184048 -0.239608
+#> (Intercept) -0.430938 -0.429452 0.077328 -0.594945 -0.291085
+#> X1           0.368916  0.370432 0.077681  0.201439  0.505782
+#> X2          -0.653416 -0.662574 0.236759 -1.107735 -0.149682
 rsfm_mod$restricted$summary_fixed
 #>                  mean    median       sd     lower     upper
-#> (Intercept) -0.437905 -0.434835 0.076374 -0.595776 -0.295067
-#> X1           0.375699  0.374915 0.073978  0.244355  0.535687
-#> X2          -0.692499 -0.690008 0.084389 -0.862317 -0.538028
+#> (Intercept) -0.434229 -0.434032 0.077096 -0.599067 -0.297298
+#> X1           0.374846  0.377902 0.077744  0.225373  0.527650
+#> X2          -0.687850 -0.691893 0.084236 -0.861404 -0.539015
 ```
 
 ``` r
 SVIF(weibull_mod$unrestricted, rsfm_mod$unrestricted)
 #>     parameter      VIF
-#> 1 (Intercept) 1.062058
-#> 2          X1 1.062693
-#> 3          X2 7.595789
+#> 1 (Intercept) 1.075396
+#> 2          X1 1.114850
+#> 3          X2 7.732596
 SVIF(weibull_mod$unrestricted, rsfm_mod$restricted)
 #>     parameter       VIF
-#> 1 (Intercept) 1.0443985
-#> 2          X1 1.0366076
-#> 3          X2 0.9673124
+#> 1 (Intercept) 1.0689532
+#> 2          X1 1.1166587
+#> 3          X2 0.9788311
 ```
