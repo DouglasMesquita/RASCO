@@ -11,7 +11,7 @@ install:
   ps: Bootstrap
 
 cache:
-  - C:\RLibrary
+  - my_cached_folder -> cleanup-cache.txt
 
 environment:
   NOT_CRAN: true
