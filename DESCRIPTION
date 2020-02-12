@@ -18,7 +18,7 @@ Imports:
 Suggests:
     covr,
     testthat (>= 2.1.0)
-Additional_repositories: https://inla.r-inla-download.org/R/stable/
+Remotes: github::inbo/INLA
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
