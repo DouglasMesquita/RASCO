@@ -2,8 +2,8 @@
 #'
 #' @description Fit a Restricted Spatial Generalized Linear Mixed model
 #'
-#' @usage rsglmm(data, formula,
-#'               area = NULL, model = NULL, neigh = NULL,
+#' @usage rsglmm(data, formula, E, n,
+#'               area = NULL, neigh = NULL, model = NULL,
 #'               family, proj = "none", nsamp = 1000,
 #'               approach = "inla", ...)
 #'
@@ -12,8 +12,8 @@
 #' @param E Expected counts for poisson data. Default = 1 for all sample units
 #' @param n N trails for binomial data. Default = 1 for all sample units
 #' @param area Areal variable name in data
-#' @param model Spatial model adopted: "besag" or "restricted_besag", for example. The model availability will depend on the approach
 #' @param neigh Neighborhood structure. A \code{SpatialPolygonsDataFrame} object
+#' @param model Spatial model adopted: "besag" or "restricted_besag", for example. The model availability will depend on the approach
 #' @param family Some allowed families are: 'gaussian', 'poisson' and 'binomial'. The family availability will depend on the approach
 #' @param proj 'none', 'rhz', 'hh' or 'spock'
 #' @param nsamp Number of samples desired. Default = 1000
@@ -69,6 +69,7 @@
 #' rglmm_hh$restricted$summary_fixed
 #'
 #' @importFrom ngspatial sparse.sglmm
+#' @importFrom stats model.matrix update.formula
 #'
 #' @return Restricted model
 #'
@@ -76,7 +77,7 @@
 
 rsglmm <- function(data, formula,
                    E = NULL, n = NULL,
-                   area = NULL, model = NULL, neigh = NULL,
+                   area = NULL, neigh = NULL, model = NULL,
                    family, proj = "none", nsamp = 1000,
                    approach = "inla",
                    ...) {

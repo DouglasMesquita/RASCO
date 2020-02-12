@@ -4,8 +4,8 @@
 \alias{rsglmm}
 \title{Restricted Spatial Generalized Linear Mixed model}
 \usage{
-rsglmm(data, formula,
-              area = NULL, model = NULL, neigh = NULL,
+rsglmm(data, formula, E, n,
+              area = NULL, neigh = NULL, model = NULL,
               family, proj = "none", nsamp = 1000,
               approach = "inla", ...)
 }
@@ -20,9 +20,9 @@ rsglmm(data, formula,
 
 \item{area}{Areal variable name in data}
 
-\item{model}{Spatial model adopted: "besag" or "restricted_besag", for example. The model availability will depend on the approach}
-
 \item{neigh}{Neighborhood structure. A \code{SpatialPolygonsDataFrame} object}
+
+\item{model}{Spatial model adopted: "besag" or "restricted_besag", for example. The model availability will depend on the approach}
 
 \item{family}{Some allowed families are: 'gaussian', 'poisson' and 'binomial'. The family availability will depend on the approach}
 

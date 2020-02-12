@@ -17,6 +17,7 @@
 #' @return INLA object with corrected parameters
 #'
 #' @import INLA
+#' @importFrom stats offset
 #'
 #' @export
 
