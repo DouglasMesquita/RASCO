@@ -16,7 +16,8 @@ Imports:
     spdep,
     ngspatial
 Suggests:
-    covr
+    covr,
+    testthat (>= 2.1.0)
 Additional_repositories: https://inla.r-inla-download.org/R/stable/
 License: GPL-2
 Encoding: UTF-8
