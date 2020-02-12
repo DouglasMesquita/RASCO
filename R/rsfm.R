@@ -7,17 +7,17 @@
 #'             family, proj = "none", fast = TRUE, nsamp = 1000,
 #'             approach = "inla", ...)
 #'
-#' @param data data.frame containing, at least, \code{time}, \code{event}, \code{covariates}, \code{area} list
+#' @param data data.frame containing the covariates in formula and area if necessary
 #' @param formula A formula in the format surv(time, time2, event) ~ X1 + X2
 #' @param area Column of data specifying the region of each individual
-#' @param model Spatial model adopted: "besag" or  "restricted_besag"
+#' @param model Spatial model adopted: "besag" or  "restricted_besag", for example
 #' @param neigh Neighborhood structure. A \code{SpatialPolygonsDataFrame} object
 #' @param family 'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'
 #' @param proj 'none', 'rhz' or 'spock'
 #' @param fast To use the reduction operator
 #' @param nsamp Sample size to use the projection approach
 #' @param approach 'inla' or 'mcmc'
-#' @param ... Other parameters used in ?inla or ?bugs
+#' @param ... Other parameters used in ?INLA::inla or ?R2OpenBUGS::bugs
 #'
 #' @examples
 #' set.seed(1)
