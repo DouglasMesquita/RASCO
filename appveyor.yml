@@ -25,7 +25,7 @@ environment:
       R_ARCH: i386
 
 before_build:
-  cmd: Rscript -e 'install.packages("INLA", repos=c(getOption("repos"), INLA="https://inla.r-inla-download.org/R/stable"), dep=TRUE)'
+  cmd: Rscript -e "install.packages('INLA', repos=c(getOption('repos'), INLA='https://inla.r-inla-download.org/R/stable'), dep=TRUE)"
 
 # Adapt as necessary starting from here
 
