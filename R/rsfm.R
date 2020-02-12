@@ -2,25 +2,30 @@
 #'
 #' @description Fit a Restricted Spatial Frailty model
 #'
-#' @usage rsfm(data, formula, area = NULL,
+#' @usage rsfm(data, formula, family, area = NULL,
 #'             model = NULL, neigh = NULL,
-#'             family, proj = "none", fast = TRUE, nsamp = 1000,
-#'             approach = "inla", ...)
+#'             proj = "none", nsamp = 1000,
+#'             fast = TRUE, approach = "inla", priors,
+#'             ...)
 #'
-#' @param data data.frame containing the covariates in formula and area if necessary
-#' @param formula A formula in the format surv(time, time2, event) ~ X1 + X2
-#' @param area Column of data specifying the region of each individual
-#' @param model Spatial model adopted: "besag" or  "restricted_besag", for example
-#' @param neigh Neighborhood structure. A \code{SpatialPolygonsDataFrame} object
-#' @param family 'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'
-#' @param proj 'none', 'rhz' or 'spock'
-#' @param fast To use the reduction operator
-#' @param nsamp Sample size to use the projection approach
-#' @param approach 'inla' or 'mcmc'
-#' @param ... Other parameters used in ?INLA::inla or ?R2OpenBUGS::bugs
+#' @param data an data frame or list containing the variables in the model.
+#' @param formula an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.
+#' @param family 'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'.
+#' @param area areal variable name in \code{data}.
+#' @param model spatial model adopted. Examples: "besag", "besag2" or "restricted_besag". See INLA::inla.list.models() for other models.
+#' @param neigh neighborhood structure. A \code{SpatialPolygonsDataFrame} object.
+#' @param proj 'none' or 'rhz'.
+#' @param nsamp number of desired. samples Default = 1000.
+#' @param fast TRUE to use the reduction operator.
+#' @param approach 'inla' or 'mcmc'. 'mcmc' has less model options.
+#' @param priors a list containing:
+#'     \itemize{
+#'        \item prior_prec: a vector of size two containing shape and scale for the gamma distribution applied for model precision
+#'     }
+#' @param ... other parameters used in ?INLA::inla or ?R2OpenBUGS::bugs
 #'
 #' @examples
-#' set.seed(1)
+#' set.seed(123456)
 #'
 #' ##-- Spatial structure
 #' data("neigh_RJ")
@@ -42,27 +47,47 @@
 #' ##-- Models
 #' weibull_inla <- rsfm(data = data,
 #'                      formula = surv(time = L, event = status) ~ X1 + X2,
-#'                      model = "none", family = "weibull",
+#'                      family = "weibull", model = "none",
 #'                      proj = "rhz", nsamp = 1000, approach = "inla")
 #'
-#' rsfm_inla <- rsfm(data = data, area = "reg",
+#' rsfm_inla <- rsfm(data = data,
 #'                   formula = surv(time = L, event = status) ~ X1 + X2,
-#'                   model = "restricted_besag", neigh = neigh_RJ, family = "weibull",
+#'                   family = "weibull", area = "reg",
+#'                   model = "restricted_besag", neigh = neigh_RJ,
 #'                   proj = "rhz", nsamp = 1000, approach = "inla")
 #'
 #' weibull_inla$unrestricted$summary_fixed
 #' rsfm_inla$unrestricted$summary_fixed
 #' rsfm_inla$restricted$summary_fixed
 #'
-#' @return \item{$unrestricted}{A list containing $sample, $summary_fixed, $summary_hyperpar, $summary_random, $out and $time}
-#' \item{$restricted}{A list containing $sample, $summary_fixed, $summary_hyperpar, $summary_random, $out and $time}
+#' @return \item{$unrestricted}{A list containing
+#'                                \itemize{
+#'                                   \item $sample a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed summary measures for the coefficients
+#'                                   \item $summary_hyperpar summary measures for hyperparameters
+#'                                   \item $summary_random summary measures for random quantities
+#'                                 }
+#'                              }
+#' \item{$restricted}{A list containing
+#'                                \itemize{
+#'                                   \item $sample a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed summary measures for the coefficients
+#'                                   \item $summary_hyperpar summary measures for hyperparameters
+#'                                   \item $summary_random summary measures for random quantities
+#'                                 }
+#'                              }
+#'
+#' \item{$out}{INLA or BUGS output}
+#' \item{$time}{time elapsed for fitting the model}
 #'
 #' @export
 
-rsfm <- function(data, formula,
+rsfm <- function(data, formula, family,
                  area = NULL, model = NULL, neigh = NULL,
-                 family, proj = "none", fast = TRUE, nsamp = 1000,
-                 approach = "inla", ...) {
+                 proj = "none", nsamp = 1000,
+                 fast = TRUE, approach = "inla",
+                 priors = list(prior_prec = c(0.5, 0.05)),
+                 ...) {
 
   if(is.null(formula)) stop("You must provide a formula for the fixed effects")
 
@@ -72,12 +97,20 @@ rsfm <- function(data, formula,
     W <- NULL
   }
 
+  priors <- append_list(list(prior_prec = c(0.5, 0.05)), priors)
+  prior_prec <- priors$prior_prec
+
   f_fixed <- format(formula)
 
   ##-- INLA
   if(approach == "inla") {
     if(!is.null(area)) {
-      f_random <- sprintf("f(%s, model = '%s', graph = %s)", area, model, "W")
+      f_random <- sprintf("f(%s,
+                             model = '%s',
+                             graph = %s,
+                             hyper = list(prec = list(prior = 'loggamma',
+                                                    param = c(%s, %s))))",
+                          area, model, "W", prior_prec[1], prior_prec[2])
       f_pred <- paste(f_fixed, f_random, sep = " + ")
     } else{
       f_pred <- f_fixed
@@ -136,7 +169,7 @@ rsfm <- function(data, formula,
 
       ##-- Prior
       priors_fixed <- paste0(c("beta_intercept", paste0("beta_", beta_names)), " ~ dnorm(0.0, 0.0001);", collapse = " \n ")
-      priors_hyper <- "tau ~ dgamma(0.001, 0.001); \n alpha ~ dgamma(1.0, 0.001);"
+      priors_hyper <- sprintf("tau ~ dgamma(%s, %s); \n alpha ~ dgamma(1.0, 0.001);", prior_prec[1], prior_prec[2])
 
       ##-- Initials
       l_init <- vector(mode = "list", length = 3 + length(beta_names))

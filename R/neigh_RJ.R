@@ -1,4 +1,4 @@
-#' @title Rio de Janeiro shapefile
+#' @title Rio de Janeiro's shapefile
 #'
 #' @description Rio de Janeiro's cities shape file
 #'

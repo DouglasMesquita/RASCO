@@ -5,27 +5,46 @@
 \title{Restricted Spatial Frailty Model in INLA}
 \usage{
 rsfm_inla(data, formula, family, W = NULL,
-                 proj = "none", fast = TRUE, nsamp = 1000, ...)
+                 proj = "none", nsamp = 1000, fast = TRUE,
+                 ...)
 }
 \arguments{
-\item{data}{data.frame containing, at least, \code{time}, \code{status}, \code{covariates}, \code{area} list}
+\item{data}{an data frame or list containing the variables in the model.}
 
-\item{formula}{INLA formula ?inla.surv}
+\item{formula}{a inla formula like inla.surv(time, event) ~ 1 + z + f(ind, model="iid") + f(ind2, weights, model="ar1"). This is much like the formula for a glm except that smooth or spatial terms can be added to the right hand side of the formula. See f for full details and the web site www.r-inla.org for several worked out examples. Each smooth or spatial term specified through f should correspond to separate column of the data frame data. The outcome is the output of the function inla.surv.}
 
-\item{family}{'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'}
+\item{family}{'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'.}
 
-\item{W}{Adjacency matrix}
+\item{W}{adjacency matrix.}
 
-\item{proj}{'none', 'rhz' or 'spock'}
+\item{proj}{'none' or 'rhz'.}
 
-\item{fast}{Should we use the reduction operator?}
+\item{nsamp}{number of desired. samples Default = 1000.}
 
-\item{nsamp}{Sample size to use the projection approach}
+\item{fast}{TRUE to use the reduction operator.}
 
-\item{...}{Other parameters used in ?inla}
+\item{...}{other parameters used in ?INLA::inla.}
 }
 \value{
-INLA object with corrected parameters
+\item{$unrestricted}{A list containing
+                               \itemize{
+                                  \item $sample a sample of size nsamp for all parameters in the model
+                                  \item $summary_fixed summary measures for the coefficients
+                                  \item $summary_hyperpar summary measures for hyperparameters
+                                  \item $summary_random summary measures for random quantities
+                                }
+                             }
+\item{$restricted}{A list containing
+                               \itemize{
+                                  \item $sample a sample of size nsamp for all parameters in the model
+                                  \item $summary_fixed summary measures for the coefficients
+                                  \item $summary_hyperpar summary measures for hyperparameters
+                                  \item $summary_random summary measures for random quantities
+                                }
+                             }
+
+\item{$out}{INLA output}
+\item{$time}{time elapsed for fitting the model}
 }
 \description{
 Fit a Restricted Spatial Frailty model using INLA

@@ -7,9 +7,9 @@
 cum_hexpsurv(t, rate)
 }
 \arguments{
-\item{t}{Time's vector}
+\item{t}{time's vector.}
 
-\item{rate}{Rate's vector}
+\item{rate}{rate's vector.}
 }
 \description{
 Exponential cumulative hazzards

@@ -1,29 +1,47 @@
 #' @title Restricted Spatial Frailty Model in BUGS
 #'
-#' @description Fit a Restricted Spatial Frailty model using INLA
+#' @description Fit a Restricted Spatial Frailty model using BUGS
 #'
 #' @usage rsfm_mcmc(model, data, inits, parameters, covariates, area,
-#'                  proj = "none", fast = TRUE, nsamp = 1000, burnin = 5000, thin = 10, ...)
+#'                  proj = "none", fast = TRUE, nsamp = 1000, burnin = 5000, lag = 10, ...)
 #'
-#' @param model character with the text model
-#' @param data dataset
-#' @param inits initial values for the chain
-#' @param parameters Vector of parameters to restore
-#' @param covariates Vector of covariates names
-#' @param area Column of data specifying the region of each individual
-#' @param proj 'none', 'rhz', 'hh' or 'spock'
-#' @param fast To use the reduction operator
-#' @param nsamp Sample size to use the projection approach
-#' @param burnin Burnin period
-#' @param thin Lag parameter
-#' @param ... Other parameters used in ?inla
+#' @param model character with the model in text format.
+#' @param data an data frame or list containing the variables in the model.
+#' @param inits initial values for the chain.
+#' @param parameters vector of parameters names to restore.
+#' @param covariates vector of covariates names.
+#' @param area areal variable name in \code{data}.
+#' @param proj 'none' or 'rhz'.
+#' @param fast TRUE to use the reduction operator.
+#' @param nsamp number of desired. samples Default = 1000.
+#' @param burnin burnin size.
+#' @param lag lag parameter.
+#' @param ... other parameters used in ?R2OpenBUGS::bugs
 #'
-#' @return INLA object with corrected parameters
+#' @return \item{$unrestricted}{A list containing
+#'                                \itemize{
+#'                                   \item $sample a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed summary measures for the coefficients
+#'                                   \item $summary_hyperpar summary measures for hyperparameters
+#'                                   \item $summary_random summary measures for random quantities
+#'                                 }
+#'                              }
+#' \item{$restricted}{A list containing
+#'                                \itemize{
+#'                                   \item $sample a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed summary measures for the coefficients
+#'                                   \item $summary_hyperpar summary measures for hyperparameters
+#'                                   \item $summary_random summary measures for random quantities
+#'                                 }
+#'                              }
+#'
+#' \item{$out}{BUGS output}
+#' \item{$time}{time elapsed for fitting the model}
 #'
 #' @importFrom R2OpenBUGS bugs
 
 rsfm_mcmc <- function(model, data, inits, parameters, covariates, area,
-                      proj = "none", fast = TRUE, nsamp = 1000, burnin = 5000, thin = 10, ...){
+                      proj = "none", fast = TRUE, nsamp = 1000, burnin = 5000, lag = 10, ...){
   ##-- Time
   time_start <- Sys.time()
 
@@ -32,7 +50,7 @@ rsfm_mcmc <- function(model, data, inits, parameters, covariates, area,
   mod <- R2OpenBUGS::bugs(data = data, inits = inits,
                           model.file = model,
                           parameters.to.save = parameters,
-                          n.chains = 1, n.iter = burnin + nsamp*thin, n.burnin = burnin, n.thin = thin)
+                          n.chains = 1, n.iter = burnin + nsamp*lag, n.burnin = burnin, n.thin = lag)
   time_end_mcmc <- Sys.time()
 
   sample <- as.data.frame(mod$sims.list)
@@ -113,17 +131,17 @@ rsfm_mcmc <- function(model, data, inits, parameters, covariates, area,
 
   out$unrestricted <- list()
   out$unrestricted$sample <- sample
-  out$unrestricted$summary_fixed <- chain_summary(obj = beta_samp)
-  out$unrestricted$summary_hyperpar <- chain_summary(obj = hyperpar_samp)
-  out$unrestricted$summary_random <- chain_summary(obj = W_samp)
-  out$unrestricted$out <- mod
+  out$unrestricted$summary_fixed <- chain_summary(sample = beta_samp)
+  out$unrestricted$summary_hyperpar <- chain_summary(sample = hyperpar_samp)
+  out$unrestricted$summary_random <- chain_summary(sample = W_samp)
 
   out$restricted <- list()
   out$restricted$sample <- sample_ast
-  out$restricted$summary_fixed <- chain_summary(obj = beta_ast)
-  out$restricted$summary_hyperpar <- chain_summary(obj = hyperpar_ast)
-  out$restricted$summary_random <- chain_summary(obj = W_ast)
+  out$restricted$summary_fixed <- chain_summary(sample = beta_ast)
+  out$restricted$summary_hyperpar <- chain_summary(sample = hyperpar_ast)
+  out$restricted$summary_random <- chain_summary(sample = W_ast)
 
+  out$out <- mod
   out$time <- time_tab
 
   return(out)

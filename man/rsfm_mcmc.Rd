@@ -5,36 +5,54 @@
 \title{Restricted Spatial Frailty Model in BUGS}
 \usage{
 rsfm_mcmc(model, data, inits, parameters, covariates, area,
-                 proj = "none", fast = TRUE, nsamp = 1000, burnin = 5000, thin = 10, ...)
+                 proj = "none", fast = TRUE, nsamp = 1000, burnin = 5000, lag = 10, ...)
 }
 \arguments{
-\item{model}{character with the text model}
+\item{model}{character with the model in text format.}
 
-\item{data}{dataset}
+\item{data}{an data frame or list containing the variables in the model.}
 
-\item{inits}{initial values for the chain}
+\item{inits}{initial values for the chain.}
 
-\item{parameters}{Vector of parameters to restore}
+\item{parameters}{vector of parameters names to restore.}
 
-\item{covariates}{Vector of covariates names}
+\item{covariates}{vector of covariates names.}
 
-\item{area}{Column of data specifying the region of each individual}
+\item{area}{areal variable name in \code{data}.}
 
-\item{proj}{'none', 'rhz', 'hh' or 'spock'}
+\item{proj}{'none' or 'rhz'.}
 
-\item{fast}{To use the reduction operator}
+\item{fast}{TRUE to use the reduction operator.}
 
-\item{nsamp}{Sample size to use the projection approach}
+\item{nsamp}{number of desired. samples Default = 1000.}
 
-\item{burnin}{Burnin period}
+\item{burnin}{burnin size.}
 
-\item{thin}{Lag parameter}
+\item{lag}{lag parameter.}
 
-\item{...}{Other parameters used in ?inla}
+\item{...}{other parameters used in ?R2OpenBUGS::bugs}
 }
 \value{
-INLA object with corrected parameters
+\item{$unrestricted}{A list containing
+                               \itemize{
+                                  \item $sample a sample of size nsamp for all parameters in the model
+                                  \item $summary_fixed summary measures for the coefficients
+                                  \item $summary_hyperpar summary measures for hyperparameters
+                                  \item $summary_random summary measures for random quantities
+                                }
+                             }
+\item{$restricted}{A list containing
+                               \itemize{
+                                  \item $sample a sample of size nsamp for all parameters in the model
+                                  \item $summary_fixed summary measures for the coefficients
+                                  \item $summary_hyperpar summary measures for hyperparameters
+                                  \item $summary_random summary measures for random quantities
+                                }
+                             }
+
+\item{$out}{BUGS output}
+\item{$time}{time elapsed for fitting the model}
 }
 \description{
-Fit a Restricted Spatial Frailty model using INLA
+Fit a Restricted Spatial Frailty model using BUGS
 }

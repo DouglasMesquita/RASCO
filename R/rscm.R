@@ -2,33 +2,56 @@
 #'
 #' @description Fit a Restricted Shared Component model for two diseases
 #'
-#' @usage rscm(data, formula1, formula2, E1 = NULL, E2 = NULL, area = NULL, neigh = NULL,
-#'             proj = "none", nsamp = 1000, family = c("poisson", "poisson"),
-#'             prior_gamma = c(0, 0.1), prior_prec = c(0.5, 0.05),
+#' @usage rscm(data, formula1, formula2, family = c("poisson", "poisson"),
+#'             E1 = NULL, E2 = NULL, area = NULL, neigh = NULL,
+#'             proj = "none", nsamp = 1000,
+#'             priors = list(prior_gamma = c(0, 0.1),
+#'                           prior_prec = list(tau_s = c(0.5, 0.05),
+#'                                             tau_1 = c(0.5, 0.05),
+#'                                             tau_2 = c(0.5, 0.05))),
 #'             random_effects = list(shared = TRUE,
 #'                                   specific_1 = TRUE,
 #'                                   specific_2 = TRUE),
 #'             ...)
 #'
-#' @param data data.frame containing, at least, \code{Y1}, \code{Y2}, \code{X1}, \code{X2}
-#' @param formula1 Formula for the disease 1 fixed effects
-#' @param formula2 Formula for the disease 2 fixed effects
-#' @param E1 Expected counts for Y1 in data. Default = 1 for all sample units
-#' @param E2 Expected counts for Y2 in data. Default = 1 for all sample units
-#' @param area Areal variable name in data
-#' @param neigh Neighborhood structure. A \code{SpatialPolygonsDataFrame} object
-#' @param proj 'none' or 'spock'
-#' @param nsamp Number of samples desired. Default = 1000
-#' @param family A vector with two families. Some allowed families are: poisson, nbinomial, zeroinflatedpoisson0, zeroinflatednbinomial0.
-#' @param prior_gamma Prior (mean and precision) for the shared component coefficient (log-scale). Default: N(0, 0.1).
-#' @param prior_prec Prior (shape, scale) for the precision parameters
-#' @param random_effects A list determining which effects should we include in the model. Default: list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE)
-#' @param ... Other parameters used in ?inla
+#' @param data an data frame or list containing the variables in the model.
+#' @param formula1 an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted for disease 1.
+#' @param formula2 an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted for disease 2.
+#' @param family a vector of size two with two families. Some allowed families are: poisson, nbinomial, zeroinflatedpoisson0, zeroinflatednbinomial0. See INLA::inla.list.models().
+#' @param E1 known component, for disease 1, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. If not provided it is set to 1.
+#' @param E2 known component, for disease 2, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. If not provided it is set to 1.
+#' @param area areal variable name in \code{data}.
+#' @param neigh neighborhood structure. A \code{SpatialPolygonsDataFrame} object.
+#' @param proj 'none' or 'spock'.
+#' @param nsamp number of desired. samples Default = 1000.
+#' @param priors a list containing:
+#'     \itemize{
+#'        \item prior_gamma: a vector of size two containing mean and precision for the normal distribution applied for \eqn{\gamma}
+#'        \item prior_prec: a list with:
+#'        \itemize{
+#'            \item tau_s: a vector of size two containing shape and scale for the gamma distribution applied for \eqn{\tau_s}
+#'            \item tau_1: a vector of size two containing shape and scale for the gamma distribution applied for \eqn{\tau_1}
+#'            \item tau_2: a vector of size two containing shape and scale for the gamma distribution applied for \eqn{\tau_2}
+#'        }
+#'     }
+#' @param random_effects a list determining which effects should we include in the model. Default: list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE).
+#' @param ... other parameters used in ?INLA::inla
+#'
+#' @details The fitted model is given by
+#' \deqn{Y_1 ~ Poisson(E_1\theta_1),}
+#' \deqn{Y_2 ~ Poisson(E_2\theta_2),}
+#'
+#' \deqn{log(\theta_1) = X\beta + \gamma\psi + \phi_1,}
+#' \deqn{log(\theta_2) = X\beta + \psi + \phi_2,}
+#'
+#' \deqn{\psi ~ ICAR(\tau_s); \phi_1 ~ ICAR(\tau_1); \phi_2 ~ ICAR(\tau_2).}
+#'
+#' \deqn{\delta = \sqrt\gamma}
 #'
 #' @examples
 #' library(spdep)
 #'
-#' set.seed(1)
+#' set.seed(123456)
 #'
 #' ##-- Spatial structure
 #' data("neigh_RJ")
@@ -54,20 +77,20 @@
 #' scm_inla <- rscm(data = data,
 #'                  formula1 = Y1 ~ X11 + X12,
 #'                  formula2 = Y2 ~ X21 + X12,
-#'                  E1 = E1, E2 = E2,
 #'                  family = c("nbinomial", "zeroinflatedpoisson0"),
+#'                  E1 = E1, E2 = E2,
 #'                  area = "reg", neigh = neigh_RJ,
-#'                  prior_prec = c(0.5, 0.05), prior_gamma = c(0, 0.5),
+#'                  priors = list(prior_prec = list(tau_s = c(0.5, 0.05)), prior_gamma = c(0, 0.5)),
 #'                  proj = "none", nsamp = 1000,
 #'                  random_effects = list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE))
 #'
 #' rscm_inla <- rscm(data = data,
 #'                   formula1 = Y1 ~ X11 + X12,
 #'                   formula2 = Y2 ~ X21 + X12,
-#'                   E1 = E1, E2 = E2,
 #'                   family = c("nbinomial", "zeroinflatedpoisson0"),
+#'                   E1 = E1, E2 = E2,
 #'                   area = "reg", neigh = neigh_RJ,
-#'                   prior_prec = c(0.5, 0.05), prior_gamma = c(0, 0.5),
+#'                   priors = list(prior_prec = list(tau_s = c(0.5, 0.05)), prior_gamma = c(0, 0.5)),
 #'                   proj = "spock", nsamp = 1000,
 #'                   random_effects = list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE))
 #'
@@ -78,20 +101,24 @@
 #' scm_inla$summary_hyperpar
 #' rscm_inla$summary_hyperpar
 #'
-#' @return \item{$sample}{A sample of size nsamp for all parameters in the model}
-#' \item{$summary_fixed}{Summary measures for the coefficients}
-#' \item{$summary_hyperpar}{Summary measures for hyperparameters}
-#' \item{$summary_random}{Summary measures for random quantities}
+#' @return \item{$sample}{a sample of size nsamp for all parameters in the model}
+#' \item{$summary_fixed}{summary measures for the coefficients}
+#' \item{$summary_hyperpar}{summary measures for hyperparameters}
+#' \item{$summary_random}{summary measures for random quantities}
 #' \item{$out}{INLA output}
-#' \item{$time}{Time elapsed for fitting the model}
+#' \item{$time}{time elapsed for fitting the model}
 #'
 #' @importFrom stats as.formula terms model.frame update
 #'
 #' @export
 
-rscm <- function(data, formula1, formula2, E1 = NULL, E2 = NULL, area = NULL, neigh = NULL,
-                 proj = "none", nsamp = 1000, family = c("poisson", "poisson"),
-                 prior_gamma = c(0, 0.1), prior_prec = c(0.5, 0.05),
+rscm <- function(data, formula1, formula2, family = c("poisson", "poisson"),
+                 E1 = NULL, E2 = NULL, area = NULL, neigh = NULL,
+                 proj = "none", nsamp = 1000,
+                 priors = list(prior_gamma = c(0, 0.1),
+                               prior_prec = list(tau_s = c(0.5, 0.05),
+                                                 tau_1 = c(0.5, 0.05),
+                                                 tau_2 = c(0.5, 0.05))),
                  random_effects = list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE),
                  ...) {
   ##-- Time
@@ -103,10 +130,28 @@ rscm <- function(data, formula1, formula2, E1 = NULL, E2 = NULL, area = NULL, ne
   if(!proj %in% c("none", "spock")) stop("proj must be 'none' or 'spock'")
 
   random_effects <- append_list(list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE), random_effects)
+  priors <- append_list(list(prior_gamma = c(0, 0.1),
+                             prior_prec = list(tau_s = c(0.5, 0.05),
+                                               tau_1 = c(0.5, 0.05),
+                                               tau_2 = c(0.5, 0.05))),
+                        priors)
 
   shared <- random_effects$shared
   specific_1 <- random_effects$specific_1
   specific_2 <- random_effects$specific_2
+
+  prior_gamma <- priors$prior_gamma
+  if(!is.list(priors$prior_prec) & length(priors$prior_prec) == 2) {
+    message(sprintf("priors$prior_prec should be a list of tau_s, tau_1 and tau_2 entries.
+                     Setting all priors as Gamma(%s, %s).", priors$prior_prec[1], priors$prior_prec[2]))
+    prior_tau_s <- priors$prior_prec
+    prior_tau_1 <- priors$prior_prec
+    prior_tau_2 <- priors$prior_prec
+  } else{
+    prior_tau_s <- priors$prior_prec$tau_s
+    prior_tau_1 <- priors$prior_prec$tau_1
+    prior_tau_2 <- priors$prior_prec$tau_2
+  }
 
   ##-- Setup INLA
   Y <- data[, c(deparse(formula1[[2]]), deparse(formula2[[2]]))]
@@ -200,7 +245,7 @@ rscm <- function(data, formula1, formula2, E1 = NULL, E2 = NULL, area = NULL, ne
                                  graph = Ws,
                                  hyper = list(prec =
                                                 list(prior = "loggamma",
-                                                     param = prior_prec))) +
+                                                     param = prior_tau_s))) +
                       f(psi_gamma,
                         copy = "psi",
                         range = c(0, Inf),
@@ -217,7 +262,7 @@ rscm <- function(data, formula1, formula2, E1 = NULL, E2 = NULL, area = NULL, ne
                                  graph = W1,
                                  hyper = list(prec =
                                                 list(prior = "loggamma",
-                                                     param = prior_prec)))
+                                                     param = prior_tau_1)))
       )
     }
 
@@ -227,7 +272,7 @@ rscm <- function(data, formula1, formula2, E1 = NULL, E2 = NULL, area = NULL, ne
                                  graph = W2,
                                  hyper = list(prec =
                                                 list(prior = "loggamma",
-                                                     param = prior_prec)))
+                                                     param = prior_tau_2)))
       )
     }
   }
@@ -299,9 +344,9 @@ rscm <- function(data, formula1, formula2, E1 = NULL, E2 = NULL, area = NULL, ne
   ##-- Return
   out <- list()
   out$sample <- sample
-  out$summary_fixed <- chain_summary(obj = beta_samp)
-  out$summary_hyperpar <- chain_summary(obj = hyperpar_samp)
-  if(is.null(area)) `<-`(out$summary_random, chain_summary(obj = latent_sample)) else `<-`(out$summary_random, NULL)
+  out$summary_fixed <- chain_summary(sample = beta_samp)
+  out$summary_hyperpar <- chain_summary(sample = hyperpar_samp)
+  if(is.null(area)) `<-`(out$summary_random, chain_summary(sample = latent_sample)) else `<-`(out$summary_random, NULL)
   out$out <- mod
 
   out$time <- time_tab

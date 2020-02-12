@@ -1,14 +1,14 @@
 #' @title SPOCK nb
 #'
-#' @description Apply the SPOCK approach to transform the neighborhood matrix
+#' @description SPOCK approach to transform the neighborhood structure
 #'
-#' @param X covariate matrix
-#' @param map neighborhood object
+#' @param X covariate matrix.
+#' @param map object of class \code{nb}.
 #'
 #' @importFrom sp coordinates
 #' @importFrom spdep poly2nb nb2mat
 #'
-#' @return map_new new neighborhood object
+#' @return map_new object of class \code{nb}
 #'
 #' @importFrom stats dist
 #'

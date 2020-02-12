@@ -7,13 +7,13 @@
 rpwesurv(N, effects = rep(1, N), rates, tgrid)
 }
 \arguments{
-\item{N}{Number of observations}
+\item{N}{number of observations.}
 
-\item{effects}{Effects}
+\item{effects}{effects.}
 
-\item{rates}{Exponential rates}
+\item{rates}{exponential rates.}
 
-\item{tgrid}{Time's grid}
+\item{tgrid}{time's grid.}
 }
 \description{
 Generate data from Piecewise Exponential hazzard model

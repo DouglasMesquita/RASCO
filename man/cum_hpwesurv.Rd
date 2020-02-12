@@ -7,11 +7,11 @@
 cum_hpwesurv(t, tgrid, rates)
 }
 \arguments{
-\item{t}{Time's vector}
+\item{t}{time's vector.}
 
-\item{tgrid}{Time's grid}
+\item{tgrid}{time's grid.}
 
-\item{rates}{Exponential rates}
+\item{rates}{exponential rates.}
 }
 \description{
 Piecewise Exponential cumulative hazzards

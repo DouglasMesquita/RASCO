@@ -7,7 +7,7 @@
 update_inla_formula(formula)
 }
 \arguments{
-\item{formula}{A formula to be updated to INLA format}
+\item{formula}{a formula to be updated to INLA format}
 }
 \description{
 Updating INLA formula

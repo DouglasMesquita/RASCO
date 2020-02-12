@@ -2,28 +2,46 @@
 #'
 #' @description Fit a Restricted Spatial Generalized Linear Mixed model using ngspatial
 #'
-#' @param data data.frame containing, at least, \code{time}, \code{status}, \code{covariates}, \code{area} list
-#' @param formula INLA formula ?inla.surv
-#' @param family 'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'
-#' @param W Adjacency matrix
-#' @param area Areal variable name in data
-#' @param proj 'none', 'rhz' or 'spock'
-#' @param nsamp Sample size to use the projection approach
-#' @param burnin Burnin period
-#' @param thin Lag parameter
-#' @param attractive The number of attractive Moran eigenvectors to use
-#' @param ... Other parameters used in ?ngspatial::sparse.sglmm
+#' @param data an data frame or list containing the variables in the model.
+#' @param formula an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.
+#' @param family allowed families are: 'gaussian', 'poisson' and 'binomial'.
+#' @param W adjacency matrix.
+#' @param area areal variable name in \code{data}.
+#' @param proj 'hh'
+#' @param nsamp number of desired. samples Default = 1000.
+#' @param burnin burnin size.
+#' @param lag lag parameter.
+#' @param attractive the number of attractive Moran eigenvectors to use. See ?ngspatial::sparse.sglmm for more information.
+#' @param ... other parameters used in ?ngspatial::sparse.sglmm
 #'
-#' @return INLA object with corrected parameters
+#' @return \item{$unrestricted}{A list containing
+#'                                \itemize{
+#'                                   \item $sample a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed summary measures for the coefficients
+#'                                   \item $summary_hyperpar summary measures for hyperparameters
+#'                                   \item $summary_random summary measures for random quantities
+#'                                 }
+#'                              }
+#' \item{$restricted}{A list containing
+#'                                \itemize{
+#'                                   \item $sample a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed summary measures for the coefficients
+#'                                   \item $summary_hyperpar summary measures for hyperparameters
+#'                                   \item $summary_random summary measures for random quantities
+#'                                 }
+#'                              }
 #'
-#' @import INLA
+#' \item{$out}{ngspatial output}
+#' \item{$time}{time elapsed for fitting the model}
+#'
+#' @importFrom ngspatial sparse.sglmm
 #' @importFrom stats offset
 #'
 #' @export
 
 rsglmm_mcmc <- function(data, formula, family,
                         W, area,
-                        proj, nsamp = 1000, burnin = 5000, thin = 1,
+                        proj, nsamp = 1000, burnin = 5000, lag = 1,
                         attractive = round(0.5*(nrow(W)/2)),
                         ...) {
   ##-- Time
@@ -38,14 +56,14 @@ rsglmm_mcmc <- function(data, formula, family,
     mod <- ngspatial::sparse.sglmm(data = data, formula = formula,
                                    family = family, offset = offset,
                                    method = "RSR", A = W,
-                                   minit = burnin, maxit = burnin + nsamp*thin,
+                                   minit = burnin, maxit = burnin + nsamp*lag,
                                    attractive = attractive, x = x,
                                    ...)
   } else {
     mod <- ngspatial::sparse.sglmm(data = data, formula = formula,
                                    family = family,
                                    method = "RSR", A = W,
-                                   minit = burnin, maxit = burnin + nsamp*thin,
+                                   minit = burnin, maxit = burnin + nsamp*lag,
                                    attractive = attractive, x = x,
                                    ...)
   }
@@ -53,7 +71,7 @@ rsglmm_mcmc <- function(data, formula, family,
   time_end_mcmc <- Sys.time()
 
   ##-- Samples
-  pos_samp <- seq(1, (nsamp*thin), by = thin)
+  pos_samp <- seq(1, (nsamp*lag), by = lag)
 
   tau_s <- mod$tau.s.sample[pos_samp]
   if(family == "gaussian") {
@@ -88,10 +106,11 @@ rsglmm_mcmc <- function(data, formula, family,
 
   out$restricted <- list()
   out$restricted$sample <- sample_ast
-  out$restricted$summary_fixed <- chain_summary(obj = beta_ast)
-  out$restricted$summary_hyperpar <- chain_summary(obj = hyperpar_ast)
-  out$restricted$summary_random <- chain_summary(obj = W_ast)
+  out$restricted$summary_fixed <- chain_summary(sample = beta_ast)
+  out$restricted$summary_hyperpar <- chain_summary(sample = hyperpar_ast)
+  out$restricted$summary_random <- chain_summary(sample = W_ast)
 
+  out$mod <- mod
   out$time <- time_tab
 
   return(out)

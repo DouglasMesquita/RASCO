@@ -7,15 +7,15 @@
 get_trans_samp(marg, fun, n = 1000, trunc = FALSE, method = "linear")
 }
 \arguments{
-\item{marg}{A marginal from a INLA model}
+\item{marg}{a marginal from a INLA model.}
 
-\item{fun}{A transformation function}
+\item{fun}{a transformation function.}
 
-\item{n}{A number of samples desired}
+\item{n}{a number of samples desired.}
 
-\item{trunc}{TRUE: x > 0}
+\item{trunc}{TRUE: x > 0.}
 
-\item{method}{?inla.tmarginal method}
+\item{method}{?inla.tmarginal method.}
 }
 \description{
 Generating a sample from the transformed marginal

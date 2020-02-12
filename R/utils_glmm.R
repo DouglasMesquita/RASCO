@@ -2,13 +2,13 @@
 #'
 #' @description Generating data from Generalized Linear Mixed models
 #'
-#' @param beta Coefficients parameters
-#' @param tau Precision for ICAR
-#' @param family "gaussian", "binomial" or "poisson"
-#' @param confounding 'none', 'linear', 'quadratic' or 'cubic'
-#' @param neigh Neighborhood structure. A \code{SpatialPolygonsDataFrame} object
-#' @param scale Scale covariates? TRUE or FALSE
-#' @param control_family A list with, at least, a \code{invlink}
+#' @param beta coefficients parameters.
+#' @param tau precision for ICAR.
+#' @param family "gaussian", "binomial" or "poisson".
+#' @param confounding 'none', 'linear', 'quadratic' or 'cubic'.
+#' @param neigh neighborhood structure. A \code{SpatialPolygonsDataFrame} object.
+#' @param scale scale covariates? TRUE or FALSE.
+#' @param control_family a list with, at least, a \code{invlink}.
 #'
 #' @importFrom stats rnorm rpois rbinom
 #' @importFrom sp coordinates
@@ -90,7 +90,7 @@ rglmm <- function(beta = c(0.1, -0.1), tau = 1, family = "gaussian",
 
 #' @title Default values to control GLMM families
 #'
-#' @param family "gaussian", "poisson", "binomial"
+#' @param family "gaussian", "poisson", "binomial".
 
 control_family_dft <- function(family){
   if(family == "gaussian") {

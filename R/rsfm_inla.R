@@ -3,18 +3,37 @@
 #' @description Fit a Restricted Spatial Frailty model using INLA
 #'
 #' @usage rsfm_inla(data, formula, family, W = NULL,
-#'                  proj = "none", fast = TRUE, nsamp = 1000, ...)
+#'                  proj = "none", nsamp = 1000, fast = TRUE,
+#'                  ...)
 #'
-#' @param data data.frame containing, at least, \code{time}, \code{status}, \code{covariates}, \code{area} list
-#' @param formula INLA formula ?inla.surv
-#' @param family 'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'
-#' @param W Adjacency matrix
-#' @param proj 'none', 'rhz' or 'spock'
-#' @param fast Should we use the reduction operator?
-#' @param nsamp Sample size to use the projection approach
-#' @param ... Other parameters used in ?inla
+#' @param data an data frame or list containing the variables in the model.
+#' @param formula a inla formula like inla.surv(time, event) ~ 1 + z + f(ind, model="iid") + f(ind2, weights, model="ar1"). This is much like the formula for a glm except that smooth or spatial terms can be added to the right hand side of the formula. See f for full details and the web site www.r-inla.org for several worked out examples. Each smooth or spatial term specified through f should correspond to separate column of the data frame data. The outcome is the output of the function inla.surv.
+#' @param family 'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'.
+#' @param W adjacency matrix.
+#' @param proj 'none' or 'rhz'.
+#' @param nsamp number of desired. samples Default = 1000.
+#' @param fast TRUE to use the reduction operator.
+#' @param ... other parameters used in ?INLA::inla.
 #'
-#' @return INLA object with corrected parameters
+#' @return \item{$unrestricted}{A list containing
+#'                                \itemize{
+#'                                   \item $sample a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed summary measures for the coefficients
+#'                                   \item $summary_hyperpar summary measures for hyperparameters
+#'                                   \item $summary_random summary measures for random quantities
+#'                                 }
+#'                              }
+#' \item{$restricted}{A list containing
+#'                                \itemize{
+#'                                   \item $sample a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed summary measures for the coefficients
+#'                                   \item $summary_hyperpar summary measures for hyperparameters
+#'                                   \item $summary_random summary measures for random quantities
+#'                                 }
+#'                              }
+#'
+#' \item{$out}{INLA output}
+#' \item{$time}{time elapsed for fitting the model}
 #'
 #' @import INLA
 #' @importFrom stats density
@@ -22,10 +41,11 @@
 #' @export
 
 rsfm_inla <- function(data, formula, family, W = NULL,
-                      proj = "none", fast = TRUE, nsamp = 1000, ...) {
+                      proj = "none", nsamp = 1000, fast = TRUE,
+                      ...) {
   ##-- TODO:
   ##---- more than one random effect
-  ##---- Random effects of different sizes
+  ##---- random effects of different sizes
 
   ##-- Time
   time_start <- Sys.time()
@@ -179,17 +199,18 @@ rsfm_inla <- function(data, formula, family, W = NULL,
 
   out$unrestricted <- list()
   out$unrestricted$sample <- sample
-  out$unrestricted$summary_fixed <- chain_summary(obj = beta_samp)
-  out$unrestricted$summary_hyperpar <- chain_summary(obj = hyperpar_samp)
-  out$unrestricted$summary_random <- chain_summary(obj = cbind(W_samp_r, W_samp_u))
-  out$out <- mod
+  out$unrestricted$summary_fixed <- chain_summary(sample = beta_samp)
+  out$unrestricted$summary_hyperpar <- chain_summary(sample = hyperpar_samp)
+  out$unrestricted$summary_random <- chain_summary(sample = cbind(W_samp_r, W_samp_u))
 
   out$restricted <- list()
   out$restricted$sample <- sample_ast
-  out$restricted$summary_fixed <- chain_summary(obj = beta_ast)
-  out$restricted$summary_hyperpar <- chain_summary(obj = hyperpar_ast)
-  out$restricted$summary_random <- rbind(chain_summary(obj = cbind(W_ast, W_ast_u)),
-                                         chain_summary(obj =  Z_ast))
+  out$restricted$summary_fixed <- chain_summary(sample = beta_ast)
+  out$restricted$summary_hyperpar <- chain_summary(sample = hyperpar_ast)
+  out$restricted$summary_random <- rbind(chain_summary(sample = cbind(W_ast, W_ast_u)),
+                                         chain_summary(sample =  Z_ast))
+
+  out$out <- mod
   out$time <- time_tab
 
   return(out)

@@ -15,19 +15,19 @@ rglmm(
 )
 }
 \arguments{
-\item{beta}{Coefficients parameters}
+\item{beta}{coefficients parameters.}
 
-\item{tau}{Precision for ICAR}
+\item{tau}{precision for ICAR.}
 
-\item{family}{"gaussian", "binomial" or "poisson"}
+\item{family}{"gaussian", "binomial" or "poisson".}
 
-\item{confounding}{'none', 'linear', 'quadratic' or 'cubic'}
+\item{confounding}{'none', 'linear', 'quadratic' or 'cubic'.}
 
-\item{neigh}{Neighborhood structure. A \code{SpatialPolygonsDataFrame} object}
+\item{neigh}{neighborhood structure. A \code{SpatialPolygonsDataFrame} object.}
 
-\item{scale}{Scale covariates? TRUE or FALSE}
+\item{scale}{scale covariates? TRUE or FALSE.}
 
-\item{control_family}{A list with, at least, a \code{invlink}}
+\item{control_family}{a list with, at least, a \code{invlink}.}
 }
 \description{
 Generating data from Generalized Linear Mixed models

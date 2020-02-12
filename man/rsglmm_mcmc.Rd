@@ -13,36 +13,54 @@ rsglmm_mcmc(
   proj,
   nsamp = 1000,
   burnin = 5000,
-  thin = 1,
+  lag = 1,
   attractive = round(0.5 * (nrow(W)/2)),
   ...
 )
 }
 \arguments{
-\item{data}{data.frame containing, at least, \code{time}, \code{status}, \code{covariates}, \code{area} list}
+\item{data}{an data frame or list containing the variables in the model.}
 
-\item{formula}{INLA formula ?inla.surv}
+\item{formula}{an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.}
 
-\item{family}{'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'}
+\item{family}{allowed families are: 'gaussian', 'poisson' and 'binomial'.}
 
-\item{W}{Adjacency matrix}
+\item{W}{adjacency matrix.}
 
-\item{area}{Areal variable name in data}
+\item{area}{areal variable name in \code{data}.}
 
-\item{proj}{'none', 'rhz' or 'spock'}
+\item{proj}{'hh'}
 
-\item{nsamp}{Sample size to use the projection approach}
+\item{nsamp}{number of desired. samples Default = 1000.}
 
-\item{burnin}{Burnin period}
+\item{burnin}{burnin size.}
 
-\item{thin}{Lag parameter}
+\item{lag}{lag parameter.}
 
-\item{attractive}{The number of attractive Moran eigenvectors to use}
+\item{attractive}{the number of attractive Moran eigenvectors to use. See ?ngspatial::sparse.sglmm for more information.}
 
-\item{...}{Other parameters used in ?ngspatial::sparse.sglmm}
+\item{...}{other parameters used in ?ngspatial::sparse.sglmm}
 }
 \value{
-INLA object with corrected parameters
+\item{$unrestricted}{A list containing
+                               \itemize{
+                                  \item $sample a sample of size nsamp for all parameters in the model
+                                  \item $summary_fixed summary measures for the coefficients
+                                  \item $summary_hyperpar summary measures for hyperparameters
+                                  \item $summary_random summary measures for random quantities
+                                }
+                             }
+\item{$restricted}{A list containing
+                               \itemize{
+                                  \item $sample a sample of size nsamp for all parameters in the model
+                                  \item $summary_fixed summary measures for the coefficients
+                                  \item $summary_hyperpar summary measures for hyperparameters
+                                  \item $summary_random summary measures for random quantities
+                                }
+                             }
+
+\item{$out}{ngspatial output}
+\item{$time}{time elapsed for fitting the model}
 }
 \description{
 Fit a Restricted Spatial Generalized Linear Mixed model using ngspatial

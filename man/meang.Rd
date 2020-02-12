@@ -7,9 +7,9 @@
 meang(x, g, weighted = FALSE)
 }
 \arguments{
-\item{x}{A numeric vector}
+\item{x}{a numeric vector}
 
-\item{g}{Group indexes}
+\item{g}{group indexes}
 
 \item{weighted}{TRUE for weighted mean}
 }

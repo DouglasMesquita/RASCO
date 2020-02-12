@@ -7,7 +7,7 @@
 control_family_dft(family)
 }
 \arguments{
-\item{family}{"gaussian", "poisson", "binomial"}
+\item{family}{"gaussian", "poisson", "binomial".}
 }
 \description{
 Default values to control GLMM families

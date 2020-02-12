@@ -7,11 +7,11 @@
 hpwesurv(t, rates, tgrid)
 }
 \arguments{
-\item{t}{Time's vector}
+\item{t}{time's vector.}
 
-\item{rates}{Exponential rates}
+\item{rates}{exponential rates.}
 
-\item{tgrid}{Time's grid}
+\item{tgrid}{time's grid.}
 }
 \description{
 Piecewise Eponential hazzards

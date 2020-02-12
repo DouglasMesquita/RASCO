@@ -19,27 +19,27 @@ rshared(
 )
 }
 \arguments{
-\item{alpha_1}{Intercept for disease 1}
+\item{alpha_1}{intercept for disease 1.}
 
-\item{alpha_2}{Intercept for disease 2}
+\item{alpha_2}{intercept for disease 2.}
 
-\item{beta_1}{Coefficients for disease 1}
+\item{beta_1}{coefficients for disease 1.}
 
-\item{beta_2}{Coefficients for disease 2}
+\item{beta_2}{coefficients for disease 2.}
 
-\item{delta}{Dependence on the shared component}
+\item{delta}{dependence on the shared component.}
 
-\item{tau_1}{Precision for ICAR specific for disease 1}
+\item{tau_1}{precision for ICAR specific for disease 1.}
 
-\item{tau_2}{Precision for ICAR specific for disease 2}
+\item{tau_2}{precision for ICAR specific for disease 2.}
 
-\item{tau_s}{Precision for ICAR specific for shared component}
+\item{tau_s}{precision for ICAR specific for shared component.}
 
-\item{confounding}{'none', 'linear', 'quadratic' or 'cubic'}
+\item{confounding}{'none', 'linear', 'quadratic' or 'cubic'.}
 
-\item{neigh}{Neighborhood structure. A \code{SpatialPolygonsDataFrame} object}
+\item{neigh}{neighborhood structure. A \code{SpatialPolygonsDataFrame} object.}
 
-\item{scale}{Scale covariates? TRUE or FALSE}
+\item{scale}{scale covariates? TRUE or FALSE.}
 }
 \description{
 Generating data from Shared Component model

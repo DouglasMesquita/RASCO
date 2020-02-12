@@ -7,13 +7,13 @@
 spock(X, map)
 }
 \arguments{
-\item{X}{covariate matrix}
+\item{X}{covariate matrix.}
 
-\item{map}{neighborhood object}
+\item{map}{object of class \code{nb}.}
 }
 \value{
-map_new new neighborhood object
+map_new object of class \code{nb}
 }
 \description{
-Apply the SPOCK approach to transform the neighborhood matrix
+SPOCK approach to transform the neighborhood structure
 }

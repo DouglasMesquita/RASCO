@@ -4,43 +4,66 @@
 \alias{rsfm}
 \title{Restricted Spatial Frailty Model}
 \usage{
-rsfm(data, formula, area = NULL,
+rsfm(data, formula, family, area = NULL,
             model = NULL, neigh = NULL,
-            family, proj = "none", fast = TRUE, nsamp = 1000,
-            approach = "inla", ...)
+            proj = "none", nsamp = 1000,
+            fast = TRUE, approach = "inla", priors,
+            ...)
 }
 \arguments{
-\item{data}{data.frame containing the covariates in formula and area if necessary}
+\item{data}{an data frame or list containing the variables in the model.}
 
-\item{formula}{A formula in the format surv(time, time2, event) ~ X1 + X2}
+\item{formula}{an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.}
 
-\item{area}{Column of data specifying the region of each individual}
+\item{family}{'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'.}
 
-\item{model}{Spatial model adopted: "besag" or  "restricted_besag", for example}
+\item{area}{areal variable name in \code{data}.}
 
-\item{neigh}{Neighborhood structure. A \code{SpatialPolygonsDataFrame} object}
+\item{model}{spatial model adopted. Examples: "besag", "besag2" or "restricted_besag". See INLA::inla.list.models() for other models.}
 
-\item{family}{'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'}
+\item{neigh}{neighborhood structure. A \code{SpatialPolygonsDataFrame} object.}
 
-\item{proj}{'none', 'rhz' or 'spock'}
+\item{proj}{'none' or 'rhz'.}
 
-\item{fast}{To use the reduction operator}
+\item{nsamp}{number of desired. samples Default = 1000.}
 
-\item{nsamp}{Sample size to use the projection approach}
+\item{fast}{TRUE to use the reduction operator.}
 
-\item{approach}{'inla' or 'mcmc'}
+\item{approach}{'inla' or 'mcmc'. 'mcmc' has less model options.}
 
-\item{...}{Other parameters used in ?INLA::inla or ?R2OpenBUGS::bugs}
+\item{priors}{a list containing:
+\itemize{
+   \item prior_prec: a vector of size two containing shape and scale for the gamma distribution applied for model precision
+}}
+
+\item{...}{other parameters used in ?INLA::inla or ?R2OpenBUGS::bugs}
 }
 \value{
-\item{$unrestricted}{A list containing $sample, $summary_fixed, $summary_hyperpar, $summary_random, $out and $time}
-\item{$restricted}{A list containing $sample, $summary_fixed, $summary_hyperpar, $summary_random, $out and $time}
+\item{$unrestricted}{A list containing
+                               \itemize{
+                                  \item $sample a sample of size nsamp for all parameters in the model
+                                  \item $summary_fixed summary measures for the coefficients
+                                  \item $summary_hyperpar summary measures for hyperparameters
+                                  \item $summary_random summary measures for random quantities
+                                }
+                             }
+\item{$restricted}{A list containing
+                               \itemize{
+                                  \item $sample a sample of size nsamp for all parameters in the model
+                                  \item $summary_fixed summary measures for the coefficients
+                                  \item $summary_hyperpar summary measures for hyperparameters
+                                  \item $summary_random summary measures for random quantities
+                                }
+                             }
+
+\item{$out}{INLA or BUGS output}
+\item{$time}{time elapsed for fitting the model}
 }
 \description{
 Fit a Restricted Spatial Frailty model
 }
 \examples{
-set.seed(1)
+set.seed(123456)
 
 ##-- Spatial structure
 data("neigh_RJ")
@@ -62,12 +85,13 @@ data <- rsurv(n_id = n_id,
 ##-- Models
 weibull_inla <- rsfm(data = data,
                      formula = surv(time = L, event = status) ~ X1 + X2,
-                     model = "none", family = "weibull",
+                     family = "weibull", model = "none",
                      proj = "rhz", nsamp = 1000, approach = "inla")
 
-rsfm_inla <- rsfm(data = data, area = "reg",
+rsfm_inla <- rsfm(data = data,
                   formula = surv(time = L, event = status) ~ X1 + X2,
-                  model = "restricted_besag", neigh = neigh_RJ, family = "weibull",
+                  family = "weibull", area = "reg",
+                  model = "restricted_besag", neigh = neigh_RJ,
                   proj = "rhz", nsamp = 1000, approach = "inla")
 
 weibull_inla$unrestricted$summary_fixed

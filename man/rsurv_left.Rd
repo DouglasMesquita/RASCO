@@ -7,9 +7,9 @@
 rsurv_left(times, cens)
 }
 \arguments{
-\item{times}{Vector with observed times}
+\item{times}{vector with observed times.}
 
-\item{cens}{Censoring fraction}
+\item{cens}{censoring fraction.}
 }
 \description{
 Generating data with left censure

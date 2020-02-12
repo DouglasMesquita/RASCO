@@ -7,9 +7,9 @@
 ricar(W, sig = 1)
 }
 \arguments{
-\item{W}{Adjcency matrix}
+\item{W}{adjcency matrix}
 
-\item{sig}{Standard deviation}
+\item{sig}{standard deviation}
 }
 \value{
 x

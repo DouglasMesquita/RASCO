@@ -7,11 +7,11 @@
 cum_hweibullsurv(t, alpha, lambda)
 }
 \arguments{
-\item{t}{Time's vector}
+\item{t}{time's vector.}
 
-\item{alpha}{Alpha parameter}
+\item{alpha}{alpha parameter.}
 
-\item{lambda}{Lambda parameter}
+\item{lambda}{lambda parameter.}
 }
 \description{
 Weibull cumulative hazzards

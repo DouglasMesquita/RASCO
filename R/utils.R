@@ -2,8 +2,8 @@
 #'
 #' @description Calculate the VIF
 #'
-#' @param base_model Model to use as comparison
-#' @param model Model to compare
+#' @param base_model model to use as comparison.
+#' @param model model to compare.
 #'
 #' @return res data.frame with VIF for fixed parameters
 #'
@@ -25,8 +25,8 @@ SVIF <- function(base_model, model) {
 #'
 #' @description Calculate the VRF
 #'
-#' @param base_model Model to use as comparison
-#' @param model Model to compare
+#' @param base_model model to use as comparison
+#' @param model model to compare
 #'
 #' @return res data.frame with VRF for fixed parameters
 #'
@@ -45,9 +45,9 @@ SVRF <- function(base_model, model) {
 #'
 #' @description Calculate the projection matrix under several approaches
 #'
-#' @param X Covariate matrix
-#' @param groups Ids for the subjects
-#' @param method Projection's method
+#' @param X covariate matrix
+#' @param groups ids for the subjects
+#' @param method projection's method
 #'
 #' @return Px Projection matrix
 #' Px_ort (I - Px)
@@ -82,8 +82,8 @@ proj_mat <- function(X, groups = NULL, method = "rhz") {
 #'
 #' @description Generate data from ICAR model
 #'
-#' @param W Adjcency matrix
-#' @param sig Standard deviation
+#' @param W adjcency matrix
+#' @param sig standard deviation
 #'
 #' @importFrom stats rnorm
 #'
@@ -110,9 +110,9 @@ ricar <- function(W, sig = 1) {
 #' #'
 #' #' @description Generate data from CAR model
 #' #'
-#' #' @param W Adjcency matrix
-#' #' @param sig Standard deviation
-#' #' @param rho Dependence parameter
+#' #' @param W adjcency matrix
+#' #' @param sig standard deviation
+#' #' @param rho dependence parameter
 #' #'
 #' #' @return x
 #'
@@ -129,8 +129,8 @@ ricar <- function(W, sig = 1) {
 #'
 #' @description Select the desired marginals on a INLA models
 #'
-#' @param samp A sample from ?inla.posterior.sample
-#' @param ids Ids to restore
+#' @param samp a sample from ?inla.posterior.sample
+#' @param ids ids to restore
 
 select_marginal <- function(samp, ids) {
   row_names <- row.names(samp$latent)
@@ -143,8 +143,8 @@ select_marginal <- function(samp, ids) {
 #'
 #' @description Get commom parameters in two list and generate one append list
 #'
-#' @param x List base
-#' @param y Second list
+#' @param x list base
+#' @param y second list
 #'
 #' @return x
 
@@ -166,8 +166,8 @@ append_list <- function (x, y) {
 #'
 #' @description Mean by groups
 #'
-#' @param x A numeric vector
-#' @param g Group indexes
+#' @param x a numeric vector
+#' @param g group indexes
 #' @param weighted TRUE for weighted mean
 
 meang <- function(x, g, weighted = FALSE) {
@@ -184,8 +184,8 @@ meang <- function(x, g, weighted = FALSE) {
 #'
 #' @description Reduction operator
 #'
-#' @param x A numeric vector or a numeric matrix
-#' @param g_index Group indexes
+#' @param x a numeric vector or a numeric matrix
+#' @param g_index group indexes
 #'
 #' @export
 
@@ -214,8 +214,8 @@ meang <- function(x, g, weighted = FALSE) {
 #'
 #' @description Enlargement operator
 #'
-#' @param x A numeric vector or a numeric matrix
-#' @param g_index Group indexes
+#' @param x a numeric vector or a numeric matrix
+#' @param g_index group indexes
 
 `%e%` <- function(x, g_index) {
 
@@ -261,7 +261,7 @@ meang <- function(x, g, weighted = FALSE) {
 #'
 #' @description Updating INLA formula
 #'
-#' @param formula A formula to be updated to INLA format
+#' @param formula a formula to be updated to INLA format
 #'
 #' @importFrom stats terms.formula
 

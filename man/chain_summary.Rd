@@ -2,18 +2,18 @@
 % Please edit documentation in R/chain_summary.R
 \name{chain_summary}
 \alias{chain_summary}
-\title{Summary measures for a(n) (un)restricted model}
+\title{Summary measures for a sample}
 \usage{
-chain_summary(obj, level)
+chain_summary(sample, level)
 }
 \arguments{
-\item{obj}{A matrix containing parameter's chains}
+\item{sample}{a matrix containing parameter's chains.}
 
-\item{level}{Credibility level}
+\item{level}{credibility interval level.}
 }
 \value{
-Measures
+a matrix with \code{mean}, \code{median}, \code{sd}, \code{lower} and \code{upper} measures
 }
 \description{
-Summary measures for a(n) (un)restricted model
+Summary measures for a sample
 }

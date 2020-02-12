@@ -2,26 +2,28 @@
 #'
 #' @description Fit a Restricted Spatial Generalized Linear Mixed model
 #'
-#' @usage rsglmm(data, formula, E, n,
-#'               area = NULL, neigh = NULL, model = NULL,
-#'               family, proj = "none", nsamp = 1000,
-#'               approach = "inla", ...)
+#' @usage rsglmm(data, formula, family,
+#'               E, n,
+#'               area = NULL, model = NULL, neigh = NULL,
+#'               proj = "none", nsamp = 1000,
+#'               approach = "inla",
+#'               ...)
 #'
-#' @param data data.frame containing the covariates in formula and E, n and area if necessary
-#' @param formula Formula for the fixed effects
-#' @param E Expected counts for poisson data. Default = 1 for all sample units
-#' @param n N trails for binomial data. Default = 1 for all sample units
-#' @param area Areal variable name in data
-#' @param neigh Neighborhood structure. A \code{SpatialPolygonsDataFrame} object
-#' @param model Spatial model adopted: "besag" or "restricted_besag", for example. The model availability will depend on the approach
-#' @param family Some allowed families are: 'gaussian', 'poisson' and 'binomial'. The family availability will depend on the approach
+#' @param data an data frame or list containing the variables in the model.
+#' @param formula an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.
+#' @param family some allowed families are: 'gaussian', 'poisson' and 'binomial'. The family availability will depend on the approach.
+#' @param E known component, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. If not provided it is set to 1.
+#' @param n a vector containing the number of trials for the binomial likelihood and variantes, or the number of required successes for the nbinomial2 likelihood. Default value is set to 1..
+#' @param area areal variable name in \code{data}.
+#' @param model spatial model adopted. Examples: "besag", "besag2" or "restricted_besag". See INLA::inla.list.models() for other models.
+#' @param neigh neighborhood structure. A \code{SpatialPolygonsDataFrame} object.
 #' @param proj 'none', 'rhz', 'hh' or 'spock'
-#' @param nsamp Number of samples desired. Default = 1000
+#' @param nsamp number of desired. samples Default = 1000.
 #' @param approach 'inla' or 'mcmc'
-#' @param ... Other parameters used in ?INLA::inla or ?ngspatial::sparse.sglmm
+#' @param ... other parameters used in ?INLA::inla or ?ngspatial::sparse.sglmm
 #'
 #' @examples
-#' set.seed(1)
+#' set.seed(123456)
 #'
 #' ##-- Spatial structure
 #' data("neigh_RJ")
@@ -41,23 +43,23 @@
 #'                    proj = "none", nsamp = 1000)
 #'
 #' sglmm_mod <- rsglmm(data = data, formula = Y ~ X1 + X2,
-#'                     area = "reg", model = "besag", neigh = neigh_RJ,
 #'                     family = family,
+#'                     area = "reg", model = "besag", neigh = neigh_RJ,
 #'                     proj = "none", nsamp = 1000)
 #'
 #' rglmm_rhz <- rsglmm(data = data, formula = Y ~ X1 + X2,
-#'                     area = "reg", model = "restricted_besag", neigh = neigh_RJ,
 #'                     family = family,
+#'                     area = "reg", model = "restricted_besag", neigh = neigh_RJ,
 #'                     proj = "rhz", nsamp = 1000)
 #'
 #' rglmm_spock <- rsglmm(data = data, formula = Y ~ X1 + X2,
-#'                       area = "reg", model = "restricted_besag", neigh = neigh_RJ,
 #'                       family = family,
+#'                       area = "reg", model = "restricted_besag", neigh = neigh_RJ,
 #'                       proj = "spock", nsamp = 1000)
 #'
 #' rglmm_hh <- rsglmm(data = data, formula = Y ~ X1 + X2,
-#'                    area = "reg", model = "restricted_besag", neigh = neigh_RJ,
 #'                    family = family,
+#'                    area = "reg", model = "restricted_besag", neigh = neigh_RJ,
 #'                    approach = "mcmc", proj = "hh",
 #'                    nsamp = 1000)
 #'
@@ -71,14 +73,32 @@
 #' @importFrom ngspatial sparse.sglmm
 #' @importFrom stats model.matrix update.formula
 #'
-#' @return Restricted model
+#' @return \item{$unrestricted}{A list containing
+#'                                \itemize{
+#'                                   \item $sample a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed summary measures for the coefficients
+#'                                   \item $summary_hyperpar summary measures for hyperparameters
+#'                                   \item $summary_random summary measures for random quantities
+#'                                 }
+#'                              }
+#' \item{$restricted}{A list containing
+#'                                \itemize{
+#'                                   \item $sample a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed summary measures for the coefficients
+#'                                   \item $summary_hyperpar summary measures for hyperparameters
+#'                                   \item $summary_random summary measures for random quantities
+#'                                 }
+#'                              }
+#'
+#' \item{$out}{INLA or ngspatial output}
+#' \item{$time}{time elapsed for fitting the model}
 #'
 #' @export
 
-rsglmm <- function(data, formula,
+rsglmm <- function(data, formula, family,
                    E = NULL, n = NULL,
-                   area = NULL, neigh = NULL, model = NULL,
-                   family, proj = "none", nsamp = 1000,
+                   area = NULL, model = NULL, neigh = NULL,
+                   proj = "none", nsamp = 1000,
                    approach = "inla",
                    ...) {
 

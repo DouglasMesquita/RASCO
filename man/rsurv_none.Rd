@@ -7,7 +7,7 @@
 rsurv_none(times)
 }
 \arguments{
-\item{times}{Vector with observed times}
+\item{times}{vector with observed times.}
 }
 \description{
 Generating data without censure

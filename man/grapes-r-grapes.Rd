@@ -7,9 +7,9 @@
 x \%r\% g_index
 }
 \arguments{
-\item{x}{A numeric vector or a numeric matrix}
+\item{x}{a numeric vector or a numeric matrix}
 
-\item{g_index}{Group indexes}
+\item{g_index}{group indexes}
 }
 \description{
 Reduction operator

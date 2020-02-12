@@ -7,13 +7,13 @@
 rweibullsurv(N, alpha, lambda = rep(1, N), variant = 1)
 }
 \arguments{
-\item{N}{Number of observations}
+\item{N}{number of observations.}
 
-\item{alpha}{Alpha parameter}
+\item{alpha}{alpha parameter.}
 
-\item{lambda}{Lambda parameter}
+\item{lambda}{lambda parameter.}
 
-\item{variant}{Variant (0 or 1)}
+\item{variant}{variant (0 or 1).}
 }
 \description{
 Generate data from Weibull hazzard model

@@ -7,9 +7,9 @@
 SVIF(base_model, model)
 }
 \arguments{
-\item{base_model}{Model to use as comparison}
+\item{base_model}{model to use as comparison.}
 
-\item{model}{Model to compare}
+\item{model}{model to compare.}
 }
 \value{
 res data.frame with VIF for fixed parameters

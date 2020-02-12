@@ -7,9 +7,9 @@
 append_list(x, y)
 }
 \arguments{
-\item{x}{List base}
+\item{x}{list base}
 
-\item{y}{Second list}
+\item{y}{second list}
 }
 \value{
 x

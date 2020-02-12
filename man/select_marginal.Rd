@@ -7,9 +7,9 @@
 select_marginal(samp, ids)
 }
 \arguments{
-\item{samp}{A sample from ?inla.posterior.sample}
+\item{samp}{a sample from ?inla.posterior.sample}
 
-\item{ids}{Ids to restore}
+\item{ids}{ids to restore}
 }
 \description{
 Select the desired marginals on a INLA models
@@ -19,9 +19,9 @@ Select the desired marginals on a INLA models
 #'
 #' @description Generate data from CAR model
 #'
-#' @param W Adjcency matrix
-#' @param sig Standard deviation
-#' @param rho Dependence parameter
+#' @param W adjcency matrix
+#' @param sig standard deviation
+#' @param rho dependence parameter
 #'
 #' @return x
 

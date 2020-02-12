@@ -7,11 +7,11 @@
 proj_mat(X, groups = NULL, method = "rhz")
 }
 \arguments{
-\item{X}{Covariate matrix}
+\item{X}{covariate matrix}
 
-\item{groups}{Ids for the subjects}
+\item{groups}{ids for the subjects}
 
-\item{method}{Projection's method}
+\item{method}{projection's method}
 }
 \value{
 Px Projection matrix

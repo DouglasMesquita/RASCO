@@ -2,17 +2,35 @@
 #'
 #' @description Fit a Restricted Spatial Generalized Linear Mixed model using INLA
 #'
-#' @param data data.frame containing, at least, \code{time}, \code{status}, \code{covariates}, \code{area} list
-#' @param formula INLA formula ?inla.surv
-#' @param family 'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'
-#' @param E Expected counts for poisson data. Default = 1 for all sample units
-#' @param n N trails for binomial data. Default = 1 for all sample units
-#' @param W Adjacency matrix
+#' @param data an data frame or list containing the variables in the model.
+#' @param formula an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.
+#' @param family some allowed families are: 'gaussian', 'poisson' and 'binomial'. The family availability will depend on the approach.
+#' @param E known component, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. If not provided it is set to 1.
+#' @param n a vector containing the number of trials for the binomial likelihood and variantes, or the number of required successes for the nbinomial2 likelihood. Default value is set to 1..
+#' @param W adjacency matrix.
 #' @param proj 'none', 'rhz' or 'spock'
-#' @param nsamp Sample size to use the projection approach
-#' @param ... Other parameters used in ?INLA::inla
+#' @param nsamp number of desired. samples Default = 1000.
+#' @param ... other parameters used in ?INLA::inla
 #'
-#' @return INLA object with corrected parameters
+#' @return \item{$unrestricted}{A list containing
+#'                                \itemize{
+#'                                   \item $sample a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed summary measures for the coefficients
+#'                                   \item $summary_hyperpar summary measures for hyperparameters
+#'                                   \item $summary_random summary measures for random quantities
+#'                                 }
+#'                              }
+#' \item{$restricted}{A list containing
+#'                                \itemize{
+#'                                   \item $sample a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed summary measures for the coefficients
+#'                                   \item $summary_hyperpar summary measures for hyperparameters
+#'                                   \item $summary_random summary measures for random quantities
+#'                                 }
+#'                              }
+#'
+#' \item{$out}{INLA output}
+#' \item{$time}{time elapsed for fitting the model}
 #'
 #' @import INLA
 #'
@@ -181,17 +199,18 @@ rsglmm_inla <- function(data, formula, family,
 
   out$unrestricted <- list()
   out$unrestricted$sample <- sample
-  out$unrestricted$summary_fixed <- chain_summary(obj = beta_samp)
-  out$unrestricted$summary_hyperpar <- chain_summary(obj = hyperpar_samp)
-  out$unrestricted$summary_random <- chain_summary(obj = cbind(W_samp_r, W_samp_u))
-  out$out <- mod
+  out$unrestricted$summary_fixed <- chain_summary(sample = beta_samp)
+  out$unrestricted$summary_hyperpar <- chain_summary(sample = hyperpar_samp)
+  out$unrestricted$summary_random <- chain_summary(sample = cbind(W_samp_r, W_samp_u))
 
   out$restricted <- list()
   out$restricted$sample <- sample_ast
-  out$restricted$summary_fixed <- chain_summary(obj = beta_ast)
-  out$restricted$summary_hyperpar <- chain_summary(obj = hyperpar_ast)
-  out$restricted$summary_random <- rbind(chain_summary(obj = cbind(W_ast, W_ast_u)),
-                                         chain_summary(obj =  Z_ast))
+  out$restricted$summary_fixed <- chain_summary(sample = beta_ast)
+  out$restricted$summary_hyperpar <- chain_summary(sample = hyperpar_ast)
+  out$restricted$summary_random <- rbind(chain_summary(sample = cbind(W_ast, W_ast_u)),
+                                         chain_summary(sample =  Z_ast))
+
+  out$out <- mod
   out$time <- time_tab
 
   return(out)

@@ -22,36 +22,36 @@ rsurv(
 )
 }
 \arguments{
-\item{n_id}{Vector with the number of individuals in each region to be generated}
+\item{n_id}{vector with the number of individuals in each region to be generated.}
 
-\item{coefs}{Vector of coefficients}
+\item{coefs}{vector of coefficients.}
 
-\item{cens}{Censure level}
+\item{cens}{censure level.}
 
-\item{cens_type}{Censoring scheme: 'left', 'right' or ''interval}
+\item{cens_type}{censoring scheme: 'left', 'right' or ''interval.}
 
-\item{hazard}{Hazard model: 'exponencial', 'weibull' or 'pwe'}
+\item{hazard}{hazard model: 'exponencial', 'weibull' or 'pwe'.}
 
-\item{hazard_params}{Named list with parameters for the hazard model: hazard_dft()}
+\item{hazard_params}{named list with parameters for the hazard model: hazard_dft().}
 
-\item{spatial}{Spatial model: 'none' for the conventional Cox model,
+\item{spatial}{spatial model: 'none' for the conventional Cox model,
 'gamma' for an independent gamma frailty,
 'lognormal' for an independent lognormal frailty,
-'ICAR' or 'BYM' for spatial structured models}
+'ICAR' or 'BYM' for spatial structured models.}
 
-\item{neigh}{Neighborhood structure. A \code{SpatialPolygonsDataFrame} object}
+\item{neigh}{neighborhood structure. A \code{SpatialPolygonsDataFrame} object.}
 
-\item{tau}{Precision for ICAR and BYM models}
+\item{tau}{precision for ICAR and BYM models.}
 
-\item{confounding}{'none', 'linear', 'quadratic' or 'cubic'}
+\item{confounding}{'none', 'linear', 'quadratic' or 'cubic'.}
 
-\item{proj}{'none', 'rhz', 'hh' or 'spock'}
+\item{proj}{'none', 'rhz', 'hh' or 'spock'.}
 
-\item{sd_x}{Standard deviation to generating confounding}
+\item{sd_x}{standard deviation to generating confounding.}
 
-\item{X}{Matrix of covariates. Default = NULL}
+\item{X}{matrix of covariates. Default = NULL.}
 
-\item{scale}{Scale X. TRUE or FALSE}
+\item{scale}{scale X. TRUE or FALSE.}
 }
 \description{
 Generating data with spatial confounding

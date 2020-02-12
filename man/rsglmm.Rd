@@ -4,44 +4,64 @@
 \alias{rsglmm}
 \title{Restricted Spatial Generalized Linear Mixed model}
 \usage{
-rsglmm(data, formula, E, n,
-              area = NULL, neigh = NULL, model = NULL,
-              family, proj = "none", nsamp = 1000,
-              approach = "inla", ...)
+rsglmm(data, formula, family,
+              E, n,
+              area = NULL, model = NULL, neigh = NULL,
+              proj = "none", nsamp = 1000,
+              approach = "inla",
+              ...)
 }
 \arguments{
-\item{data}{data.frame containing the covariates in formula and E, n and area if necessary}
+\item{data}{an data frame or list containing the variables in the model.}
 
-\item{formula}{Formula for the fixed effects}
+\item{formula}{an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.}
 
-\item{E}{Expected counts for poisson data. Default = 1 for all sample units}
+\item{family}{some allowed families are: 'gaussian', 'poisson' and 'binomial'. The family availability will depend on the approach.}
 
-\item{n}{N trails for binomial data. Default = 1 for all sample units}
+\item{E}{known component, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. If not provided it is set to 1.}
 
-\item{area}{Areal variable name in data}
+\item{n}{a vector containing the number of trials for the binomial likelihood and variantes, or the number of required successes for the nbinomial2 likelihood. Default value is set to 1..}
 
-\item{neigh}{Neighborhood structure. A \code{SpatialPolygonsDataFrame} object}
+\item{area}{areal variable name in \code{data}.}
 
-\item{model}{Spatial model adopted: "besag" or "restricted_besag", for example. The model availability will depend on the approach}
+\item{model}{spatial model adopted. Examples: "besag", "besag2" or "restricted_besag". See INLA::inla.list.models() for other models.}
 
-\item{family}{Some allowed families are: 'gaussian', 'poisson' and 'binomial'. The family availability will depend on the approach}
+\item{neigh}{neighborhood structure. A \code{SpatialPolygonsDataFrame} object.}
 
 \item{proj}{'none', 'rhz', 'hh' or 'spock'}
 
-\item{nsamp}{Number of samples desired. Default = 1000}
+\item{nsamp}{number of desired. samples Default = 1000.}
 
 \item{approach}{'inla' or 'mcmc'}
 
-\item{...}{Other parameters used in ?INLA::inla or ?ngspatial::sparse.sglmm}
+\item{...}{other parameters used in ?INLA::inla or ?ngspatial::sparse.sglmm}
 }
 \value{
-Restricted model
+\item{$unrestricted}{A list containing
+                               \itemize{
+                                  \item $sample a sample of size nsamp for all parameters in the model
+                                  \item $summary_fixed summary measures for the coefficients
+                                  \item $summary_hyperpar summary measures for hyperparameters
+                                  \item $summary_random summary measures for random quantities
+                                }
+                             }
+\item{$restricted}{A list containing
+                               \itemize{
+                                  \item $sample a sample of size nsamp for all parameters in the model
+                                  \item $summary_fixed summary measures for the coefficients
+                                  \item $summary_hyperpar summary measures for hyperparameters
+                                  \item $summary_random summary measures for random quantities
+                                }
+                             }
+
+\item{$out}{INLA or ngspatial output}
+\item{$time}{time elapsed for fitting the model}
 }
 \description{
 Fit a Restricted Spatial Generalized Linear Mixed model
 }
 \examples{
-set.seed(1)
+set.seed(123456)
 
 ##-- Spatial structure
 data("neigh_RJ")
@@ -61,23 +81,23 @@ sglm_mod <- rsglmm(data = data, formula = Y ~ X1 + X2,
                    proj = "none", nsamp = 1000)
 
 sglmm_mod <- rsglmm(data = data, formula = Y ~ X1 + X2,
-                    area = "reg", model = "besag", neigh = neigh_RJ,
                     family = family,
+                    area = "reg", model = "besag", neigh = neigh_RJ,
                     proj = "none", nsamp = 1000)
 
 rglmm_rhz <- rsglmm(data = data, formula = Y ~ X1 + X2,
-                    area = "reg", model = "restricted_besag", neigh = neigh_RJ,
                     family = family,
+                    area = "reg", model = "restricted_besag", neigh = neigh_RJ,
                     proj = "rhz", nsamp = 1000)
 
 rglmm_spock <- rsglmm(data = data, formula = Y ~ X1 + X2,
-                      area = "reg", model = "restricted_besag", neigh = neigh_RJ,
                       family = family,
+                      area = "reg", model = "restricted_besag", neigh = neigh_RJ,
                       proj = "spock", nsamp = 1000)
 
 rglmm_hh <- rsglmm(data = data, formula = Y ~ X1 + X2,
-                   area = "reg", model = "restricted_besag", neigh = neigh_RJ,
                    family = family,
+                   area = "reg", model = "restricted_besag", neigh = neigh_RJ,
                    approach = "mcmc", proj = "hh",
                    nsamp = 1000)
 
