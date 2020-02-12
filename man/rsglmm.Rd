@@ -9,6 +9,31 @@ rsglmm(data, formula,
               family, proj = "none", nsamp = 1000,
               approach = "inla", ...)
 }
+\arguments{
+\item{data}{data.frame containing the covariates in formula and E, n and area if necessary}
+
+\item{formula}{Formula for the fixed effects}
+
+\item{E}{Expected counts for poisson data. Default = 1 for all sample units}
+
+\item{n}{N trails for binomial data. Default = 1 for all sample units}
+
+\item{area}{Areal variable name in data}
+
+\item{model}{Spatial model adopted: "besag" or "restricted_besag", for example. The model availability will depend on the approach}
+
+\item{neigh}{Neighborhood structure. A \code{SpatialPolygonsDataFrame} object}
+
+\item{family}{Some allowed families are: 'gaussian', 'poisson' and 'binomial'. The family availability will depend on the approach}
+
+\item{proj}{'none', 'rhz', 'hh' or 'spock'}
+
+\item{nsamp}{Number of samples desired. Default = 1000}
+
+\item{approach}{'inla' or 'mcmc'}
+
+\item{...}{Other parameters used in ?INLA::inla or ?ngspatial::sparse.sglmm}
+}
 \value{
 Restricted model
 }
@@ -25,7 +50,7 @@ beta <- c(-0.5, -0.2)
 tau <- 1
 
 ##-- Data ----
-family <- "binomial"
+family <- "poisson"
 data <- rglmm(beta = beta, tau = tau, family = family,
               confounding = "none", neigh = neigh_RJ,
               scale = TRUE)
@@ -40,17 +65,27 @@ sglmm_mod <- rsglmm(data = data, formula = Y ~ X1 + X2,
                     family = family,
                     proj = "none", nsamp = 1000)
 
-rglmm_mod <- rsglmm(data = data, formula = Y ~ X1 + X2,
+rglmm_rhz <- rsglmm(data = data, formula = Y ~ X1 + X2,
                     area = "reg", model = "restricted_besag", neigh = neigh_RJ,
                     family = family,
                     proj = "rhz", nsamp = 1000)
 
+rglmm_spock <- rsglmm(data = data, formula = Y ~ X1 + X2,
+                      area = "reg", model = "restricted_besag", neigh = neigh_RJ,
+                      family = family,
+                      proj = "spock", nsamp = 1000)
+
+rglmm_hh <- rsglmm(data = data, formula = Y ~ X1 + X2,
+                   area = "reg", model = "restricted_besag", neigh = neigh_RJ,
+                   family = family,
+                   approach = "mcmc", proj = "hh",
+                   nsamp = 1000)
+
 sglm_mod$unrestricted$summary_fixed
 sglmm_mod$unrestricted$summary_fixed
-rglmm_mod$unrestricted$summary_fixed
-rglmm_mod$restricted$summary_fixed
-
-sglm_mod$unrestricted$summary_hyperpar
-sglmm_mod$unrestricted$summary_hyperpar
+rglmm_rhz$unrestricted$summary_fixed
+rglmm_rhz$restricted$summary_fixed
+rglmm_spock$restricted$summary_fixed
+rglmm_hh$restricted$summary_fixed
 
 }

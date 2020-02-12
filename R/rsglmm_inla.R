@@ -5,10 +5,12 @@
 #' @param data data.frame containing, at least, \code{time}, \code{status}, \code{covariates}, \code{area} list
 #' @param formula INLA formula ?inla.surv
 #' @param family 'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'
+#' @param E Expected counts for poisson data. Default = 1 for all sample units
+#' @param n N trails for binomial data. Default = 1 for all sample units
 #' @param W Adjacency matrix
 #' @param proj 'none', 'rhz' or 'spock'
 #' @param nsamp Sample size to use the projection approach
-#' @param ... Other parameters used in ?inla
+#' @param ... Other parameters used in ?INLA::inla
 #'
 #' @return INLA object with corrected parameters
 #'
@@ -16,8 +18,9 @@
 #'
 #' @export
 
-rsglmm_inla <- function(data, formula, family, W = NULL,
+rsglmm_inla <- function(data, formula, family,
                         E = NULL, n = NULL,
+                        W = NULL,
                         proj = "none", nsamp = 1000,
                         ...) {
   ##-- Time

@@ -7,6 +7,19 @@
 #'               family, proj = "none", nsamp = 1000,
 #'               approach = "inla", ...)
 #'
+#' @param data data.frame containing the covariates in formula and E, n and area if necessary
+#' @param formula Formula for the fixed effects
+#' @param E Expected counts for poisson data. Default = 1 for all sample units
+#' @param n N trails for binomial data. Default = 1 for all sample units
+#' @param area Areal variable name in data
+#' @param model Spatial model adopted: "besag" or "restricted_besag", for example. The model availability will depend on the approach
+#' @param neigh Neighborhood structure. A \code{SpatialPolygonsDataFrame} object
+#' @param family Some allowed families are: 'gaussian', 'poisson' and 'binomial'. The family availability will depend on the approach
+#' @param proj 'none', 'rhz', 'hh' or 'spock'
+#' @param nsamp Number of samples desired. Default = 1000
+#' @param approach 'inla' or 'mcmc'
+#' @param ... Other parameters used in ?INLA::inla or ?ngspatial::sparse.sglmm
+#'
 #' @examples
 #' set.seed(1)
 #'
@@ -17,7 +30,7 @@
 #' tau <- 1
 #'
 #' ##-- Data ----
-#' family <- "binomial"
+#' family <- "poisson"
 #' data <- rglmm(beta = beta, tau = tau, family = family,
 #'               confounding = "none", neigh = neigh_RJ,
 #'               scale = TRUE)
@@ -32,32 +45,45 @@
 #'                     family = family,
 #'                     proj = "none", nsamp = 1000)
 #'
-#' rglmm_mod <- rsglmm(data = data, formula = Y ~ X1 + X2,
+#' rglmm_rhz <- rsglmm(data = data, formula = Y ~ X1 + X2,
 #'                     area = "reg", model = "restricted_besag", neigh = neigh_RJ,
 #'                     family = family,
 #'                     proj = "rhz", nsamp = 1000)
 #'
+#' rglmm_spock <- rsglmm(data = data, formula = Y ~ X1 + X2,
+#'                       area = "reg", model = "restricted_besag", neigh = neigh_RJ,
+#'                       family = family,
+#'                       proj = "spock", nsamp = 1000)
+#'
+#' rglmm_hh <- rsglmm(data = data, formula = Y ~ X1 + X2,
+#'                    area = "reg", model = "restricted_besag", neigh = neigh_RJ,
+#'                    family = family,
+#'                    approach = "mcmc", proj = "hh",
+#'                    nsamp = 1000)
+#'
 #' sglm_mod$unrestricted$summary_fixed
 #' sglmm_mod$unrestricted$summary_fixed
-#' rglmm_mod$unrestricted$summary_fixed
-#' rglmm_mod$restricted$summary_fixed
+#' rglmm_rhz$unrestricted$summary_fixed
+#' rglmm_rhz$restricted$summary_fixed
+#' rglmm_spock$restricted$summary_fixed
+#' rglmm_hh$restricted$summary_fixed
 #'
-#' sglm_mod$unrestricted$summary_hyperpar
-#' sglmm_mod$unrestricted$summary_hyperpar
+#' @importFrom ngspatial sparse.sglmm
 #'
 #' @return Restricted model
 #'
 #' @export
 
 rsglmm <- function(data, formula,
+                   E = NULL, n = NULL,
                    area = NULL, model = NULL, neigh = NULL,
                    family, proj = "none", nsamp = 1000,
                    approach = "inla",
-                   E = NULL, n = NULL,
                    ...) {
 
   if(missing(formula)) stop("You must provide the formula")
-  if(!proj %in% c("none", "rhz", "spock")) stop("proj must be 'none', 'rhz' or 'spock'")
+  if(!proj %in% c("none", "rhz", "hh", "spock")) stop("proj must be 'none', 'rhz', 'hh' or 'spock'")
+  if(proj == "hh" & approach == "inla") message("hh is only implemented in INLA. Changing approach to 'inla'\n")
 
   f_fixed <- format(formula)
 
@@ -74,7 +100,7 @@ rsglmm <- function(data, formula,
         W <- nb2mat(neighbours = neigh, style = "B")
       }
     } else {
-      W <- nb2mat(neighbours = poly2nb(neigh), style = "B")
+      W <- nb2mat(neighbours = poly2nb(neigh), style = "B", zero.policy = TRUE)
     }
   } else {
     W <- NULL
@@ -102,7 +128,26 @@ rsglmm <- function(data, formula,
 
   ##-- BUGS
   if(approach == "mcmc") {
-    stop("Not implemented yet")
+    if(proj != "hh") message("Just hh method is available for now. Changing proj to 'hh' \n")
+    proj <- 'hh'
+
+    if(family == "nbinomial") family <- "negbinomial"
+
+    if(is.null(list(...)$attractive)) {
+      attractive <- round(0.5*(nrow(W)/2))
+      message(sprintf("'attractive' parameter not defined. Trying attractive = %s. See ?ngspatial::sparse.sglmm", attractive))
+    }
+
+    E <- substitute(E)
+    n <- substitute(n)
+    if(!is.null(E)) formula <- update.formula(formula, paste0("~ . + offset(log(", deparse(E), "))"))
+    if(!is.null(n)) formula <- update.formula(formula, paste0("~ . + offset(log(", deparse(n), "))"))
+
+    out <- rsglmm_mcmc(data = data, formula = formula,
+                       family = family, W = W, area = area,
+                       proj = proj, ...)
+
+    return(out)
   }
 
   return(out)

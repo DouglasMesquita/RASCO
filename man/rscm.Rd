@@ -22,9 +22,9 @@ rscm(data, formula1, formula2, E1 = NULL, E2 = NULL, neigh = NULL, area = NULL,
 
 \item{E2}{Expected counts for Y2 in data. Default = 1 for all sample units}
 
-\item{neigh}{Neighborhood structure. A \code{SpatialPolygonsDataFrame} object}
-
 \item{area}{Areal variable name in data}
+
+\item{neigh}{Neighborhood structure. A \code{SpatialPolygonsDataFrame} object}
 
 \item{proj}{'none' or 'spock'}
 
