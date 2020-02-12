@@ -17,6 +17,12 @@ environment:
   NOT_CRAN: true
   USE_RTOOLS: true
   R_REMOTES_STANDALONE: true
+  matrix:
+    - R_VERSION: stable
+      R_ARCH: x64
+
+    - R_VERSION: stable
+      R_ARCH: i386
 
 # Adapt as necessary starting from here
 
