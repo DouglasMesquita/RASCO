@@ -5,4 +5,5 @@
     * RHZ is now available for GLMM
     * RHZ can deal with multiple individuos in the same region
     * SPOCK is now available for GLMM
+    * HH is now available for GLMM
 

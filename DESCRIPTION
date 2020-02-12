@@ -13,10 +13,10 @@ Imports:
     R2OpenBUGS, 
     coda, 
     sp, 
-    spdep
+    spdep,
+    ngspatial
 Suggests:
     covr
-#Remotes: url::https://inla.r-inla-download.org/R/testing/src/contrib/INLA_19.12.10.tar.gz
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
