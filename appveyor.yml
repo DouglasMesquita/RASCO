@@ -6,58 +6,16 @@ init:
         $ErrorActionPreference = "Stop"
         Invoke-WebRequest http://raw.github.com/krlmlr/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
         Import-Module '..\appveyor-tool.ps1'
-
 install:
   ps: Bootstrap
 
 cache:
-#  - C:\RLibrary
+  - C:\RLibrary
 
-environment:
-  global:
-    NOT_CRAN: true
-    USE_RTOOLS: true
-  matrix:
-  - R_VERSION: devel
-    GCC_PATH: mingw_32
+platform:
+  - x64
 
-  - R_VERSION: devel
-    R_ARCH: x64
-    GCC_PATH: mingw_64
-
-  - R_VERSION: release
-    R_ARCH: x64
-
-  - R_VERSION: stable
-
-  - R_VERSION: patched
-
-  - R_VERSION: 3.5.3
-    RTOOLS_VERSION: 35
-
-  - R_VERSION: 3.4.4
-    RTOOLS_VERSION: 34
-
-  - R_VERSION: 3.3.3
-    RTOOLS_VERSION: 33
-
-  - R_VERSION: 3.2.5
-    RTOOLS_VERSION: 33
-
-  - R_VERSION: 3.2.3
-    _R_CHECK_FORCE_SUGGESTS_: false
-    PKGTYPE: source
-    RTOOLS_VERSION: 33
-    DOWNLOAD_FILE_METHOD: wininet
-
-  - R_VERSION: 3.2.0
-    _R_CHECK_FORCE_SUGGESTS_: false
-    PKGTYPE: source
-    RTOOLS_VERSION: 32
-    DOWNLOAD_FILE_METHOD: wininet
-
-matrix:
-  fast_finish: true
+# Adapt as necessary starting from here
 
 build_script:
   - travis-tool.sh install_deps
