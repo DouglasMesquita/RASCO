@@ -76,6 +76,7 @@ test_that("rscm options", {
   testthat::expect_error(
     rscm(data = data,
          formula1 = Y1 ~ X11 + X12,
+         formula2 = Y2 ~ X21 + X12,
          family = c("poisson", "zeroinflatedpoisson0"),
          E1 = E1, E2 = E2,
          area = "reg", neigh = neigh_RJ,
@@ -84,6 +85,7 @@ test_that("rscm options", {
   testthat::expect_error(
     rscm(data = data,
          formula1 = Y1 ~ X11 + X12,
+         formula2 = Y2 ~ X21 + X12,
          family = c("poisson", "zeroinflatedpoisson0"),
          E1 = E1, E2 = E2,
          area = "reg", neigh = neigh_RJ,
@@ -92,6 +94,7 @@ test_that("rscm options", {
   testthat::expect_true(
     rscm(data = data,
          formula1 = Y1 ~ X11 + X12,
+         formula2 = Y2 ~ X21 + X12,
          family = c("poisson", "zeroinflatedpoisson0"),
          E1 = E1, E2 = E2,
          area = "reg", neigh = neigh_RJ,
@@ -100,6 +103,7 @@ test_that("rscm options", {
   testthat::expect_true(
     rscm(data = data,
          formula1 = Y1 ~ X11 + X12,
+         formula2 = Y2 ~ X21 + X12,
          family = c("poisson", "zeroinflatedpoisson0"),
          E1 = E1, E2 = E2,
          area = "reg", neigh = neigh_RJ,
@@ -108,6 +112,7 @@ test_that("rscm options", {
   testthat::expect_true(
     rscm(data = data,
          formula1 = Y1 ~ X11 + X12,
+         formula2 = Y2 ~ X21 + X12,
          family = c("poisson", "zeroinflatedpoisson0"),
          E1 = E1, E2 = E2,
          area = "reg", neigh = neigh_RJ,
