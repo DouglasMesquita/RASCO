@@ -25,7 +25,7 @@ environment:
       R_ARCH: i386
 
 before_build:
-  cmd: Rscript -e "install.packages(https://inla.r-inla-download.org/R/stable/bin/windows/contrib/3.6/INLA_19.09.03.zip, repos = 'https://cloud.r-project.org', dependencies = TRUE)"
+  cmd: Rscript -e "install.packages('https://inla.r-inla-download.org/R/stable/bin/windows/contrib/3.6/INLA_19.09.03.zip', repos = 'https://cloud.r-project.org', dependencies = TRUE)"
 
 # Adapt as necessary starting from here
 
