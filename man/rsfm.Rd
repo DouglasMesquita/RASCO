@@ -10,13 +10,13 @@ rsfm(data, formula, area = NULL,
             approach = "inla", ...)
 }
 \arguments{
-\item{data}{data.frame containing, at least, \code{time}, \code{event}, \code{covariates}, \code{area} list}
+\item{data}{data.frame containing the covariates in formula and area if necessary}
 
 \item{formula}{A formula in the format surv(time, time2, event) ~ X1 + X2}
 
 \item{area}{Column of data specifying the region of each individual}
 
-\item{model}{Spatial model adopted: "besag" or  "restricted_besag"}
+\item{model}{Spatial model adopted: "besag" or  "restricted_besag", for example}
 
 \item{neigh}{Neighborhood structure. A \code{SpatialPolygonsDataFrame} object}
 
@@ -30,7 +30,7 @@ rsfm(data, formula, area = NULL,
 
 \item{approach}{'inla' or 'mcmc'}
 
-\item{...}{Other parameters used in ?inla or ?bugs}
+\item{...}{Other parameters used in ?INLA::inla or ?R2OpenBUGS::bugs}
 }
 \value{
 \item{$unrestricted}{A list containing $sample, $summary_fixed, $summary_hyperpar, $summary_random, $out and $time}

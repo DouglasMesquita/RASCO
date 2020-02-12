@@ -14,8 +14,8 @@
 #' @param formula2 Formula for the disease 2 fixed effects
 #' @param E1 Expected counts for Y1 in data. Default = 1 for all sample units
 #' @param E2 Expected counts for Y2 in data. Default = 1 for all sample units
-#' @param neigh Neighborhood structure. A \code{SpatialPolygonsDataFrame} object
 #' @param area Areal variable name in data
+#' @param neigh Neighborhood structure. A \code{SpatialPolygonsDataFrame} object
 #' @param proj 'none' or 'spock'
 #' @param nsamp Number of samples desired. Default = 1000
 #' @param family A vector with two families. Some allowed families are: poisson, nbinomial, zeroinflatedpoisson0, zeroinflatednbinomial0.
@@ -88,7 +88,7 @@
 #'
 #' @export
 
-rscm <- function(data, formula1, formula2, E1 = NULL, E2 = NULL, neigh = NULL, area = NULL,
+rscm <- function(data, formula1, formula2, E1 = NULL, E2 = NULL, area = NULL, neigh = NULL,
                  proj = "none", nsamp = 1000, family = c("poisson", "poisson"),
                  prior_gamma = c(0, 0.1), prior_prec = c(0.5, 0.05),
                  random_effects = list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE), ...) {
