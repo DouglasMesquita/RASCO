@@ -111,7 +111,7 @@ rsglmm <- function(data, formula, family,
 
   if("sf" %in% class(neigh)) neigh <- as(neigh, "Spatial")
 
-  f_fixed <- format(formula)
+  f_fixed <- paste0(format(formula), collapse = "")
 
   if(!is.null(area)) {
     if(proj == "spock" & grepl(x = model, pattern = "restricted")) {
