@@ -109,6 +109,8 @@ rsglmm <- function(data, formula, family,
     approach <- 'mcmc'
   }
 
+  if("sf" %in% class(neigh)) neigh <- as(neigh, "Spatial")
+
   f_fixed <- format(formula)
 
   if(!is.null(area)) {
