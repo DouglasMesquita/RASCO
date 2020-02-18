@@ -84,6 +84,9 @@ rsglmm_mcmc <- function(data, formula, family, E, n,
 
     hyperpar_ast <- cbind.data.frame(tau_g, tau_s)
     names(hyperpar_ast) <- c("Precision for the Gaussian observations", sprintf("Precision for %s", area))
+  } else {
+    hyperpar_ast <- cbind.data.frame(tau_s)
+    names(hyperpar_ast) <- sprintf("Precision for %s", area)
   }
 
   W_ast <- data.frame(mod$gamma.sample[pos_samp,]%*%t(mod$M))
