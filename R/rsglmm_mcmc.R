@@ -10,9 +10,6 @@
 #' @param W adjacency matrix.
 #' @param area areal variable name in \code{data}.
 #' @param proj 'hh'
-#' @param nsamp number of desired. samples Default = 1000.
-#' @param burnin burnin size.
-#' @param lag lag parameter.
 #' @param attractive the number of attractive Moran eigenvectors to use. See ?ngspatial::sparse.sglmm for more information.
 #' @param ... other parameters used in ?ngspatial::sparse.sglmm
 #'
@@ -43,8 +40,7 @@
 
 rsglmm_mcmc <- function(data, formula, family, E, n,
                         W, area,
-                        proj, nsamp = 1000, burnin = 5000, lag = 1,
-                        attractive = round(0.5*(nrow(W)/2)),
+                        proj, attractive = round(0.5*(nrow(W)/2)),
                         ...) {
   ##-- Time
   time_start <- Sys.time()
@@ -61,14 +57,12 @@ rsglmm_mcmc <- function(data, formula, family, E, n,
     mod <- ngspatial::sparse.sglmm(data = data, formula = formula,
                                    family = family, offset = offset,
                                    method = "RSR", A = W,
-                                   minit = burnin, maxit = burnin + nsamp*lag,
                                    attractive = attractive, x = x,
                                    ...)
   } else {
     mod <- ngspatial::sparse.sglmm(data = data, formula = formula,
                                    family = family,
                                    method = "RSR", A = W,
-                                   minit = burnin, maxit = burnin + nsamp*lag,
                                    attractive = attractive, x = x,
                                    ...)
   }
@@ -76,11 +70,9 @@ rsglmm_mcmc <- function(data, formula, family, E, n,
   time_end_mcmc <- Sys.time()
 
   ##-- Samples
-  pos_samp <- seq(1, (nsamp*lag), by = lag)
-
-  tau_s <- mod$tau.s.sample[pos_samp]
+  tau_s <- mod$tau.s.sample
   if(family == "gaussian") {
-    tau_g <- mod$tau.h.sample[pos_samp]
+    tau_g <- mod$tau.h.sample
 
     hyperpar_ast <- cbind.data.frame(tau_g, tau_s)
     names(hyperpar_ast) <- c("Precision for the Gaussian observations", sprintf("Precision for %s", area))
@@ -89,10 +81,10 @@ rsglmm_mcmc <- function(data, formula, family, E, n,
     names(hyperpar_ast) <- sprintf("Precision for %s", area)
   }
 
-  W_ast <- data.frame(mod$gamma.sample[pos_samp,]%*%t(mod$M))
+  W_ast <- data.frame(mod$gamma.sample%*%t(mod$M))
   names(W_ast) <- paste(area, 1:ncol(W_ast), sep = "_")
 
-  beta_ast <- data.frame(mod$beta.sample[pos_samp, , drop = FALSE])
+  beta_ast <- data.frame(mod$beta.sample)
   names(beta_ast) <- names(mod$coefficients)
 
   sample_ast <- cbind.data.frame(hyperpar_ast, beta_ast, W_ast)
