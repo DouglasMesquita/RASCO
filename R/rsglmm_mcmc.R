@@ -5,6 +5,8 @@
 #' @param data an data frame or list containing the variables in the model.
 #' @param formula an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.
 #' @param family allowed families are: 'gaussian', 'poisson' and 'binomial'.
+#' @param E known component, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. If not provided it is set to 1.
+#' @param n a vector containing the number of trials for the binomial likelihood and variantes, or the number of required successes for the nbinomial2 likelihood. Default value is set to 1.
 #' @param W adjacency matrix.
 #' @param area areal variable name in \code{data}.
 #' @param proj 'hh'
@@ -39,13 +41,16 @@
 #'
 #' @export
 
-rsglmm_mcmc <- function(data, formula, family,
+rsglmm_mcmc <- function(data, formula, family, E, n,
                         W, area,
                         proj, nsamp = 1000, burnin = 5000, lag = 1,
                         attractive = round(0.5*(nrow(W)/2)),
                         ...) {
   ##-- Time
   time_start <- Sys.time()
+
+  if(!is.null(E)) data$offset <- log(E)
+  if(!is.null(n)) data$offset <- log(n)
 
   ##-- Model
   time_start_mcmc <- Sys.time()
@@ -79,12 +84,6 @@ rsglmm_mcmc <- function(data, formula, family,
 
     hyperpar_ast <- cbind.data.frame(tau_g, tau_s)
     names(hyperpar_ast) <- c("Precision for the Gaussian observations", sprintf("Precision for %s", area))
-  }
-  if(family %in% c("poisson", "binomial")) {
-    tau_g <- mod$tau.h.sample
-
-    hyperpar_ast <- cbind.data.frame(tau_s)
-    names(hyperpar_ast) <- sprintf("Precision for %s", area)
   }
 
   W_ast <- data.frame(mod$gamma.sample[pos_samp,]%*%t(mod$M))

@@ -13,7 +13,7 @@
 #' @param formula an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.
 #' @param family some allowed families are: 'gaussian', 'poisson' and 'binomial'. The family availability will depend on the approach.
 #' @param E known component, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. If not provided it is set to 1.
-#' @param n a vector containing the number of trials for the binomial likelihood and variantes, or the number of required successes for the nbinomial2 likelihood. Default value is set to 1..
+#' @param n a vector containing the number of trials for the binomial likelihood and variantes, or the number of required successes for the nbinomial2 likelihood. Default value is set to 1.
 #' @param area areal variable name in \code{data}.
 #' @param model spatial model adopted. Examples: "besag", "besag2" or "restricted_besag". See INLA::inla.list.models() for other models.
 #' @param neigh neighborhood structure. A \code{SpatialPolygonsDataFrame} object.
@@ -170,12 +170,7 @@ rsglmm <- function(data, formula, family,
       message(sprintf("'attractive' parameter not defined. Trying attractive = %s. See ?ngspatial::sparse.sglmm", attractive))
     }
 
-    E <- substitute(E)
-    n <- substitute(n)
-    if(!is.null(E)) formula <- update.formula(formula, paste0("~ . + offset(log(", deparse(E), "))"))
-    if(!is.null(n)) formula <- update.formula(formula, paste0("~ . + offset(log(", deparse(n), "))"))
-
-    out <- rsglmm_mcmc(data = data, formula = formula,
+    out <- rsglmm_mcmc(data = data, E = E, n = n, formula = formula,
                        family = family, W = W, area = area,
                        proj = proj, ...)
 
