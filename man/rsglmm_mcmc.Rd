@@ -13,6 +13,9 @@ rsglmm_mcmc(
   W,
   area,
   proj,
+  nsamp,
+  burnin,
+  lag,
   attractive = round(0.5 * (nrow(W)/2)),
   ...
 )
@@ -33,6 +36,12 @@ rsglmm_mcmc(
 \item{area}{areal variable name in \code{data}.}
 
 \item{proj}{'hh'}
+
+\item{nsamp}{number of desired. samples Default = 1000.}
+
+\item{burnin}{burnin size.}
+
+\item{lag}{lag parameter.}
 
 \item{attractive}{the number of attractive Moran eigenvectors to use. See ?ngspatial::sparse.sglmm for more information.}
 

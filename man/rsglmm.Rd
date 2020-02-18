@@ -7,7 +7,7 @@
 rsglmm(data, formula, family,
               E, n,
               area = NULL, model = NULL, neigh = NULL,
-              proj = "none", nsamp = 1000,
+              proj = "none", nsamp = 1000, burnin = 5000, lag = 1,
               approach = "inla",
               ...)
 }
@@ -31,6 +31,10 @@ rsglmm(data, formula, family,
 \item{proj}{'none', 'rhz', 'hh' or 'spock'}
 
 \item{nsamp}{number of desired. samples Default = 1000.}
+
+\item{burnin}{burnin size (just for hh).}
+
+\item{lag}{lag parameter (just for hh).}
 
 \item{approach}{'inla' or 'mcmc'}
 
@@ -98,7 +102,8 @@ rglmm_spock <- rsglmm(data = data, formula = Y ~ X1 + X2,
 rglmm_hh <- rsglmm(data = data, formula = Y ~ X1 + X2,
                    family = family,
                    area = "reg", model = "restricted_besag", neigh = neigh_RJ,
-                   approach = "mcmc", proj = "hh")
+                   approach = "mcmc",
+                   proj = "hh", burnin = 5000, nsamp = 1000, lag = 10)
 
 sglm_mod$unrestricted$summary_fixed
 sglmm_mod$unrestricted$summary_fixed

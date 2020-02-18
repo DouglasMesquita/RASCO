@@ -5,7 +5,7 @@
 #' @usage rsglmm(data, formula, family,
 #'               E, n,
 #'               area = NULL, model = NULL, neigh = NULL,
-#'               proj = "none", nsamp = 1000,
+#'               proj = "none", nsamp = 1000, burnin = 5000, lag = 1,
 #'               approach = "inla",
 #'               ...)
 #'
@@ -19,6 +19,8 @@
 #' @param neigh neighborhood structure. A \code{SpatialPolygonsDataFrame} object.
 #' @param proj 'none', 'rhz', 'hh' or 'spock'
 #' @param nsamp number of desired. samples Default = 1000.
+#' @param burnin burnin size (just for hh).
+#' @param lag lag parameter (just for hh).
 #' @param approach 'inla' or 'mcmc'
 #' @param ... other parameters used in ?INLA::inla or ?ngspatial::sparse.sglmm
 #'
@@ -60,7 +62,8 @@
 #' rglmm_hh <- rsglmm(data = data, formula = Y ~ X1 + X2,
 #'                    family = family,
 #'                    area = "reg", model = "restricted_besag", neigh = neigh_RJ,
-#'                    approach = "mcmc", proj = "hh")
+#'                    approach = "mcmc",
+#'                    proj = "hh", burnin = 5000, nsamp = 1000, lag = 10)
 #'
 #' sglm_mod$unrestricted$summary_fixed
 #' sglmm_mod$unrestricted$summary_fixed
@@ -97,7 +100,7 @@
 rsglmm <- function(data, formula, family,
                    E = NULL, n = NULL,
                    area = NULL, model = NULL, neigh = NULL,
-                   proj = "none", nsamp = 1000,
+                   proj = "none", nsamp = 1000, burnin = 5000, lag = 1,
                    approach = "inla",
                    ...) {
 
@@ -171,7 +174,8 @@ rsglmm <- function(data, formula, family,
 
     out <- rsglmm_mcmc(data = data, E = E, n = n, formula = formula,
                        family = family, W = W, area = area,
-                       proj = proj, ...)
+                       proj = proj, burnin = burnin, nsamp = nsamp, lag = lag,
+                       ...)
 
     return(out)
   }
