@@ -20,7 +20,7 @@ rsglmm(data, formula, family,
 
 \item{E}{known component, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. If not provided it is set to 1.}
 
-\item{n}{a vector containing the number of trials for the binomial likelihood and variantes, or the number of required successes for the nbinomial2 likelihood. Default value is set to 1..}
+\item{n}{a vector containing the number of trials for the binomial likelihood and variantes, or the number of required successes for the nbinomial2 likelihood. Default value is set to 1.}
 
 \item{area}{areal variable name in \code{data}.}
 

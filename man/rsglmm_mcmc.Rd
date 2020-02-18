@@ -8,12 +8,11 @@ rsglmm_mcmc(
   data,
   formula,
   family,
+  E,
+  n,
   W,
   area,
   proj,
-  nsamp = 1000,
-  burnin = 5000,
-  lag = 1,
   attractive = round(0.5 * (nrow(W)/2)),
   ...
 )
@@ -25,17 +24,15 @@ rsglmm_mcmc(
 
 \item{family}{allowed families are: 'gaussian', 'poisson' and 'binomial'.}
 
+\item{E}{known component, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. If not provided it is set to 1.}
+
+\item{n}{a vector containing the number of trials for the binomial likelihood and variantes, or the number of required successes for the nbinomial2 likelihood. Default value is set to 1.}
+
 \item{W}{adjacency matrix.}
 
 \item{area}{areal variable name in \code{data}.}
 
 \item{proj}{'hh'}
-
-\item{nsamp}{number of desired. samples Default = 1000.}
-
-\item{burnin}{burnin size.}
-
-\item{lag}{lag parameter.}
 
 \item{attractive}{the number of attractive Moran eigenvectors to use. See ?ngspatial::sparse.sglmm for more information.}
 
