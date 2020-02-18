@@ -60,8 +60,7 @@
 #' rglmm_hh <- rsglmm(data = data, formula = Y ~ X1 + X2,
 #'                    family = family,
 #'                    area = "reg", model = "restricted_besag", neigh = neigh_RJ,
-#'                    approach = "mcmc", proj = "hh",
-#'                    nsamp = 1000)
+#'                    approach = "mcmc", proj = "hh")
 #'
 #' sglm_mod$unrestricted$summary_fixed
 #' sglmm_mod$unrestricted$summary_fixed
