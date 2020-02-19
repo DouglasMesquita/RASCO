@@ -6,6 +6,7 @@
 #'               E, n,
 #'               area = NULL, model = NULL, neigh = NULL,
 #'               proj = "none", nsamp = 1000, burnin = 5000, lag = 1,
+#'               priors = list(prior_prec = list(tau = c(0.5, 0.05))),
 #'               approach = "inla",
 #'               ...)
 #'
@@ -21,8 +22,23 @@
 #' @param nsamp number of desired. samples Default = 1000.
 #' @param burnin burnin size (just for hh).
 #' @param lag lag parameter (just for hh).
+#' @param priors a list containing (for now):
+#'     \itemize{
+#'        \item prior_prec: a list with:
+#'        \itemize{
+#'            \item tau: a vector of size two containing shape and scale for the gamma distribution applied for \eqn{\tau}
+#'        }
+#'     }
+#'
 #' @param approach 'inla' or 'mcmc'
 #' @param ... other parameters used in ?INLA::inla or ?ngspatial::sparse.sglmm
+#'
+#' @details The fitted model is given by
+#' \deqn{Y ~ Poisson(E\theta),}
+#'
+#' \deqn{log(\theta) = X\beta + \psi,}
+#'
+#' \deqn{\psi ~ ICAR(\tau).}
 #'
 #' @examples
 #' set.seed(123456)
@@ -101,6 +117,7 @@ rsglmm <- function(data, formula, family,
                    E = NULL, n = NULL,
                    area = NULL, model = NULL, neigh = NULL,
                    proj = "none", nsamp = 1000, burnin = 5000, lag = 1,
+                   priors = list(prior_prec = list(tau = c(0.5, 0.05))),
                    approach = "inla",
                    ...) {
 
@@ -140,6 +157,8 @@ rsglmm <- function(data, formula, family,
     approach <- 'inla'
   }
 
+  prior_tau <- priors$prior_prec
+
   ##-- INLA
   if(approach == "inla") {
     if(!is.null(area)) {
@@ -147,8 +166,8 @@ rsglmm <- function(data, formula, family,
                              model = '%s',
                              graph = %s,
                              hyper = list(prec = list(prior = 'loggamma',
-                                                      param = c(0.5, 0.0005))))",
-                          area, model, "W")
+                                                      param = c(%s, %s))))",
+                          area, model, "W", prior_tau[1], prior_tau[2])
       f_pred <- paste(f_fixed, f_random, sep = " + ")
     } else{
       f_pred <- f_fixed

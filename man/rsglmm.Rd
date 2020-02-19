@@ -8,6 +8,7 @@ rsglmm(data, formula, family,
               E, n,
               area = NULL, model = NULL, neigh = NULL,
               proj = "none", nsamp = 1000, burnin = 5000, lag = 1,
+              priors = list(prior_prec = list(tau = c(0.5, 0.05))),
               approach = "inla",
               ...)
 }
@@ -36,6 +37,14 @@ rsglmm(data, formula, family,
 
 \item{lag}{lag parameter (just for hh).}
 
+\item{priors}{a list containing (for now):
+\itemize{
+   \item prior_prec: a list with:
+   \itemize{
+       \item tau: a vector of size two containing shape and scale for the gamma distribution applied for \eqn{\tau}
+   }
+}}
+
 \item{approach}{'inla' or 'mcmc'}
 
 \item{...}{other parameters used in ?INLA::inla or ?ngspatial::sparse.sglmm}
@@ -63,6 +72,14 @@ rsglmm(data, formula, family,
 }
 \description{
 Fit a Restricted Spatial Generalized Linear Mixed model
+}
+\details{
+The fitted model is given by
+\deqn{Y ~ Poisson(E\theta),}
+
+\deqn{log(\theta) = X\beta + \psi,}
+
+\deqn{\psi ~ ICAR(\tau).}
 }
 \examples{
 set.seed(123456)
