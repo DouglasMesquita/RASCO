@@ -112,7 +112,7 @@ rsglmm_mcmc <- function(data, formula, family, E, n,
   out$restricted$summary_hyperpar <- chain_summary(sample = hyperpar_ast)
   out$restricted$summary_random <- chain_summary(sample = W_ast)
 
-  out$mod <- mod
+  out$out <- mod
   out$time <- time_tab
 
   return(out)
