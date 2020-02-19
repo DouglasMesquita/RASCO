@@ -3,10 +3,10 @@
 #' @description Fit a Restricted Spatial Generalized Linear Mixed model
 #'
 #' @usage rsglmm(data, formula, family,
-#'               E, n,
+#'               E = NULL, n = NULL,
 #'               area = NULL, model = NULL, neigh = NULL,
 #'               proj = "none", nsamp = 1000, burnin = 5000, lag = 1,
-#'               priors = list(prior_prec = list(tau = c(0.5, 0.05))),
+#'               priors = list(prior_prec = list(tau = c(0.5, 0.0005))),
 #'               approach = "inla",
 #'               ...)
 #'
@@ -117,7 +117,7 @@ rsglmm <- function(data, formula, family,
                    E = NULL, n = NULL,
                    area = NULL, model = NULL, neigh = NULL,
                    proj = "none", nsamp = 1000, burnin = 5000, lag = 1,
-                   priors = list(prior_prec = list(tau = c(0.5, 0.05))),
+                   priors = list(prior_prec = list(tau = c(0.5, 0.0005))),
                    approach = "inla",
                    ...) {
 
