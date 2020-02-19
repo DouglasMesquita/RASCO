@@ -318,3 +318,51 @@ update_inla_formula <- function(formula) {
               size_restricted = size_restricted,
               size_unrestricted = size_unrestricted))
 }
+
+#' @title Deviance Information Criterion
+#'
+#' @description Get the Deviance Information Criterion (DIC) from a model
+#'
+#' @param object a object from ?rsglmm, ?rscm or ?rsfm
+#'
+#' @return DIC
+#'
+#' @export
+
+DIC <- function(object) {
+  out <- object$out
+
+  if(class(out) == "inla") {
+    return(out$dic$dic)
+  }
+
+  if(class(out) == "sparse.sglmm") {
+    return(out$dic)
+  }
+
+  stop(sprintf("Don't know how to deal with an object of class %s. Did you fit a model using rsglmm, rscm or rsfm?", class(out)))
+}
+
+#' @title Watanabe–Akaike information criterion
+#'
+#' @description Get the Watanabe–Akaike information criterion (WAIC) from a model
+#'
+#' @param object a object from ?rsglmm, ?rscm or ?rsfm
+#'
+#' @return WAIC
+#'
+#' @export
+
+WAIC <- function(object) {
+  out <- object$out
+
+  if(class(out) == "inla") {
+    return(out$waic$waic)
+  }
+
+  if(class(out) == "sparse.sglmm") {
+    stop(sprintf("Not implemented yet!", class(out)))
+  }
+
+  stop(sprintf("Don't know how to deal with an object of class %s. Did you fit a model using rsglmm, rscm or rsfm?", class(out)))
+}
