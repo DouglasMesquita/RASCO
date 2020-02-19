@@ -268,8 +268,8 @@ meang <- function(x, g, weighted = FALSE) {
 update_inla_formula <- function(formula) {
   ##-- Checking formula
   terms_formula <- terms.formula(formula, specials = c("f"), data = NULL)
-  terms_labels <- attr(terms_formula, "term.labels")
-  terms_f <- attr(terms_formula, "specials")$f - 1
+  terms_labels <- paste(attr(terms_formula, "variables"))
+  terms_f <- attr(terms_formula, "specials")$f + 1 ##-- + 1 for the list parameter
 
   pos_restricted <- grep(x = terms_labels, pattern = "restricted")
   pos_unrestricted <- grep(x = terms_labels,
@@ -282,7 +282,7 @@ update_inla_formula <- function(formula) {
     formula_new <- as.formula(formula_char)
 
     terms_formula <- terms.formula(formula_new, specials = c("f"), data = NULL)
-    terms_labels <- attr(terms_formula, "term.labels")
+    terms_labels <- paste(attr(terms_formula, "variables"))
   } else{
     formula_new <- formula
   }
