@@ -73,8 +73,11 @@ rsfm_inla <- function(data, formula, family, W = NULL,
 
   ##-- Model
   time_start_inla <- Sys.time()
-  mod <- inla(formula = formula, data = data, family = family,
-              control.compute = list(config = TRUE), ...)
+  args <- list(...)
+  args$control.compute$config <- TRUE
+
+  inla_aux <- function(...) inla(formula = formula, data = data, family = family, ...)
+  mod <- do.call(what = inla_aux, args = args)
 
   model_sample <- inla.posterior.sample(result = mod, n = nsamp, use.improved.mean = TRUE)
   hyperpar_samp <- inla.hyperpar.sample(result = mod, n = nsamp, improve.marginals = TRUE)

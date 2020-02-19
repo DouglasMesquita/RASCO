@@ -277,15 +277,19 @@ rscm <- function(data, formula1, formula2, family = c("poisson", "poisson"),
     }
   }
 
-  if("control.inla" %in% names(list(...))) `<-`(control.inla$strategy, "laplace") else `<-`(control.inla, list(strategy = "laplace"))
-  if("control.compute" %in% names(list(...))) `<-`(control.compute$config, TRUE) else `<-`(control.compute, list(config = TRUE))
-
   time_start_inla <- Sys.time()
-  mod <- inla(formula = f_s,
-              family = family,
-              data = inla_list,
-              E = as.vector(E), control.inla = control.inla,
-              control.compute = control.compute, ...)
+  args <- list(...)
+  args$control.compute$config <- TRUE
+  args$control.inla$strategy <- "laplace"
+
+  inla_aux <- function(...) inla(formula = f_s, family = family, data = inla_list, E = as.vector(E), ...)
+  mod <- do.call(what = inla_aux, args = args)
+
+  # mod <- inla(formula = f_s,
+  #             family = family,
+  #             data = inla_list,
+  #             E = as.vector(E), control.inla = control.inla,
+  #             control.compute = control.compute, ...)
   model_sample <- inla.posterior.sample(result = mod, n = nsamp, use.improved.mean = TRUE)
   hyperpar_samp <- inla.hyperpar.sample(result = mod, n = nsamp, improve.marginals = TRUE)
   time_end_inla <- Sys.time()
