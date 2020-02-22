@@ -271,7 +271,7 @@ update_inla_formula <- function(formula) {
   terms_labels <- paste(attr(terms_formula, "variables"))
   terms_f <- attr(terms_formula, "specials")$f + 1 ##-- + 1 for the list parameter
 
-  pos_restricted <- grep(x = terms_labels, pattern = "restricted")
+  pos_restricted <- grep(x = terms_labels, pattern = "restricted|r_")
   pos_unrestricted <- grep(x = terms_labels,
                            pattern = "\"(iid|besag|besag2|besagproper|besagproper2)")
 
