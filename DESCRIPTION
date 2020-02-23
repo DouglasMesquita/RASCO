@@ -14,7 +14,8 @@ Imports:
     coda, 
     sp, 
     spdep,
-    ngspatial
+    ngspatial,
+    methods
 Suggests:
     covr,
     testthat (>= 2.1.0)

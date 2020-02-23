@@ -56,7 +56,6 @@ test_that("rscm options", {
   testthat::expect_equal(object = rownames(zip_model$summary_random), NULL)
   testthat::expect_equal(object = rownames(zip_model$summary_hyperpar), "zero-probability parameter for zero-inflated poisson_0[2]")
   testthat::expect_equal(object = nrow(spoi_model$summary_hyperpar), 6)
-  testthat::expect_equal(object = rspoi_model$time$total > spoi_model$time$total, TRUE)
   testthat::expect_message(
     rscm(data = data,
          formula1 = Y1 ~ X11 + X12,
@@ -101,30 +100,42 @@ test_that("rscm options", {
          proj = "hh", priors = list(prior_prec = c(0.5, 0.005, 0.01)))
   )
   testthat::expect_true(
-    rscm(data = data,
-         formula1 = Y1 ~ X11 + X12,
-         formula2 = Y2 ~ X21 + X12,
-         family = c("poisson", "poisson"),
-         E1 = E1, E2 = E2,
-         area = "reg", neigh = neigh_RJ,
-         random_effects = list(shared = FALSE)) %>% is.list()
+    {
+      out <- rscm(data = data,
+                  formula1 = Y1 ~ X11 + X12,
+                  formula2 = Y2 ~ X21 + X12,
+                  family = c("poisson", "poisson"),
+                  E1 = E1, E2 = E2,
+                  area = "reg", neigh = neigh_RJ,
+                  random_effects = list(shared = FALSE))
+
+      is.list(out)
+    }
   )
   testthat::expect_true(
-    rscm(data = data,
+    {
+      out <- rscm(data = data,
          formula1 = Y1 ~ X11 + X12,
          formula2 = Y2 ~ X21 + X12,
          family = c("poisson", "poisson"),
          E1 = E1, E2 = E2,
          area = "reg", neigh = neigh_RJ,
-         random_effects = list(specific_1 = FALSE)) %>% is.list()
+         random_effects = list(specific_1 = FALSE))
+
+      is.list(out)
+    }
   )
   testthat::expect_true(
-    rscm(data = data,
+    {
+      out <- rscm(data = data,
          formula1 = Y1 ~ X11 + X12,
          formula2 = Y2 ~ X21 + X12,
          family = c("poisson", "poisson"),
          E1 = E1, E2 = E2,
          area = "reg", neigh = neigh_RJ,
-         random_effects = list(specific_2 = FALSE)) %>% is.list()
+         random_effects = list(specific_2 = FALSE))
+
+      is.list(out)
+    }
   )
 })

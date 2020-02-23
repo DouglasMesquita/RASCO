@@ -88,6 +88,7 @@
 #' rglmm_spock$restricted$summary_fixed
 #' rglmm_hh$restricted$summary_fixed
 #'
+#' @importFrom methods as
 #' @importFrom ngspatial sparse.sglmm
 #' @importFrom stats model.matrix update.formula
 #'
