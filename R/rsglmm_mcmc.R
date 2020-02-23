@@ -57,7 +57,7 @@ rsglmm_mcmc <- function(data, formula, family, E, n,
   dimnames(W)[[1]] <- NULL
   x <- TRUE
 
-  if(!is.null(data$offset)) {
+  if(suppressWarnings(!is.null(data$offset))) {
     mod <- ngspatial::sparse.sglmm(data = data, formula = formula,
                                    family = family, offset = offset,
                                    method = "RSR", A = W,
