@@ -77,6 +77,7 @@ rsfm_inla <- function(data, formula, family, W = NULL,
   args$control.compute$config <- TRUE
 
   inla_aux <- function(...) inla(formula = formula, data = data, family = family, ...)
+  if(length(reg_name_r) > 0) W <- parent.frame()$W
   mod <- do.call(what = inla_aux, args = args)
 
   model_sample <- inla.posterior.sample(result = mod, n = nsamp, use.improved.mean = TRUE)
