@@ -79,7 +79,7 @@ rsglmm_mcmc <- function(data, formula, family, E, n,
   pos_samp <- seq(burnin + lag,  burnin + lag*nsamp, by = lag)
 
   tau_s <- mod$tau.s.sample[pos_samp]
-  if(family == "gaussian") {
+  if((is.character(family) && family == "gaussian" || (class(family) == "family" && family$family == "gaussian"))) {
     tau_g <- mod$tau.h.sample[pos_samp]
 
     hyperpar_ast <- cbind.data.frame(tau_g, tau_s)

@@ -185,7 +185,7 @@ rsglmm <- function(data, formula, family,
     if(proj != "hh") message("Just hh method is available for now. Changing proj to 'hh'")
     proj <- 'hh'
 
-    if(family == "nbinomial") family <- "negbinomial"
+    if(is.character(family) && family == "nbinomial") family <- "negbinomial"
 
     if(is.null(list(...)$attractive)) {
       attractive <- round(0.5*(nrow(W)/2))
