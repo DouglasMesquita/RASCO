@@ -292,7 +292,8 @@ update_inla_formula <- function(formula) {
     for(i in seq_along(terms_f)){
       var_f[[i]] = eval(expr = parse(text = gsub(pattern = "^f\\(",
                                                  replacement = "INLA::f(",
-                                                 x = terms_labels[terms_f[i]])), envir = parent.frame())
+                                                 x = terms_labels[terms_f[i]])),
+                        envir = parent.frame(n = 2))
     }
 
     ##-- Restricted and unrestricted components
@@ -361,7 +362,7 @@ WAIC <- function(object) {
   }
 
   if(class(out) == "sparse.sglmm") {
-    stop(sprintf("Not implemented yet!", class(out)))
+    return(NA_real_)
   }
 
   stop(sprintf("Don't know how to deal with an object of class %s. Did you fit a model using rsglmm, rscm or rsfm?", class(out)))
