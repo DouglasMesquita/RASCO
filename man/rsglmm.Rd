@@ -25,7 +25,7 @@ rsglmm(data, formula, family,
 
 \item{area}{areal variable name in \code{data}.}
 
-\item{model}{spatial model adopted. Examples: "besag", "besag2" or "restricted_besag". See INLA::inla.list.models() for other models.}
+\item{model}{spatial model adopted. Examples: "besag", "besag2" or "r_besag". See INLA::inla.list.models() for other models.}
 
 \item{neigh}{neighborhood structure. A \code{SpatialPolygonsDataFrame} object.}
 
@@ -108,17 +108,17 @@ sglmm_mod <- rsglmm(data = data, formula = Y ~ X1 + X2,
 
 rglmm_rhz <- rsglmm(data = data, formula = Y ~ X1 + X2,
                     family = family,
-                    area = "reg", model = "restricted_besag", neigh = neigh_RJ,
+                    area = "reg", model = "r_besag", neigh = neigh_RJ,
                     proj = "rhz", nsamp = 1000)
 
 rglmm_spock <- rsglmm(data = data, formula = Y ~ X1 + X2,
                       family = family,
-                      area = "reg", model = "restricted_besag", neigh = neigh_RJ,
+                      area = "reg", model = "r_besag", neigh = neigh_RJ,
                       proj = "spock", nsamp = 1000)
 
 rglmm_hh <- rsglmm(data = data, formula = Y ~ X1 + X2,
                    family = family,
-                   area = "reg", model = "restricted_besag", neigh = neigh_RJ,
+                   area = "reg", model = "r_besag", neigh = neigh_RJ,
                    approach = "mcmc",
                    proj = "hh", burnin = 5000, nsamp = 1000, lag = 10)
 

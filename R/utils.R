@@ -278,7 +278,7 @@ update_inla_formula <- function(formula) {
   ##-- Updating formula
   if(length(pos_restricted) > 0){
     formula_char <- format(formula)
-    formula_char <- gsub(pattern = "restricted_besag", replacement = "besag", x = formula_char)
+    formula_char <- gsub(pattern = "restricted_besag|r_besag", replacement = "besag", x = formula_char)
     formula_new <- as.formula(formula_char)
 
     terms_formula <- terms.formula(formula_new, specials = c("f"), data = NULL)

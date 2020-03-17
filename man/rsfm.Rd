@@ -19,7 +19,7 @@ rsfm(data, formula, family, area = NULL,
 
 \item{area}{areal variable name in \code{data}.}
 
-\item{model}{spatial model adopted. Examples: "besag", "besag2" or "restricted_besag". See INLA::inla.list.models() for other models.}
+\item{model}{spatial model adopted. Examples: "besag", "besag2" or "r_besag". See INLA::inla.list.models() for other models.}
 
 \item{neigh}{neighborhood structure. A \code{SpatialPolygonsDataFrame} object.}
 
@@ -91,7 +91,7 @@ weibull_inla <- rsfm(data = data,
 rsfm_inla <- rsfm(data = data,
                   formula = surv(time = L, event = status) ~ X1 + X2,
                   family = "weibull", area = "reg",
-                  model = "restricted_besag", neigh = neigh_RJ,
+                  model = "r_besag", neigh = neigh_RJ,
                   proj = "rhz", nsamp = 1000, approach = "inla")
 
 weibull_inla$unrestricted$summary_fixed

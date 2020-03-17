@@ -24,7 +24,7 @@ test_that("rglmm options", {
 
   rglmm_rhz <- rsglmm(data = data, formula = Y ~ X1 + X2,
                       family = family,
-                      area = "reg", model = "restricted_besag", neigh = neigh_RJ,
+                      area = "reg", model = "r_besag", neigh = neigh_RJ,
                       proj = "rhz", nsamp = 1000)
 
   testthat::skip_on_appveyor()
@@ -40,13 +40,13 @@ test_that("rglmm options", {
   testthat::expect_error(
     rsglmm(data = data, formula = Y ~ X1 + X2,
            family = family,
-           area = "reg", model = "restricted_besag", neigh = neigh_RJ,
+           area = "reg", model = "r_besag", neigh = neigh_RJ,
            proj = "hughes", nsamp = 1000)
   )
   testthat::expect_message(
     rsglmm(data = data, formula = Y ~ X1 + X2,
            family = family,
-           area = "reg", model = "restricted_besag", neigh = neigh_RJ,
+           area = "reg", model = "r_besag", neigh = neigh_RJ,
            proj = "hh", approach = "inla", nsamp = 1000)
   )
 
@@ -54,19 +54,19 @@ test_that("rglmm options", {
   testthat::expect_message(
     rsglmm(data = data_tst, formula = Y ~ X1 + X2,
            family = family,
-           area = "reg", model = "restricted_besag", neigh = neigh_RJ,
+           area = "reg", model = "r_besag", neigh = neigh_RJ,
            proj = "hh", approach = "inla", nsamp = 1000)
   )
   testthat::expect_message(
     rsglmm(data = data, formula = Y ~ X1 + X2,
            family = family,
-           area = "reg", model = "restricted_besag", neigh = neigh_RJ,
+           area = "reg", model = "r_besag", neigh = neigh_RJ,
            proj = "hh", approach = "mcmc", nsamp = 1000)
   )
   testthat::expect_message(
     rsglmm(data = data, formula = Y ~ X1 + X2,
            family = family,
-           area = "reg", model = "restricted_besag", neigh = neigh_RJ,
+           area = "reg", model = "r_besag", neigh = neigh_RJ,
            proj = "rhz", approach = "mcmc", nsamp = 1000, attractive = 10)
   )
 })

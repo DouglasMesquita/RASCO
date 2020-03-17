@@ -16,7 +16,7 @@
 #' @param E known component, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. If not provided it is set to 1.
 #' @param n a vector containing the number of trials for the binomial likelihood and variantes, or the number of required successes for the nbinomial2 likelihood. Default value is set to 1.
 #' @param area areal variable name in \code{data}.
-#' @param model spatial model adopted. Examples: "besag", "besag2" or "restricted_besag". See INLA::inla.list.models() for other models.
+#' @param model spatial model adopted. Examples: "besag", "besag2" or "r_besag". See INLA::inla.list.models() for other models.
 #' @param neigh neighborhood structure. A \code{SpatialPolygonsDataFrame} object.
 #' @param proj 'none', 'rhz', 'hh' or 'spock'
 #' @param nsamp number of desired. samples Default = 1000.
@@ -67,17 +67,17 @@
 #'
 #' rglmm_rhz <- rsglmm(data = data, formula = Y ~ X1 + X2,
 #'                     family = family,
-#'                     area = "reg", model = "restricted_besag", neigh = neigh_RJ,
+#'                     area = "reg", model = "r_besag", neigh = neigh_RJ,
 #'                     proj = "rhz", nsamp = 1000)
 #'
 #' rglmm_spock <- rsglmm(data = data, formula = Y ~ X1 + X2,
 #'                       family = family,
-#'                       area = "reg", model = "restricted_besag", neigh = neigh_RJ,
+#'                       area = "reg", model = "r_besag", neigh = neigh_RJ,
 #'                       proj = "spock", nsamp = 1000)
 #'
 #' rglmm_hh <- rsglmm(data = data, formula = Y ~ X1 + X2,
 #'                    family = family,
-#'                    area = "reg", model = "restricted_besag", neigh = neigh_RJ,
+#'                    area = "reg", model = "r_besag", neigh = neigh_RJ,
 #'                    approach = "mcmc",
 #'                    proj = "hh", burnin = 5000, nsamp = 1000, lag = 10)
 #'
@@ -134,7 +134,7 @@ rsglmm <- function(data, formula, family,
   f_fixed <- paste0(format(formula), collapse = "")
 
   if(!is.null(area)) {
-    if(proj == "spock" & grepl(x = model, pattern = "restricted")) {
+    if(proj == "spock" & grepl(x = model, pattern = "restricted_|r_")) {
       X <- model.matrix(object = formula[-2], data = data)
 
       if(nrow(X) > length(neigh)) {

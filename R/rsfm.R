@@ -12,7 +12,7 @@
 #' @param formula an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.
 #' @param family 'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'.
 #' @param area areal variable name in \code{data}.
-#' @param model spatial model adopted. Examples: "besag", "besag2" or "restricted_besag". See INLA::inla.list.models() for other models.
+#' @param model spatial model adopted. Examples: "besag", "besag2" or "r_besag". See INLA::inla.list.models() for other models.
 #' @param neigh neighborhood structure. A \code{SpatialPolygonsDataFrame} object.
 #' @param proj 'none' or 'rhz'.
 #' @param nsamp number of desired. samples Default = 1000.
@@ -53,7 +53,7 @@
 #' rsfm_inla <- rsfm(data = data,
 #'                   formula = surv(time = L, event = status) ~ X1 + X2,
 #'                   family = "weibull", area = "reg",
-#'                   model = "restricted_besag", neigh = neigh_RJ,
+#'                   model = "r_besag", neigh = neigh_RJ,
 #'                   proj = "rhz", nsamp = 1000, approach = "inla")
 #'
 #' weibull_inla$unrestricted$summary_fixed

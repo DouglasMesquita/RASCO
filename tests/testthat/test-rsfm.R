@@ -27,7 +27,7 @@ test_that("rsfm options", {
   rsfm_inla <- rsfm(data = data,
                     formula = surv(time = L, event = status) ~ X1 + X2,
                     family = "weibull", area = "reg",
-                    model = "restricted_besag", neigh = neigh_RJ,
+                    model = "r_besag", neigh = neigh_RJ,
                     proj = "rhz", nsamp = 1000, approach = "inla")
 
   testthat::skip_on_appveyor()

@@ -1,0 +1,191 @@
+---
+output: github_document
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# RASCO: An R package to Alleviate the Spatial Confounding
+
+<!-- badges: start -->
+<!-- [![CRAN status](https://www.r-pkg.org/badges/version/FLAMES)](https://cran.r-project.org/package=FLAMES) -->
+[![Travis build status](https://travis-ci.org/DouglasMesquita/RASCO.svg?branch=master)](https://travis-ci.org/DouglasMesquita/RASCO)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/DouglasMesquita/RASCO?branch=master&svg=true)](https://ci.appveyor.com/project/DouglasMesquita/RASCO)
+[![Codecov test coverage](https://codecov.io/gh/DouglasMesquita/RASCO/branch/master/graph/badge.svg)](https://codecov.io/gh/DouglasMesquita/RASCO?branch=master)
+<!-- badges: end -->
+
+## Overview
+
+RASCO is an R package that allow the practioners to fit restricted spatial models for three class of models:
+
++ Generalized linear mixed models 
+
++ Shared component models
+
++ Spatial frailty models
+
+
+## Installation
+
+```{r eval = FALSE}
+# Install from CRAN (when available)
+install.packages("RASCO")
+# Or the development version from GitHub
+# install.packages("devtools")
+devtools::install_github("DouglasMesquita/RASCO")
+```
+
+```{r RASCO, message=FALSE}
+library(RASCO)
+library(spdep)
+
+set.seed(11022020)
+```
+
+## Restricted generalized linear mixed models
+
+```{r rglmm}
+##-- Spatial structure
+data("neigh_RJ")
+
+beta <- c(-0.1, 0.7)
+tau <- 1
+
+##-- Data ----
+family <- "poisson"
+data <- rglmm(beta = beta, tau = tau, family = family,
+              confounding = "linear", neigh = neigh_RJ,
+              scale = TRUE)
+
+##-- Models ----
+sglm_mod <- rsglmm(data = data, formula = Y ~ X1 + X2,
+                   family = family,
+                   proj = "none", nsamp = 1000)
+
+sglmm_mod <- rsglmm(data = data, formula = Y ~ X1 + X2,
+                    area = "reg", model = "besag", neigh = neigh_RJ,
+                    family = family,
+                    proj = "none", nsamp = 1000)
+
+rglmm_mod <- rsglmm(data = data, formula = Y ~ X1 + X2,
+                    area = "reg", model = "r_besag", neigh = neigh_RJ,
+                    family = family,
+                    proj = "rhz", nsamp = 1000)
+
+sglm_mod$unrestricted$summary_fixed
+sglmm_mod$unrestricted$summary_fixed
+rglmm_mod$unrestricted$summary_fixed
+rglmm_mod$restricted$summary_fixed
+
+sglmm_mod$unrestricted$summary_hyperpar
+```
+
+The _SVIF_ function provides the coefficients variance ratio between two models. We can notice that the restricted model alleviates the variance inflation
+
+```{r rsglmm vif}
+SVIF(rglmm_mod$restricted, rglmm_mod$unrestricted)
+```
+
+## Restricted shared component models
+
+```{r rscm}
+##-- Spatial structure
+data("neigh_RJ")
+
+##-- Parameters
+alpha_1 <- 0.5
+alpha_2 <- 0.1
+beta_1 <- c(-0.5, -0.2)
+beta_2 <- c(-0.8, -0.4)
+tau_s <- 1
+tau_1 <- tau_2 <- 10
+delta <- 1.5
+
+##-- Data
+data <- rshared(alpha_1 = alpha_1, alpha_2 = alpha_2, beta_1 = beta_1, beta_2 = beta_2, delta = delta,
+                tau_1 = tau_1, tau_2 = tau_2, tau_s = tau_s,
+                confounding = "linear",
+                neigh = neigh_RJ)
+
+##-- Models
+scm_mod <- rscm(data = data,
+                formula1 = Y1 ~ X11 + X12,
+                formula2 = Y2 ~ X21 + X12,
+                E1 = E1, E2 = E2,
+                family = c("poisson", "poisson"),
+                area = "reg", neigh = neigh_RJ,
+                priors = list(prior_prec = c(0.5, 0.05), 
+                              prior_gamma = c(0, 0.5)),
+                proj = "none", nsamp = 1000,
+                random_effects = list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE))
+
+rscm_mod <- rscm(data = data,
+                 formula1 = Y1 ~ X11 + X12,
+                 formula2 = Y2 ~ X21 + X12,
+                 E1 = E1, E2 = E2,
+                 family = c("poisson", "poisson"),
+                 area = "reg", neigh = neigh_RJ,
+                 priors = list(prior_prec = list(tau_s = c(0.5, 0.05), 
+                                                 tau_1 = c(0.5, 0.05), 
+                                                 tau_2 = c(0.5, 0.05)), 
+                               prior_gamma = c(0, 0.5)),
+                 proj = "spock", nsamp = 1000,
+                 random_effects = list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE))
+
+##-- Summary
+scm_mod$summary_fixed
+rscm_mod$summary_fixed
+
+scm_mod$summary_hyperpar
+rscm_mod$summary_hyperpar
+```
+
+```{r rscm vif}
+SVIF(rscm_mod, scm_mod)
+```
+
+## Restricted spatial frailty models
+
+```{r rsfm}
+#-- Spatial structure
+data("neigh_RJ")
+
+##-- Individuals and regions
+n_reg <- length(neigh_RJ)
+n_id <- sample(x = 3:5, size = n_reg, replace = T)
+beta <- c(0.3, -0.3)
+tau <- 0.75 # Scale of spatial effect
+
+##-- Data
+data <- rsurv(n_id = n_id,
+              coefs = beta, cens = 0.5, scale = FALSE,
+              cens_type = "right", hazard = "weibull",
+              hazard_params = hazard_params <- list(weibull = list(alpha = 1.2, variant = 0)),
+              spatial = "ICAR",
+              neigh = neigh_RJ, tau = tau, confounding = "linear", proj = "none")
+
+##-- Models
+weibull_mod <- rsfm(data = data,
+                    formula = surv(time = L, event = status) ~ X1 + X2,
+                    model = "none", family = "weibull",
+                    proj = "rhz", nsamp = 1000, approach = "inla")
+
+rsfm_mod <- rsfm(data = data, area = "reg",
+                 formula = surv(time = L, event = status) ~ X1 + X2,
+                 model = "r_besag", neigh = neigh_RJ, family = "weibull",
+                 proj = "rhz", nsamp = 1000, approach = "inla")
+
+weibull_mod$unrestricted$summary_fixed
+rsfm_mod$unrestricted$summary_fixed
+rsfm_mod$restricted$summary_fixed
+```
+
+```{r rsfm vif}
+SVIF(weibull_mod$unrestricted, rsfm_mod$unrestricted)
+SVIF(weibull_mod$unrestricted, rsfm_mod$restricted)
+```
