@@ -15,6 +15,9 @@
 #' @export
 
 spock <- function(X, map){
+
+  if("sf" %in% class(map)) neigh <- as(map, "Spatial")
+
   H <- X%*%solve(t(X)%*%X)%*%t(X)
   n <- ncol(H)
 
