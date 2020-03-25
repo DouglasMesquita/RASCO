@@ -40,7 +40,7 @@
 #' data <- rsurv(n_id = n_id,
 #'               coefs = coefs, cens = 0.5, scale = FALSE,
 #'               cens_type = "right", hazard = "weibull",
-#'               hazard_params = hazard_params <- list(weibull = list(alpha = 1.2, variant = 0)),
+#'               hazard_params = list(weibull = list(alpha = 1.2, variant = 0)),
 #'               spatial = "ICAR",
 #'               neigh = neigh_RJ, tau = tau, confounding = "linear", proj = "none")
 #'
