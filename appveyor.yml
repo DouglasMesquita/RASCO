@@ -17,7 +17,11 @@ platform:
 
 # Adapt as necessary starting from here
 environment:
-  USE_RTOOLS: true
+  global:
+    WARNINGS_ARE_ERRORS: false
+    _R_CHECK_FORCE_SUGGESTS_: false
+    R_ARCH: x64
+    USE_RTOOLS: true ## to be able to use Remotes (i.e. packages from non-CRAN sources)
 
 build_script:
   - travis-tool.sh install_deps
