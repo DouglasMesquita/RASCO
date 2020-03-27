@@ -2,7 +2,7 @@ Package: RASCO
 Type: Package
 Title: An R Package to Alleviate Spatial Confounding
 Version: 0.0.3
-Author: Douglas R. M. Azevedo
+Author: Douglas R. M. Azevedo, Marcos O. Prates, Dipankar Bandyopadhyay
 Maintainer: Douglas R. M. Azevedo <douglasrm.azevedo@gmail.com>
 Description: It allows the application of several restricted models for
     generalized linear regressions and survival analysis under spatial confounding.
