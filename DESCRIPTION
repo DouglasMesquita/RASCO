@@ -9,13 +9,14 @@ Description: It allows the application of several restricted models for
 Depends: 
     R (>= 3.5.0)
 Imports:
+    coda,
     INLA,
-    R2OpenBUGS,
-    coda, 
-    sp, 
-    spdep,
+    methods,
     ngspatial,
-    methods
+    R2OpenBUGS,
+    remotes,
+    sp, 
+    spdep
 Suggests:
     covr,
     testthat (>= 2.1.0)
