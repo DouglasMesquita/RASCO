@@ -108,6 +108,7 @@
 #' \item{$out}{INLA output}
 #' \item{$time}{time elapsed for fitting the model}
 #'
+#' @importFrom INLA inla inla.posterior.sample inla.hyperpar.sample
 #' @importFrom stats as.formula terms model.frame update
 #'
 #' @export

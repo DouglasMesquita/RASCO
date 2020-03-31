@@ -9,8 +9,8 @@ Description: It allows the application of several restricted models for
 Depends: 
     R (>= 3.5.0)
 Imports:
-    coda,
     INLA,
+    coda,
     methods,
     ngspatial,
     R2OpenBUGS,
@@ -20,7 +20,7 @@ Imports:
 Suggests:
     covr,
     testthat (>= 2.1.0)
-Additional_repositories: https://inla.r-inla-download.org/R/stable/
+Additional_repositories: https://inla.r-inla-download.org/R/testing
 License: GPL-2
 Encoding: UTF-8
 LazyData: true

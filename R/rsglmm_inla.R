@@ -32,7 +32,7 @@
 #' \item{$out}{INLA output}
 #' \item{$time}{time elapsed for fitting the model}
 #'
-#' @import INLA
+#' @importFrom INLA inla inla.posterior.sample inla.hyperpar.sample
 #'
 #' @export
 
