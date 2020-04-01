@@ -96,8 +96,8 @@ get_trans_samp <- function(marg, fun, n = 1000, trunc = FALSE, method = "linear"
 
   if(trunc) marg <- marg[marg[, 1] > 0, ]
 
-  trans_marg <- inla.tmarginal(fun = fun, marginal = marg, method = method)
-  trans_samp <- inla.rmarginal(n = n, marginal = trans_marg)
+  trans_marg <- INLA::inla.tmarginal(fun = fun, marginal = marg, method = method)
+  trans_samp <- INLA::inla.rmarginal(n = n, marginal = trans_marg)
 
   return(trans_samp)
 }

@@ -76,12 +76,12 @@ rsfm_inla <- function(data, formula, family, W = NULL,
   args <- list(...)
   args$control.compute$config <- TRUE
 
-  inla_aux <- function(...) inla(formula = formula, data = data, family = family, ...)
+  inla_aux <- function(...) INLA::inla(formula = formula, data = data, family = family, ...)
   if(length(reg_name_r) > 0) W <- parent.frame()$W
   mod <- do.call(what = inla_aux, args = args)
 
-  model_sample <- inla.posterior.sample(result = mod, n = nsamp, use.improved.mean = TRUE)
-  hyperpar_samp <- inla.hyperpar.sample(result = mod, n = nsamp, improve.marginals = TRUE)
+  model_sample <- INLA::inla.posterior.sample(result = mod, n = nsamp, use.improved.mean = TRUE)
+  hyperpar_samp <- INLA::inla.hyperpar.sample(result = mod, n = nsamp, improve.marginals = TRUE)
   time_end_inla <- Sys.time()
 
   X <- as.matrix(mod$model.matrix)

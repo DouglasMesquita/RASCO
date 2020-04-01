@@ -283,11 +283,11 @@ rscm <- function(data, formula1, formula2, family = c("poisson", "poisson"),
   args$control.compute$config <- TRUE
   args$control.inla$strategy <- "laplace"
 
-  inla_aux <- function(...) inla(formula = f_s, family = family, data = inla_list, E = as.vector(E), ...)
+  inla_aux <- function(...) INLA::inla(formula = f_s, family = family, data = inla_list, E = as.vector(E), ...)
   mod <- do.call(what = inla_aux, args = args)
 
-  model_sample <- inla.posterior.sample(result = mod, n = nsamp, use.improved.mean = TRUE)
-  hyperpar_samp <- inla.hyperpar.sample(result = mod, n = nsamp, improve.marginals = TRUE)
+  model_sample <- INLA::inla.posterior.sample(result = mod, n = nsamp, use.improved.mean = TRUE)
+  hyperpar_samp <- INLA::inla.hyperpar.sample(result = mod, n = nsamp, improve.marginals = TRUE)
   time_end_inla <- Sys.time()
 
   id_fixed <- paste0(c("alpha1", "alpha2", colnames(inla_list$X)), ":", 1)
