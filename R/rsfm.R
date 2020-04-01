@@ -110,7 +110,7 @@ rsfm <- function(data, formula, family,
                              model = '%s',
                              graph = %s,
                              hyper = list(prec = list(prior = 'loggamma',
-                                                    param = c(%s, %s))))",
+                                                      param = c(%s, %s))))",
                           area, model, "W", prior_prec[1], prior_prec[2])
       f_pred <- paste(f_fixed, f_random, sep = " + ")
     } else{

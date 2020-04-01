@@ -35,7 +35,7 @@
 #' \item{$out}{INLA output}
 #' \item{$time}{time elapsed for fitting the model}
 #'
-#' @importFrom INLA inla inla.posterior.sample inla.hyperpar.sample
+#' @importFrom INLA inla f inla.posterior.sample inla.hyperpar.sample
 #' @importFrom stats density
 #'
 #' @export
