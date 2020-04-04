@@ -15,6 +15,8 @@ test_that("rscm options", {
   tau_1 <- tau_2 <- 10
   delta <- 1.5
 
+  testthat::skip_on_appveyor()
+
   ##-- Data
   data <- rshared(alpha_1 = alpha_1, alpha_2 = alpha_2,
                   beta_1 = beta_1, beta_2 = beta_2,
@@ -51,7 +53,6 @@ test_that("rscm options", {
                       area = "reg", neigh = neigh_RJ,
                       proj = "spock")
 
-  testthat::skip_on_appveyor()
   testthat::expect_equal(object = simple_model$summary_hyperpar, NULL)
   testthat::expect_equal(object = rownames(zip_model$summary_random), NULL)
   testthat::expect_equal(object = rownames(zip_model$summary_hyperpar), "zero-probability parameter for zero-inflated poisson_0[2]")
