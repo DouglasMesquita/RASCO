@@ -45,8 +45,8 @@ test_that("rsfm options", {
 
   testthat::skip_on_appveyor()
   testthat::expect_equal(object = length(weibull_inla$restricted), 0)
-  testthat::expect_equal(object = length(weibull_mcmc$restricted), 0)
-  # testthat::expect_equal(object = length(rsfm_inla$restricted), 4)
+  # testthat::expect_equal(object = length(weibull_mcmc$restricted), 0)
+  testthat::expect_equal(object = length(rsfm_inla$restricted), 4)
   # testthat::expect_equal(object = length(rsfm_mcmc$restricted), 4)
   testthat::expect_error(
     suppressWarnings(rsfm(data = data,
