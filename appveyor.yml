@@ -18,6 +18,8 @@ platform:
 # Adapt as necessary starting from here
 environment:
   global:
+    R_BUILD_ARGS: --no-build-vignettes --resave-data
+    R_CHECK_ARGS: --no-build-vignettes --resave-data
     WARNINGS_ARE_ERRORS: false
     _R_CHECK_FORCE_SUGGESTS_: false
     R_ARCH: x64
