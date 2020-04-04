@@ -8,8 +8,8 @@ compiler:
 os:
   - linux
 
-r_build_args: "--no-build-vignettes --resave-data"
-r_check_args: "--no-build-vignettes --resave-data"
+r_build_args: "--no-build-vignettes --resave-data --no-manual"
+r_check_args: "--no-build-vignettes --resave-data --no-manual --as-cran"
 
 before_install:
   - sudo apt-get -y install libudunits2-dev
