@@ -253,6 +253,7 @@ rsurv_left <- function(times, cens){
   }
 
   cens_ids <- cens_times > times
+  cens_val <- rep(x = 1, times = N)
   censure <- cens_ids
 
   L[censure] <- 0
@@ -286,7 +287,7 @@ rsurv_interval <- function(times, cens){
   cens_val <- rep(x = 1, times = N)
 
   ##-- Censure ----
-  max_time <- max(times[!cens_ids])
+  max_time <- max(times)
   med_times <- median(times[!cens_ids])
 
   cens_times_L <- runif(n = N, min = 0, max = times)

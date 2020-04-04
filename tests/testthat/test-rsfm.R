@@ -30,9 +30,24 @@ test_that("rsfm options", {
                     model = "r_besag", neigh = neigh_RJ,
                     proj = "rhz", nsamp = 1000, approach = "inla")
 
+  weibull_mcmc <- rsfm(data = data,
+                       formula = surv(time = L, event = status) ~ X1 + X2,
+                       family = "weibull", model = "none",
+                       proj = "rhz", nsamp = 10, burnin = 0, lag = 1,
+                       approach = "mcmc")
+
+  rsfm_mcmc <- rsfm(data = data,
+                    formula = surv(time = L, event = status) ~ X1 + X2,
+                    family = "weibull", area = "reg",
+                    model = "r_besag", neigh = neigh_RJ,
+                    proj = "rhz", nsamp = 10, burnin = 0, lag = 1,
+                    approach = "mcmc")
+
   testthat::skip_on_appveyor()
   testthat::expect_equal(object = length(weibull_inla$restricted), 0)
+  testthat::expect_equal(object = length(weibull_mcmc$restricted), 0)
   testthat::expect_equal(object = length(rsfm_inla$restricted), 4)
+  testthat::expect_equal(object = length(rsfm_mcmc$restricted), 4)
   testthat::expect_error(
     suppressWarnings(rsfm(data = data,
                           formula = L ~ X1 + X2,
