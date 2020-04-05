@@ -42,6 +42,8 @@
 
 rsfm_mcmc <- function(model, data, inits, parameters, covariates, area,
                       proj = "none", fast = TRUE, nsamp = 1000, burnin = 5000, lag = 10, ...){
+  if(is.na(findOpenBUGS())) stop("We didn't find OpenBugs on your computer.")
+
   ##-- Time
   time_start <- Sys.time()
 
