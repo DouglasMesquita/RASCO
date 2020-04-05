@@ -40,19 +40,19 @@ test_that("rsfm options", {
   testthat::skip_on_appveyor()
   testthat::expect_equal(object = length(weibull_inla$restricted), 0)
 
-  if(!is.na(findOpenBUGS())) testthat::expect_length(object =
-                                                      rsfm(data = data,
-                                                           formula = surv(time = L, event = status) ~ X1 + X2,
-                                                           family = "weibull", model = "none",
-                                                           proj = "rhz", nsamp = 10, burnin = 0, lag = 1,
-                                                           approach = "mcmc")$unrestricted,
-                                                    3)
-  if(is.na(findOpenBUGS())) testthat::expect_error(object =
-                                                     rsfm(data = data,
-                                                          formula = surv(time = L, event = status) ~ X1 + X2,
-                                                          family = "weibull", model = "none",
-                                                          proj = "rhz", nsamp = 10, burnin = 0, lag = 1,
-                                                          approach = "mcmc"))
+  # if(!is.na(findOpenBUGS())) testthat::expect_length(object =
+  #                                                     rsfm(data = data,
+  #                                                          formula = surv(time = L, event = status) ~ X1 + X2,
+  #                                                          family = "weibull", model = "none",
+  #                                                          proj = "rhz", nsamp = 10, burnin = 0, lag = 1,
+  #                                                          approach = "mcmc")$unrestricted,
+  #                                                   3)
+  # if(is.na(findOpenBUGS())) testthat::expect_error(object =
+  #                                                    rsfm(data = data,
+  #                                                         formula = surv(time = L, event = status) ~ X1 + X2,
+  #                                                         family = "weibull", model = "none",
+  #                                                         proj = "rhz", nsamp = 10, burnin = 0, lag = 1,
+  #                                                         approach = "mcmc"))
 
   testthat::expect_equal(object = length(rsfm_inla$restricted), 4)
   testthat::expect_equal(object = length(rsfm_inla2$restricted), 4)
