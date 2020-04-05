@@ -5,7 +5,7 @@
 #' @param n_id vector with the number of individuals in each region to be generated.
 #' @param coefs vector of coefficients.
 #' @param cens censure level.
-#' @param cens_type censoring scheme: 'left', 'right' or ''interval.
+#' @param cens_type censoring scheme: 'none', 'left', 'right' or ''interval.
 #' @param hazard hazard model: 'exponencial', 'weibull' or 'pwe'.
 #' @param hazard_params named list with parameters for the hazard model: hazard_dft().
 #' @param spatial spatial model: 'none' for the conventional Cox model,
@@ -38,7 +38,7 @@ rsurv <- function(n_id, coefs = c(0.1, 0.4, -0.3),
     stop("It is a not valid spatial model. Please try: 'none', 'gamma', 'lognormal', 'ICAR' or 'BYM'")
   if(!(hazard %in% c("weibull", "exponential", "pwe")))
     stop("It is a not valid hazard model. Please try: 'weibull', 'exponential' or 'pwe'")
-  if(!(cens_type %in% c("right", "left", "interval")))
+  if(!(cens_type %in% c("none", "right", "left", "interval")))
     stop("It is a not valid censoring scheme. Please try: 'right', 'left' or 'interval'")
   if(is.null(neigh)) stop("You must to define neigh (SpatialPolygonsDataFrame object).")
   if(!confounding %in% c("none", "linear", "quadratic", "cubic")) stop("It is a not valid confounding specification. Please try: 'none', 'linear', 'quadratic', 'cubic'.")
