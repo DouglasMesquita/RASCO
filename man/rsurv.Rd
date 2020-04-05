@@ -28,7 +28,7 @@ rsurv(
 
 \item{cens}{censure level.}
 
-\item{cens_type}{censoring scheme: 'left', 'right' or ''interval.}
+\item{cens_type}{censoring scheme: 'none', 'left', 'right' or ''interval.}
 
 \item{hazard}{hazard model: 'exponencial', 'weibull' or 'pwe'.}
 
