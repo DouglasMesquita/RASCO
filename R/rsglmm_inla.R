@@ -4,28 +4,28 @@
 #'
 #' @param data an data frame or list containing the variables in the model.
 #' @param formula an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.
-#' @param family some allowed families are: 'gaussian', 'poisson' and 'binomial'. The family availability will depend on the approach.
-#' @param E known component, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. If not provided it is set to 1.
-#' @param n a vector containing the number of trials for the binomial likelihood and variantes, or the number of required successes for the nbinomial2 likelihood. Default value is set to 1..
+#' @param family some allowed families are: "gaussian", "poisson" and "binomial". The family availability will depend on the approach.
+#' @param E known component, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. Default = 1
+#' @param n a vector containing the number of trials for the binomial likelihood, or the number of required successes for the nbinomial2 likelihood. Default value is set to 1..
 #' @param W adjacency matrix.
-#' @param proj 'none', 'rhz' or 'spock'
-#' @param nsamp number of desired. samples Default = 1000.
+#' @param proj "none", "rhz" or "spock"
+#' @param nsamp number of samples. Default = 1000.
 #' @param ... other parameters used in ?INLA::inla
 #'
 #' @return \item{$unrestricted}{A list containing
 #'                                \itemize{
-#'                                   \item $sample a sample of size nsamp for all parameters in the model
-#'                                   \item $summary_fixed summary measures for the coefficients
-#'                                   \item $summary_hyperpar summary measures for hyperparameters
-#'                                   \item $summary_random summary measures for random quantities
+#'                                   \item $sample: a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed: summary measures for the coefficients
+#'                                   \item $summary_hyperpar: summary measures for hyperparameters
+#'                                   \item $summary_random: summary measures for random quantities
 #'                                 }
 #'                              }
 #' \item{$restricted}{A list containing
 #'                                \itemize{
-#'                                   \item $sample a sample of size nsamp for all parameters in the model
-#'                                   \item $summary_fixed summary measures for the coefficients
-#'                                   \item $summary_hyperpar summary measures for hyperparameters
-#'                                   \item $summary_random summary measures for random quantities
+#'                                   \item $sample: a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed: summary measures for the coefficients
+#'                                   \item $summary_hyperpar: summary measures for hyperparameters
+#'                                   \item $summary_random: summary measures for random quantities
 #'                                 }
 #'                              }
 #'

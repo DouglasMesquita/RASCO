@@ -23,19 +23,19 @@ rshared(
 
 \item{alpha_2}{intercept for disease 2.}
 
-\item{beta_1}{coefficients for disease 1.}
+\item{beta_1}{regression parameters for disease 1.}
 
-\item{beta_2}{coefficients for disease 2.}
+\item{beta_2}{regression parameters for disease 2.}
 
 \item{delta}{dependence on the shared component.}
 
-\item{tau_1}{precision for ICAR specific for disease 1.}
+\item{tau_1}{precision of ICAR specific to disease 1.}
 
-\item{tau_2}{precision for ICAR specific for disease 2.}
+\item{tau_2}{precision of ICAR specific to disease 2.}
 
-\item{tau_s}{precision for ICAR specific for shared component.}
+\item{tau_s}{precision for ICAR specific to the shared component.}
 
-\item{confounding}{'none', 'linear', 'quadratic' or 'cubic'.}
+\item{confounding}{"none", "linear", "quadratic" or "cubic".}
 
 \item{neigh}{neighborhood structure. A \code{SpatialPolygonsDataFrame} object.}
 

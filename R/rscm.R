@@ -17,13 +17,13 @@
 #' @param data an data frame or list containing the variables in the model.
 #' @param formula1 an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted for disease 1.
 #' @param formula2 an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted for disease 2.
-#' @param family a vector of size two with two families. Some allowed families are: poisson, nbinomial, zeroinflatedpoisson0, zeroinflatednbinomial0. See INLA::inla.list.models().
-#' @param E1 known component, for disease 1, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. If not provided it is set to 1.
-#' @param E2 known component, for disease 2, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. If not provided it is set to 1.
+#' @param family a vector of size two with two families. Some allowed families are: poisson, nbinomial, zeroinflatedpoisson0, zeroinflatednbinomial0. See INLA::inla.list.models() for more information.
+#' @param E1 known component, for disease 1, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. Default = 1.
+#' @param E2 known component, for disease 2, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. Default = 1.
 #' @param area areal variable name in \code{data}.
 #' @param neigh neighborhood structure. A \code{SpatialPolygonsDataFrame} object.
-#' @param proj 'none' or 'spock'.
-#' @param nsamp number of desired. samples Default = 1000.
+#' @param proj "none" or "spock".
+#' @param nsamp number of samples. Default = 1000.
 #' @param priors a list containing:
 #'     \itemize{
 #'        \item prior_gamma: a vector of size two containing mean and precision for the normal distribution applied for \eqn{\gamma}

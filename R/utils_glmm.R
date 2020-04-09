@@ -5,9 +5,9 @@
 #' @param beta coefficients parameters.
 #' @param tau precision for ICAR.
 #' @param family "gaussian", "binomial" or "poisson".
-#' @param confounding 'none', 'linear', 'quadratic' or 'cubic'.
+#' @param confounding "none", "linear", "quadratic" or "cubic".
 #' @param neigh neighborhood structure. A \code{SpatialPolygonsDataFrame} object.
-#' @param scale scale covariates? TRUE or FALSE.
+#' @param scale scale covariates? TRUE or FALSE. See ?scale for more information.
 #' @param control_family a list with, at least, a \code{invlink}.
 #'
 #' @importFrom stats rnorm rpois rbinom
@@ -91,6 +91,8 @@ rglmm <- function(beta = c(0.1, -0.1), tau = 1, family = "gaussian",
 #' @title Default values to control GLMM families
 #'
 #' @param family "gaussian", "poisson", "binomial".
+#'
+#' @keywords internal
 
 control_family_dft <- function(family){
   if(family == "gaussian") {

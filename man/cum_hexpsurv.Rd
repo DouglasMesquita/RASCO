@@ -7,10 +7,11 @@
 cum_hexpsurv(t, rate)
 }
 \arguments{
-\item{t}{time's vector.}
+\item{t}{time vector.}
 
-\item{rate}{rate's vector.}
+\item{rate}{rate vector.}
 }
 \description{
-Exponential cumulative hazzards
+Exponential cumulative hazards
 }
+\keyword{internal}

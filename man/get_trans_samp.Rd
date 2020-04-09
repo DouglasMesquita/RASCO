@@ -11,7 +11,7 @@ get_trans_samp(marg, fun, n = 1000, trunc = FALSE, method = "linear")
 
 \item{fun}{a transformation function.}
 
-\item{n}{a number of samples desired.}
+\item{n}{a number of samples}
 
 \item{trunc}{TRUE: x > 0.}
 
@@ -20,3 +20,4 @@ get_trans_samp(marg, fun, n = 1000, trunc = FALSE, method = "linear")
 \description{
 Generating a sample from the transformed marginal
 }
+\keyword{internal}

@@ -18,3 +18,4 @@ gamma_prior(mean, var, a = NULL, b = NULL)
 \description{
 Given mean and variance return a and b
 }
+\keyword{internal}

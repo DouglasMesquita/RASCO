@@ -7,12 +7,13 @@
 surv(time, time2 = NULL, event)
 }
 \arguments{
-\item{time}{time until event (censure) or lower limit for interval censoring.}
+\item{time}{time to event (right censoring), or lower limit (interval censoring).}
 
-\item{time2}{upper limit for interval censoring.}
+\item{time2}{upper limit (interval censoring).}
 
-\item{event}{the event indicator, 1 = observed event, 0 = right censored event, 2 = left censored event, 3 = interval censored event.}
+\item{event}{event indicator; 1 = observed event, 0 = right censored event, 2 = left censored event, 3 = interval censored event.}
 }
 \description{
 Auxiliar function for survival models
 }
+\keyword{internal}

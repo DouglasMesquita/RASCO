@@ -4,32 +4,32 @@
 #'
 #' @param data an data frame or list containing the variables in the model.
 #' @param formula an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.
-#' @param family allowed families are: 'gaussian', 'poisson' and 'binomial'.
-#' @param E known component, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. If not provided it is set to 1.
-#' @param n a vector containing the number of trials for the binomial likelihood and variantes, or the number of required successes for the nbinomial2 likelihood. Default value is set to 1.
+#' @param family allowed families are: "gaussian", "poisson" and "binomial".
+#' @param E known component, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. Default = 1.
+#' @param n a vector containing the number of trials for the binomial likelihood, or the number of required successes for the nbinomial2 likelihood. Default value is set to 1.
 #' @param W adjacency matrix.
 #' @param area areal variable name in \code{data}.
-#' @param proj 'hh'
-#' @param nsamp number of desired. samples Default = 1000.
-#' @param burnin burnin size.
+#' @param proj "hh"
+#' @param nsamp number of samples. Default = 1000.
+#' @param burnin burn-in size.
 #' @param lag lag parameter.
 #' @param attractive the number of attractive Moran eigenvectors to use. See ?ngspatial::sparse.sglmm for more information.
 #' @param ... other parameters used in ?ngspatial::sparse.sglmm
 #'
 #' @return \item{$unrestricted}{A list containing
 #'                                \itemize{
-#'                                   \item $sample a sample of size nsamp for all parameters in the model
-#'                                   \item $summary_fixed summary measures for the coefficients
-#'                                   \item $summary_hyperpar summary measures for hyperparameters
-#'                                   \item $summary_random summary measures for random quantities
+#'                                   \item $sample: a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed: summary measures for the coefficients
+#'                                   \item $summary_hyperpar: summary measures for hyperparameters
+#'                                   \item $summary_random: summary measures for random quantities
 #'                                 }
 #'                              }
 #' \item{$restricted}{A list containing
 #'                                \itemize{
-#'                                   \item $sample a sample of size nsamp for all parameters in the model
-#'                                   \item $summary_fixed summary measures for the coefficients
-#'                                   \item $summary_hyperpar summary measures for hyperparameters
-#'                                   \item $summary_random summary measures for random quantities
+#'                                   \item $sample: a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed: summary measures for the coefficients
+#'                                   \item $summary_hyperpar: summary measures for hyperparameters
+#'                                   \item $summary_random: summary measures for random quantities
 #'                                 }
 #'                              }
 #'

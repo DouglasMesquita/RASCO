@@ -12,3 +12,4 @@ update_inla_formula(formula)
 \description{
 Updating INLA formula
 }
+\keyword{internal}

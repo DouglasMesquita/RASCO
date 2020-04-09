@@ -17,3 +17,4 @@ x
 \description{
 Generate data from ICAR model
 }
+\keyword{internal}

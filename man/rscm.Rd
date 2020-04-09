@@ -23,19 +23,19 @@ rscm(data, formula1, formula2, family = c("poisson", "poisson"),
 
 \item{formula2}{an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted for disease 2.}
 
-\item{family}{a vector of size two with two families. Some allowed families are: poisson, nbinomial, zeroinflatedpoisson0, zeroinflatednbinomial0. See INLA::inla.list.models().}
+\item{family}{a vector of size two with two families. Some allowed families are: poisson, nbinomial, zeroinflatedpoisson0, zeroinflatednbinomial0. See INLA::inla.list.models() for more information.}
 
-\item{E1}{known component, for disease 1, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. If not provided it is set to 1.}
+\item{E1}{known component, for disease 1, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. Default = 1.}
 
-\item{E2}{known component, for disease 2, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. If not provided it is set to 1.}
+\item{E2}{known component, for disease 2, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. Default = 1.}
 
 \item{area}{areal variable name in \code{data}.}
 
 \item{neigh}{neighborhood structure. A \code{SpatialPolygonsDataFrame} object.}
 
-\item{proj}{'none' or 'spock'.}
+\item{proj}{"none" or "spock".}
 
-\item{nsamp}{number of desired. samples Default = 1000.}
+\item{nsamp}{number of samples. Default = 1000.}
 
 \item{priors}{a list containing:
 \itemize{

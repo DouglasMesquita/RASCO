@@ -9,8 +9,9 @@ rexpsurv(N, rate = rep(1, N))
 \arguments{
 \item{N}{number of observations.}
 
-\item{rate}{rate's vector.}
+\item{rate}{rate vector.}
 }
 \description{
-Generate data from Exponential hazzard model
+Generate data from Exponential hazard model
 }
+\keyword{internal}

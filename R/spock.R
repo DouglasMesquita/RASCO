@@ -2,6 +2,8 @@
 #'
 #' @description SPOCK approach to transform the neighborhood structure
 #'
+#' @references Prates, M. O., Assunção, R. M., & Rodrigues, E. C. (2019). \emph{"Alleviating spatial confounding for areal data problems by displacing the geographical centroids"}. Bayesian Analysis, 14(2), 623-647.
+#'
 #' @param X covariate matrix.
 #' @param map object of class \code{nb}.
 #'

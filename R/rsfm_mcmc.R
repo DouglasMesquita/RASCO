@@ -11,27 +11,27 @@
 #' @param parameters vector of parameters names to restore.
 #' @param covariates vector of covariates names.
 #' @param area areal variable name in \code{data}.
-#' @param proj 'none' or 'rhz'.
+#' @param proj "none" or "rhz".
 #' @param fast TRUE to use the reduction operator.
-#' @param nsamp number of desired. samples Default = 1000.
-#' @param burnin burnin size.
+#' @param nsamp number of samples. Default = 1000.
+#' @param burnin burn-in size.
 #' @param lag lag parameter.
 #' @param ... other parameters used in ?R2OpenBUGS::bugs
 #'
 #' @return \item{$unrestricted}{A list containing
 #'                                \itemize{
-#'                                   \item $sample a sample of size nsamp for all parameters in the model
-#'                                   \item $summary_fixed summary measures for the coefficients
-#'                                   \item $summary_hyperpar summary measures for hyperparameters
-#'                                   \item $summary_random summary measures for random quantities
+#'                                   \item $sample: a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed: summary measures for the coefficients
+#'                                   \item $summary_hyperpar: summary measures for hyperparameters
+#'                                   \item $summary_random: summary measures for random quantities
 #'                                 }
 #'                              }
 #' \item{$restricted}{A list containing
 #'                                \itemize{
-#'                                   \item $sample a sample of size nsamp for all parameters in the model
-#'                                   \item $summary_fixed summary measures for the coefficients
-#'                                   \item $summary_hyperpar summary measures for hyperparameters
-#'                                   \item $summary_random summary measures for random quantities
+#'                                   \item $sample: a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed: summary measures for the coefficients
+#'                                   \item $summary_hyperpar: summary measures for hyperparameters
+#'                                   \item $summary_random: summary measures for random quantities
 #'                                 }
 #'                              }
 #'

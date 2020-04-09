@@ -7,10 +7,11 @@
 rsurv_interval(times, cens)
 }
 \arguments{
-\item{times}{vector with observed times.}
+\item{times}{observed time vector.}
 
-\item{cens}{censoring fraction.}
+\item{cens}{censored proportion.}
 }
 \description{
-Generating data with interval censure
+Generating data with interval censoring
 }
+\keyword{internal}

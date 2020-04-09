@@ -20,13 +20,13 @@ rsfm_mcmc(model, data, inits, parameters, covariates, area,
 
 \item{area}{areal variable name in \code{data}.}
 
-\item{proj}{'none' or 'rhz'.}
+\item{proj}{"none" or "rhz".}
 
 \item{fast}{TRUE to use the reduction operator.}
 
-\item{nsamp}{number of desired. samples Default = 1000.}
+\item{nsamp}{number of samples. Default = 1000.}
 
-\item{burnin}{burnin size.}
+\item{burnin}{burn-in size.}
 
 \item{lag}{lag parameter.}
 
@@ -35,18 +35,18 @@ rsfm_mcmc(model, data, inits, parameters, covariates, area,
 \value{
 \item{$unrestricted}{A list containing
                                \itemize{
-                                  \item $sample a sample of size nsamp for all parameters in the model
-                                  \item $summary_fixed summary measures for the coefficients
-                                  \item $summary_hyperpar summary measures for hyperparameters
-                                  \item $summary_random summary measures for random quantities
+                                  \item $sample: a sample of size nsamp for all parameters in the model
+                                  \item $summary_fixed: summary measures for the coefficients
+                                  \item $summary_hyperpar: summary measures for hyperparameters
+                                  \item $summary_random: summary measures for random quantities
                                 }
                              }
 \item{$restricted}{A list containing
                                \itemize{
-                                  \item $sample a sample of size nsamp for all parameters in the model
-                                  \item $summary_fixed summary measures for the coefficients
-                                  \item $summary_hyperpar summary measures for hyperparameters
-                                  \item $summary_random summary measures for random quantities
+                                  \item $sample: a sample of size nsamp for all parameters in the model
+                                  \item $summary_fixed: summary measures for the coefficients
+                                  \item $summary_hyperpar: summary measures for hyperparameters
+                                  \item $summary_random: summary measures for random quantities
                                 }
                              }
 

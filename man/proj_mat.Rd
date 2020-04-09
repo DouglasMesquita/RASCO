@@ -9,14 +9,11 @@ proj_mat(X, groups = NULL, method = "rhz")
 \arguments{
 \item{X}{covariate matrix}
 
-\item{groups}{ids for the subjects}
+\item{groups}{subject id}
 
-\item{method}{projection's method}
-}
-\value{
-Px Projection matrix
-Px_ort (I - Px)
+\item{method}{specific projection method, for now just "rhz" is available.}
 }
 \description{
 Calculate the projection matrix under several approaches
 }
+\keyword{internal}

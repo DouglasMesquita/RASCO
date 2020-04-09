@@ -21,11 +21,11 @@ rglmm(
 
 \item{family}{"gaussian", "binomial" or "poisson".}
 
-\item{confounding}{'none', 'linear', 'quadratic' or 'cubic'.}
+\item{confounding}{"none", "linear", "quadratic" or "cubic".}
 
 \item{neigh}{neighborhood structure. A \code{SpatialPolygonsDataFrame} object.}
 
-\item{scale}{scale covariates? TRUE or FALSE.}
+\item{scale}{scale covariates? TRUE or FALSE. See ?scale for more information.}
 
 \item{control_family}{a list with, at least, a \code{invlink}.}
 }

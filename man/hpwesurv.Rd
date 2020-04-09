@@ -7,12 +7,13 @@
 hpwesurv(t, rates, tgrid)
 }
 \arguments{
-\item{t}{time's vector.}
+\item{t}{time vector.}
 
 \item{rates}{exponential rates.}
 
-\item{tgrid}{time's grid.}
+\item{tgrid}{time grid.}
 }
 \description{
-Piecewise Eponential hazzards
+Piecewise Eponential hazards
 }
+\keyword{internal}

@@ -10,17 +10,17 @@
 #'
 #' @param data an data frame or list containing the variables in the model.
 #' @param formula an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.
-#' @param family 'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'.
+#' @param family "exponential", "weibull", "weibullcure", "loglogistic", "gamma", "lognormal" or "pwe".
 #' @param area areal variable name in \code{data}.
 #' @param model spatial model adopted. Examples: "besag", "besag2" or "r_besag". See INLA::inla.list.models() for other models.
 #' @param neigh neighborhood structure. A \code{SpatialPolygonsDataFrame} object.
-#' @param proj 'none' or 'rhz'.
-#' @param nsamp number of desired. samples Default = 1000.
+#' @param proj "none" or "rhz".
+#' @param nsamp number of samples. Default = 1000.
 #' @param fast TRUE to use the reduction operator.
-#' @param approach 'inla' or 'mcmc'. 'mcmc' has less model options.
+#' @param approach "inla" or "mcmc". "mcmc" has less model options.
 #' @param priors a list containing:
 #'     \itemize{
-#'        \item prior_prec: a vector of size two containing shape and scale for the gamma distribution applied for model precision
+#'        \item prior_prec: a vector of size two, representing shape and scale for the gamma distribution applied for model precision
 #'     }
 #' @param ... other parameters used in ?INLA::inla or ?R2OpenBUGS::bugs
 #'
@@ -62,18 +62,18 @@
 #'
 #' @return \item{$unrestricted}{A list containing
 #'                                \itemize{
-#'                                   \item $sample a sample of size nsamp for all parameters in the model
-#'                                   \item $summary_fixed summary measures for the coefficients
-#'                                   \item $summary_hyperpar summary measures for hyperparameters
-#'                                   \item $summary_random summary measures for random quantities
+#'                                   \item $sample: a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed: summary measures for the coefficients
+#'                                   \item $summary_hyperpar: summary measures for hyperparameters
+#'                                   \item $summary_random: summary measures for random quantities
 #'                                 }
 #'                              }
 #' \item{$restricted}{A list containing
 #'                                \itemize{
-#'                                   \item $sample a sample of size nsamp for all parameters in the model
-#'                                   \item $summary_fixed summary measures for the coefficients
-#'                                   \item $summary_hyperpar summary measures for hyperparameters
-#'                                   \item $summary_random summary measures for random quantities
+#'                                   \item $sample: a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed: summary measures for the coefficients
+#'                                   \item $summary_hyperpar: summary measures for hyperparameters
+#'                                   \item $summary_random: summary measures for random quantities
 #'                                 }
 #'                              }
 #'

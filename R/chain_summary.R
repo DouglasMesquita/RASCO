@@ -10,7 +10,7 @@
 #' @importFrom coda HPDinterval as.mcmc
 #' @importFrom stats median sd
 #'
-#' @return a matrix with \code{mean}, \code{median}, \code{sd}, \code{lower} and \code{upper} measures
+#' @return a matrix with \code{mean}, \code{median}, \code{sd}, \code{lower} and \code{upper} credibility interval measures
 #'
 #' @export
 

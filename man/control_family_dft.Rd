@@ -12,3 +12,4 @@ control_family_dft(family)
 \description{
 Default values to control GLMM families
 }
+\keyword{internal}

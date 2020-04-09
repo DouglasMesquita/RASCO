@@ -14,23 +14,4 @@ select_marginal(samp, ids)
 \description{
 Select the desired marginals on a INLA models
 }
-\details{
-#' @title Generate data from CAR model
-#'
-#' @description Generate data from CAR model
-#'
-#' @param W adjcency matrix
-#' @param sig standard deviation
-#' @param rho dependence parameter
-#'
-#' @return x
-
-rcar <- function(W, sig, rho = 0.9999){
-  D <- diag(colSums(W))
-  Q <- sig*(D - rho*W)
-  sigma <- solve(Q)
-
-  samp <- as.numeric(rmvnorm(n = 1, mean = rep(0, ncol(W)), sigma = sigma))
-  return(samp)
-}
-}
+\keyword{internal}

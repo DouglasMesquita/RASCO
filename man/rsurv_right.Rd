@@ -7,10 +7,11 @@
 rsurv_right(times, cens)
 }
 \arguments{
-\item{times}{vector with observed times.}
+\item{times}{observed time vector.}
 
-\item{cens}{censoring fraction.}
+\item{cens}{censored proportion.}
 }
 \description{
-Generating data with right censure
+Generating data with right censoring
 }
+\keyword{internal}

@@ -9,12 +9,13 @@ rweibullsurv(N, alpha, lambda = rep(1, N), variant = 1)
 \arguments{
 \item{N}{number of observations.}
 
-\item{alpha}{alpha parameter.}
+\item{alpha}{shape parameter.}
 
-\item{lambda}{lambda parameter.}
+\item{lambda}{scale parameter.}
 
 \item{variant}{variant (0 or 1).}
 }
 \description{
-Generate data from Weibull hazzard model
+Generate data from Weibull hazard model
 }
+\keyword{internal}

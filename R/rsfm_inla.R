@@ -8,27 +8,27 @@
 #'
 #' @param data an data frame or list containing the variables in the model.
 #' @param formula a inla formula like inla.surv(time, event) ~ 1 + z + f(ind, model="iid") + f(ind2, weights, model="ar1"). This is much like the formula for a glm except that smooth or spatial terms can be added to the right hand side of the formula. See f for full details and the web site www.r-inla.org for several worked out examples. Each smooth or spatial term specified through f should correspond to separate column of the data frame data. The outcome is the output of the function inla.surv.
-#' @param family 'exponential', 'weibull', 'weibullcure', 'loglogistic', 'gamma', 'lognormal' or 'pwe'.
+#' @param family "exponential", "weibull", "weibullcure", "loglogistic", "gamma", "lognormal" or "pwe".
 #' @param W adjacency matrix.
-#' @param proj 'none' or 'rhz'.
-#' @param nsamp number of desired. samples Default = 1000.
+#' @param proj "none" or "rhz".
+#' @param nsamp number of samples. Default = 1000.
 #' @param fast TRUE to use the reduction operator.
 #' @param ... other parameters used in ?INLA::inla.
 #'
 #' @return \item{$unrestricted}{A list containing
 #'                                \itemize{
-#'                                   \item $sample a sample of size nsamp for all parameters in the model
-#'                                   \item $summary_fixed summary measures for the coefficients
-#'                                   \item $summary_hyperpar summary measures for hyperparameters
-#'                                   \item $summary_random summary measures for random quantities
+#'                                   \item $sample: a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed: summary measures for the coefficients
+#'                                   \item $summary_hyperpar: summary measures for hyperparameters
+#'                                   \item $summary_random: summary measures for random quantities
 #'                                 }
 #'                              }
 #' \item{$restricted}{A list containing
 #'                                \itemize{
-#'                                   \item $sample a sample of size nsamp for all parameters in the model
-#'                                   \item $summary_fixed summary measures for the coefficients
-#'                                   \item $summary_hyperpar summary measures for hyperparameters
-#'                                   \item $summary_random summary measures for random quantities
+#'                                   \item $sample: a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed: summary measures for the coefficients
+#'                                   \item $summary_hyperpar: summary measures for hyperparameters
+#'                                   \item $summary_random: summary measures for random quantities
 #'                                 }
 #'                              }
 #'

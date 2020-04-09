@@ -12,8 +12,8 @@ SVRF(base_model, model)
 \item{model}{model to compare}
 }
 \value{
-res data.frame with VRF for fixed parameters
+res data.frame with SVRF for fixed parameters
 }
 \description{
-Calculate the VRF
+Calculate the spatial variance retraction factor (SVRF)
 }

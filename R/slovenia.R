@@ -10,7 +10,7 @@
 #'
 #' @keywords datasets
 #'
-#' @references Zadnik, Vesna, and B. J. Reich. "Analysis of the relationship between socioeconomic factors and stomach cancer incidence in Slovenia." Neoplasma 53.2 (2006): 103-110.
+#' @references Zadnik, Vesna, and B. J. Reich. \emph{"Analysis of the relationship between socioeconomic factors and stomach cancer incidence in Slovenia"}. Neoplasma 53.2 (2006): 103-110.
 #'
 
 "slovenia"

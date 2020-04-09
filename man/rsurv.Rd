@@ -26,26 +26,26 @@ rsurv(
 
 \item{coefs}{vector of coefficients.}
 
-\item{cens}{censure level.}
+\item{cens}{proportion of censoring.}
 
-\item{cens_type}{censoring scheme: 'none', 'left', 'right' or ''interval.}
+\item{cens_type}{censoring scheme: "none", "left", "right" or "interval".}
 
-\item{hazard}{hazard model: 'exponencial', 'weibull' or 'pwe'.}
+\item{hazard}{hazard model: "exponential", "weibull" or "pwe" for piecewise exponential.}
 
 \item{hazard_params}{named list with parameters for the hazard model: hazard_dft().}
 
-\item{spatial}{spatial model: 'none' for the conventional Cox model,
-'gamma' for an independent gamma frailty,
-'lognormal' for an independent lognormal frailty,
-'ICAR' or 'BYM' for spatial structured models.}
+\item{spatial}{spatial model: "none" for the conventional Cox model,
+"gamma" for an independent gamma frailty,
+"lognormal" for an independent lognormal frailty,
+"ICAR" or "BYM" for spatial structured models.}
 
 \item{neigh}{neighborhood structure. A \code{SpatialPolygonsDataFrame} object.}
 
 \item{tau}{precision for ICAR and BYM models.}
 
-\item{confounding}{'none', 'linear', 'quadratic' or 'cubic'.}
+\item{confounding}{"none", "linear", "quadratic" or "cubic".}
 
-\item{proj}{'none', 'rhz', 'hh' or 'spock'.}
+\item{proj}{"none", "rhz", "hh" or "spock".}
 
 \item{sd_x}{standard deviation to generating confounding.}
 

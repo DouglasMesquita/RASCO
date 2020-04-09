@@ -9,3 +9,4 @@ hazard_dft()
 \description{
 Default values for hazard models
 }
+\keyword{internal}

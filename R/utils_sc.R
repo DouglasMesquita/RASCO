@@ -4,13 +4,13 @@
 #'
 #' @param alpha_1 intercept for disease 1.
 #' @param alpha_2 intercept for disease 2.
-#' @param beta_1 coefficients for disease 1.
-#' @param beta_2 coefficients for disease 2.
+#' @param beta_1 regression parameters for disease 1.
+#' @param beta_2 regression parameters for disease 2.
 #' @param delta dependence on the shared component.
-#' @param tau_1 precision for ICAR specific for disease 1.
-#' @param tau_2 precision for ICAR specific for disease 2.
-#' @param tau_s precision for ICAR specific for shared component.
-#' @param confounding 'none', 'linear', 'quadratic' or 'cubic'.
+#' @param tau_1 precision of ICAR specific to disease 1.
+#' @param tau_2 precision of ICAR specific to disease 2.
+#' @param tau_s precision for ICAR specific to the shared component.
+#' @param confounding "none", "linear", "quadratic" or "cubic".
 #' @param neigh neighborhood structure. A \code{SpatialPolygonsDataFrame} object.
 #' @param scale scale covariates? TRUE or FALSE.
 #'
@@ -86,11 +86,13 @@ rshared <- function(alpha_1 = 0, alpha_2 = 0, beta_1 = c(0.1, -0.1), beta_2 = c(
 #'
 #' @param marg a marginal from a INLA model.
 #' @param fun a transformation function.
-#' @param n a number of samples desired.
+#' @param n a number of samples
 #' @param trunc TRUE: x > 0.
 #' @param method ?inla.tmarginal method.
 #'
 #' @importFrom INLA inla.tmarginal inla.rmarginal
+#'
+#' @keywords internal
 
 get_trans_samp <- function(marg, fun, n = 1000, trunc = FALSE, method = "linear") {
 
@@ -110,6 +112,8 @@ get_trans_samp <- function(marg, fun, n = 1000, trunc = FALSE, method = "linear"
 #' @param var variance of a desired gamma distribution (restore a and b).
 #' @param a shape of a desired gamma distribution (restore mean and variance).
 #' @param b scale of a desired gamma distribution (restore mean and variance).
+#'
+#' @keywords internal
 
 gamma_prior <- function(mean, var, a = NULL, b = NULL){
   if(all(!is.null(c(a, b)))){

@@ -1,11 +1,11 @@
 #' @title Spatial Variance Inflation Factor
 #'
-#' @description Calculate the VIF
+#' @description Calculate the spatial variance inflation factor (SVIF)
 #'
 #' @param base_model model to use as comparison.
 #' @param model model to compare.
 #'
-#' @return res data.frame with VIF for fixed parameters
+#' @return res data.frame with SVIF for fixed parameters
 #'
 #' @export
 
@@ -23,12 +23,12 @@ SVIF <- function(base_model, model) {
 
 #' @title Spatial Variance Retraction Factor
 #'
-#' @description Calculate the VRF
+#' @description Calculate the spatial variance retraction factor (SVRF)
 #'
 #' @param base_model model to use as comparison
 #' @param model model to compare
 #'
-#' @return res data.frame with VRF for fixed parameters
+#' @return res data.frame with SVRF for fixed parameters
 #'
 #' @export
 
@@ -46,11 +46,10 @@ SVRF <- function(base_model, model) {
 #' @description Calculate the projection matrix under several approaches
 #'
 #' @param X covariate matrix
-#' @param groups ids for the subjects
-#' @param method projection's method
+#' @param groups subject id
+#' @param method specific projection method, for now just "rhz" is available.
 #'
-#' @return Px Projection matrix
-#' Px_ort (I - Px)
+#' @keywords internal
 
 proj_mat <- function(X, groups = NULL, method = "rhz") {
   N <- nrow(X)
@@ -88,6 +87,8 @@ proj_mat <- function(X, groups = NULL, method = "rhz") {
 #' @importFrom stats rnorm
 #'
 #' @return x
+#'
+#' @keywords internal
 
 ricar <- function(W, sig = 1) {
   n <- ncol(W)
@@ -106,31 +107,14 @@ ricar <- function(W, sig = 1) {
   return(as.vector(rnd))
 }
 
-#' #' @title Generate data from CAR model
-#' #'
-#' #' @description Generate data from CAR model
-#' #'
-#' #' @param W adjcency matrix
-#' #' @param sig standard deviation
-#' #' @param rho dependence parameter
-#' #'
-#' #' @return x
-#'
-#' rcar <- function(W, sig, rho = 0.9999){
-#'   D <- diag(colSums(W))
-#'   Q <- sig*(D - rho*W)
-#'   sigma <- solve(Q)
-#'
-#'   samp <- as.numeric(rmvnorm(n = 1, mean = rep(0, ncol(W)), sigma = sigma))
-#'   return(samp)
-#' }
-
 #' @title select_marginal
 #'
 #' @description Select the desired marginals on a INLA models
 #'
 #' @param samp a sample from ?inla.posterior.sample
 #' @param ids ids to restore
+#'
+#' @keywords internal
 
 select_marginal <- function(samp, ids) {
   row_names <- row.names(samp$latent)
@@ -147,6 +131,8 @@ select_marginal <- function(samp, ids) {
 #' @param y second list
 #'
 #' @return x
+#'
+#' @keywords internal
 
 append_list <- function (x, y) {
   xnames <- names(x)
@@ -169,6 +155,8 @@ append_list <- function (x, y) {
 #' @param x a numeric vector
 #' @param g group indexes
 #' @param weighted TRUE for weighted mean
+#'
+#' @keywords internal
 
 meang <- function(x, g, weighted = FALSE) {
   if(weighted){
@@ -266,6 +254,8 @@ meang <- function(x, g, weighted = FALSE) {
 #' @param formula a formula to be updated to INLA format
 #'
 #' @importFrom stats terms.formula
+#'
+#' @keywords internal
 
 update_inla_formula <- function(formula) {
   ##-- Checking formula
@@ -326,6 +316,8 @@ update_inla_formula <- function(formula) {
 #'
 #' @description Get the Deviance Information Criterion (DIC) from a model
 #'
+#' @references Spiegelhalter, D. J., Best, N. G., Carlin, B. P., & Van Der Linde, A. (2002). \emph{"Bayesian measures of model complexity and fit"}. Journal of the royal statistical society: Series b (statistical methodology), 64(4), 583-639.
+#'
 #' @param object a object from ?rsglmm, ?rscm or ?rsfm
 #'
 #' @return DIC
@@ -350,6 +342,8 @@ DIC <- function(object) {
 #'
 #' @description Get the Watanabe–Akaike information criterion (WAIC) from a model
 #'
+#' @references Watanabe, S. (2010). \emph{"Asymptotic equivalence of Bayes cross validation and widely applicable information criterion in singular learning theory"}. Journal of Machine Learning Research, 11(Dec), 3571-3594.
+#'
 #' @param object a object from ?rsglmm, ?rscm or ?rsfm
 #'
 #' @return WAIC
@@ -370,7 +364,10 @@ WAIC <- function(object) {
   stop(sprintf("Don't know how to deal with an object of class %s. Did you fit a model using rsglmm, rscm or rsfm?", class(out)))
 }
 
-## Copied from R2OpenBugs
+#' Copy from R2OpenBugs
+#'
+#' @keywords internal
+
 findOpenBUGS <- function(){
   dir <- Sys.getenv("OpenBUGS_PATH")
   if(nchar(dir))

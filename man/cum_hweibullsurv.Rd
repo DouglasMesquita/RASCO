@@ -7,12 +7,13 @@
 cum_hweibullsurv(t, alpha, lambda)
 }
 \arguments{
-\item{t}{time's vector.}
+\item{t}{time vector.}
 
 \item{alpha}{alpha parameter.}
 
 \item{lambda}{lambda parameter.}
 }
 \description{
-Weibull cumulative hazzards
+Weibull cumulative hazards
 }
+\keyword{internal}

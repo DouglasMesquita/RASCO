@@ -16,3 +16,4 @@ meang(x, g, weighted = FALSE)
 \description{
 Mean by groups
 }
+\keyword{internal}

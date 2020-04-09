@@ -13,14 +13,14 @@
 #' @param data an data frame or list containing the variables in the model.
 #' @param formula an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.
 #' @param family some allowed families are: 'gaussian', 'poisson' and 'binomial'. The family availability will depend on the approach.
-#' @param E known component, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. If not provided it is set to 1.
-#' @param n a vector containing the number of trials for the binomial likelihood and variantes, or the number of required successes for the nbinomial2 likelihood. Default value is set to 1.
+#' @param E known component, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. Default = 1.
+#' @param n a vector containing the number of trials for the binomial likelihood, or the number of required successes for the nbinomial2 likelihood. Default value is set to 1.
 #' @param area areal variable name in \code{data}.
 #' @param model spatial model adopted. Examples: "besag", "besag2" or "r_besag". See INLA::inla.list.models() for other models.
 #' @param neigh neighborhood structure. A \code{SpatialPolygonsDataFrame} object.
-#' @param proj 'none', 'rhz', 'hh' or 'spock'
-#' @param nsamp number of desired. samples Default = 1000.
-#' @param burnin burnin size (just for hh).
+#' @param proj "none", "rhz", "hh" or "spock"
+#' @param nsamp number of samples. Default = 1000.
+#' @param burnin burn-in size (just for hh).
 #' @param lag lag parameter (just for hh).
 #' @param priors a list containing (for now):
 #'     \itemize{
@@ -94,18 +94,18 @@
 #'
 #' @return \item{$unrestricted}{A list containing
 #'                                \itemize{
-#'                                   \item $sample a sample of size nsamp for all parameters in the model
-#'                                   \item $summary_fixed summary measures for the coefficients
-#'                                   \item $summary_hyperpar summary measures for hyperparameters
-#'                                   \item $summary_random summary measures for random quantities
+#'                                   \item $sample: a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed: summary measures for the coefficients
+#'                                   \item $summary_hyperpar: summary measures for hyperparameters
+#'                                   \item $summary_random: summary measures for random quantities
 #'                                 }
 #'                              }
 #' \item{$restricted}{A list containing
 #'                                \itemize{
-#'                                   \item $sample a sample of size nsamp for all parameters in the model
-#'                                   \item $summary_fixed summary measures for the coefficients
-#'                                   \item $summary_hyperpar summary measures for hyperparameters
-#'                                   \item $summary_random summary measures for random quantities
+#'                                   \item $sample: a sample of size nsamp for all parameters in the model
+#'                                   \item $summary_fixed: summary measures for the coefficients
+#'                                   \item $summary_hyperpar: summary measures for hyperparameters
+#'                                   \item $summary_random: summary measures for random quantities
 #'                                 }
 #'                              }
 #'

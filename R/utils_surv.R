@@ -4,18 +4,18 @@
 #'
 #' @param n_id vector with the number of individuals in each region to be generated.
 #' @param coefs vector of coefficients.
-#' @param cens censure level.
-#' @param cens_type censoring scheme: 'none', 'left', 'right' or ''interval.
-#' @param hazard hazard model: 'exponencial', 'weibull' or 'pwe'.
+#' @param cens proportion of censoring.
+#' @param cens_type censoring scheme: "none", "left", "right" or "interval".
+#' @param hazard hazard model: "exponential", "weibull" or "pwe" for piecewise exponential.
 #' @param hazard_params named list with parameters for the hazard model: hazard_dft().
-#' @param spatial spatial model: 'none' for the conventional Cox model,
-#' 'gamma' for an independent gamma frailty,
-#' 'lognormal' for an independent lognormal frailty,
-#' 'ICAR' or 'BYM' for spatial structured models.
+#' @param spatial spatial model: "none" for the conventional Cox model,
+#' "gamma" for an independent gamma frailty,
+#' "lognormal" for an independent lognormal frailty,
+#' "ICAR" or "BYM" for spatial structured models.
 #' @param neigh neighborhood structure. A \code{SpatialPolygonsDataFrame} object.
 #' @param tau precision for ICAR and BYM models.
-#' @param confounding 'none', 'linear', 'quadratic' or 'cubic'.
-#' @param proj 'none', 'rhz', 'hh' or 'spock'.
+#' @param confounding "none", "linear", "quadratic" or "cubic".
+#' @param proj "none", "rhz", "hh" or "spock".
 #' @param sd_x standard deviation to generating confounding.
 #' @param X matrix of covariates. Default = NULL.
 #' @param scale scale X. TRUE or FALSE.
@@ -159,9 +159,11 @@ rsurv <- function(n_id, coefs = c(0.1, 0.4, -0.3),
 #'
 #' @description Auxiliar function for survival models
 #'
-#' @param time time until event (censure) or lower limit for interval censoring.
-#' @param time2 upper limit for interval censoring.
-#' @param event the event indicator, 1 = observed event, 0 = right censored event, 2 = left censored event, 3 = interval censored event.
+#' @param time time to event (right censoring), or lower limit (interval censoring).
+#' @param time2 upper limit (interval censoring).
+#' @param event event indicator; 1 = observed event, 0 = right censored event, 2 = left censored event, 3 = interval censored event.
+#'
+#' @keywords internal
 
 surv <- function(time, time2 = NULL, event) {
   time <- deparse(substitute(time))
@@ -173,9 +175,11 @@ surv <- function(time, time2 = NULL, event) {
 
 #' @title rsurv_none
 #'
-#' @description Generating data without censure
+#' @description Generating data without censoring
 #'
-#' @param times vector with observed times.
+#' @param times observed time vector.
+#'
+#' @keywords internal
 
 rsurv_none <- function(times){
   N <- length(times)
@@ -194,12 +198,14 @@ rsurv_none <- function(times){
 
 #' @title rsurv_right
 #'
-#' @description Generating data with right censure
+#' @description Generating data with right censoring
 #'
-#' @param times vector with observed times.
-#' @param cens censoring fraction.
+#' @param times observed time vector.
+#' @param cens censored proportion.
 #'
 #' @importFrom stats runif
+#'
+#' @keywords internal
 
 rsurv_right <- function(times, cens){
   N <- length(times)
@@ -233,12 +239,14 @@ rsurv_right <- function(times, cens){
 
 #' @title rsurv_left
 #'
-#' @description Generating data with left censure
+#' @description Generating data with left censoring
 #'
-#' @param times vector with observed times.
-#' @param cens censoring fraction.
+#' @param times observed time vector.
+#' @param cens censored proportion.
 #'
 #' @importFrom stats runif
+#'
+#' @keywords internal
 
 rsurv_left <- function(times, cens){
   N <- length(times)
@@ -271,12 +279,14 @@ rsurv_left <- function(times, cens){
 
 #' @title rsurv_interval
 #'
-#' @description Generating data with interval censure
+#' @description Generating data with interval censoring
 #'
-#' @param times vector with observed times.
-#' @param cens censoring fraction.
+#' @param times observed time vector.
+#' @param cens censored proportion.
 #'
 #' @importFrom stats rbinom median runif
+#'
+#' @keywords internal
 
 rsurv_interval <- function(times, cens){
   N <- length(times)
@@ -310,12 +320,14 @@ rsurv_interval <- function(times, cens){
 
 #' @title rexpsurv
 #'
-#' @description Generate data from Exponential hazzard model
+#' @description Generate data from Exponential hazard model
 #'
 #' @param N number of observations.
-#' @param rate rate's vector.
+#' @param rate rate vector.
 #'
 #' @importFrom stats rexp
+#'
+#' @keywords internal
 
 rexpsurv <- function(N, rate = rep(1, N)){
   times <- rexp(n = N, rate = rate)
@@ -325,40 +337,46 @@ rexpsurv <- function(N, rate = rep(1, N)){
 
 #' @title hexpsurv
 #'
-#' @description Exponential hazzards
+#' @description Exponential hazards
 #'
-#' @param t time's vector.
-#' @param rate rate's vector.
+#' @param t time vector.
+#' @param rate rate vector.
+#'
+#' @keywords internal
 
 hexpsurv <- function(t, rate){
-  hazzard <- rate
+  hazard <- rate
 
-  return(hazzard)
+  return(hazard)
 }
 
 #' @title cum_hexpsurv
 #'
-#' @description Exponential cumulative hazzards
+#' @description Exponential cumulative hazards
 #'
-#' @param t time's vector.
-#' @param rate rate's vector.
+#' @param t time vector.
+#' @param rate rate vector.
+#'
+#' @keywords internal
 
 cum_hexpsurv <- function(t, rate){
-  cum_hazzard <- t*rate
+  cum_hazard <- t*rate
 
-  return(cum_hazzard)
+  return(cum_hazard)
 }
 
 #' @title rweibullsurv
 #'
-#' @description Generate data from Weibull hazzard model
+#' @description Generate data from Weibull hazard model
 #'
 #' @param N number of observations.
-#' @param alpha alpha parameter.
-#' @param lambda lambda parameter.
+#' @param alpha shape parameter.
+#' @param lambda scale parameter.
 #' @param variant variant (0 or 1).
 #'
 #' @importFrom stats rweibull
+#'
+#' @keywords internal
 
 rweibullsurv <- function(N, alpha, lambda = rep(1, N), variant = 1){
   if(variant == 1){
@@ -372,42 +390,48 @@ rweibullsurv <- function(N, alpha, lambda = rep(1, N), variant = 1){
 
 #' @title hweibullsurv
 #'
-#' @description Weibull hazzards
+#' @description Weibull hazards
 #'
-#' @param t time's vector.
+#' @param t time vector.
 #' @param alpha alpha parameter.
 #' @param lambda lambda parameter.
+#'
+#' @keywords internal
 
 hweibullsurv <- function(t, alpha, lambda){
-  hazzard <- alpha*lambda*t^(alpha - 1)
+  hazard <- alpha*lambda*t^(alpha - 1)
 
-  return(hazzard)
+  return(hazard)
 }
 
 #' @title cum_hweibullsurv
 #'
-#' @description Weibull cumulative hazzards
+#' @description Weibull cumulative hazards
 #'
-#' @param t time's vector.
+#' @param t time vector.
 #' @param alpha alpha parameter.
 #' @param lambda lambda parameter.
+#'
+#' @keywords internal
 
 cum_hweibullsurv <- function(t, alpha, lambda){
-  cum_hazzard <- lambda*t^alpha
+  cum_hazard <- lambda*t^alpha
 
-  return(cum_hazzard)
+  return(cum_hazard)
 }
 
 #' @title rpwesurv
 #'
-#' @description Generate data from Piecewise Exponential hazzard model
+#' @description Generate data from Piecewise Exponential hazard model
 #'
 #' @param N number of observations.
-#' @param effects effects.
+#' @param effects the linear predictor
 #' @param rates exponential rates.
-#' @param tgrid time's grid.
+#' @param tgrid time grid.
 #'
 #' @importFrom stats runif
+#'
+#' @keywords internal
 
 rpwesurv <- function(N, effects = rep(1, N), rates, tgrid){
   u <- runif(n = N, min = 0, max = 1)
@@ -426,27 +450,31 @@ rpwesurv <- function(N, effects = rep(1, N), rates, tgrid){
 
 #' @title hpwesurv
 #'
-#' @description Piecewise Eponential hazzards
+#' @description Piecewise Eponential hazards
 #'
-#' @param t time's vector.
+#' @param t time vector.
 #' @param rates exponential rates.
-#' @param tgrid time's grid.
+#' @param tgrid time grid.
+#'
+#' @keywords internal
 
 hpwesurv <- function(t, rates, tgrid){
 
   pos <- as.numeric(cut(t, tgrid, include.lowest = TRUE))
-  hazzard <- rates[pos]
+  hazard <- rates[pos]
 
-  return(hazzard)
+  return(hazard)
 }
 
 #' @title cum_hpwesurv
 #'
-#' @description Piecewise Exponential cumulative hazzards
+#' @description Piecewise Exponential cumulative hazards
 #'
-#' @param t time's vector.
+#' @param t time vector.
 #' @param rates exponential rates.
-#' @param tgrid time's grid.
+#' @param tgrid time grid.
+#'
+#' @keywords internal
 
 cum_hpwesurv <- function(t, tgrid, rates){
 
@@ -457,21 +485,23 @@ cum_hpwesurv <- function(t, tgrid, rates){
 
   if(n == 1){
     if(pos == 1){
-      cum_hazzard <- t*rates[1]
+      cum_hazard <- t*rates[1]
     } else{
-      cum_hazzard <- (t-tgrid[pos])*rates[pos] + area[pos-1]
+      cum_hazard <- (t-tgrid[pos])*rates[pos] + area[pos-1]
     }
   } else{
-    cum_hazzard  <- rep(0, n)
-    cum_hazzard[which(pos == 1)] <- t[which(pos == 1)]*rates[1]
+    cum_hazard  <- rep(0, n)
+    cum_hazard[which(pos == 1)] <- t[which(pos == 1)]*rates[1]
     aux <- which(pos > 1)
-    cum_hazzard[aux] <- (t[aux] - tgrid[pos[aux]])*rates[pos[aux]] + area[pos[aux] - 1]
+    cum_hazard[aux] <- (t[aux] - tgrid[pos[aux]])*rates[pos[aux]] + area[pos[aux] - 1]
   }
 
-  return(cum_hazzard)
+  return(cum_hazard)
 }
 
 #' @title Default values for hazard models
+#'
+#' @keywords internal
 
 hazard_dft <- function(){
   l_out <- list(frailty = list(frailty = "gamma",

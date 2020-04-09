@@ -12,8 +12,8 @@ SVIF(base_model, model)
 \item{model}{model to compare.}
 }
 \value{
-res data.frame with VIF for fixed parameters
+res data.frame with SVIF for fixed parameters
 }
 \description{
-Calculate the VIF
+Calculate the spatial variance inflation factor (SVIF)
 }

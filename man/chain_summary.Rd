@@ -12,7 +12,7 @@ chain_summary(sample, level)
 \item{level}{credibility interval level.}
 }
 \value{
-a matrix with \code{mean}, \code{median}, \code{sd}, \code{lower} and \code{upper} measures
+a matrix with \code{mean}, \code{median}, \code{sd}, \code{lower} and \code{upper} credibility interval measures
 }
 \description{
 Summary measures for a sample

@@ -15,3 +15,6 @@ DIC
 \description{
 Get the Deviance Information Criterion (DIC) from a model
 }
+\references{
+Spiegelhalter, D. J., Best, N. G., Carlin, B. P., & Van Der Linde, A. (2002). \emph{"Bayesian measures of model complexity and fit"}. Journal of the royal statistical society: Series b (statistical methodology), 64(4), 583-639.
+}

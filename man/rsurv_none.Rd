@@ -7,8 +7,9 @@
 rsurv_none(times)
 }
 \arguments{
-\item{times}{vector with observed times.}
+\item{times}{observed time vector.}
 }
 \description{
-Generating data without censure
+Generating data without censoring
 }
+\keyword{internal}
