@@ -16,5 +16,5 @@ WAIC
 Get the Watanabe–Akaike information criterion (WAIC) from a model
 }
 \references{
-Watanabe, S. (2010). \emph{"Asymptotic equivalence of Bayes cross validation and widely applicable information criterion in singular learning theory"}. Journal of Machine Learning Research, 11(Dec), 3571-3594.
+Watanabe, S. (2010). \emph{"Asymptotic Equivalence of Bayes Cross Validation and Widely Applicable Information Criterion in Singular Learning Theory"}. Journal of Machine Learning Research, 11, 3571-3594.
 }

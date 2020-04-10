@@ -10,7 +10,7 @@ rsfm_mcmc(model, data, inits, parameters, covariates, area,
 \arguments{
 \item{model}{character with the model in text format.}
 
-\item{data}{an data frame or list containing the variables in the model.}
+\item{data}{a data frame or list containing the variables in the model.}
 
 \item{inits}{initial values for the chain.}
 
@@ -22,7 +22,7 @@ rsfm_mcmc(model, data, inits, parameters, covariates, area,
 
 \item{proj}{"none" or "rhz".}
 
-\item{fast}{TRUE to use the reduction operator.}
+\item{fast}{set TRUE, to use the reduction operator.}
 
 \item{nsamp}{number of samples. Default = 1000.}
 

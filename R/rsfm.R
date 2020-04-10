@@ -8,7 +8,7 @@
 #'             fast = TRUE, approach = "inla", priors,
 #'             ...)
 #'
-#' @param data an data frame or list containing the variables in the model.
+#' @param data a data frame or list containing the variables in the model.
 #' @param formula an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.
 #' @param family "exponential", "weibull", "weibullcure", "loglogistic", "gamma", "lognormal" or "pwe".
 #' @param area areal variable name in \code{data}.

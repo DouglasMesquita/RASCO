@@ -3,15 +3,15 @@
 \docType{data}
 \name{slovenia}
 \alias{slovenia}
-\title{Slovenia stomach cancer dataset}
+\title{Slovenia Stomach Cancer Dataset}
 \format{An object of class \code{"sf"}.}
 \usage{
 data(slovenia)
 }
 \description{
-Slovenia stomach cancer dataset
+Slovenia Stomach Cancer Dataset
 }
 \references{
-Zadnik, Vesna, and B. J. Reich. \emph{"Analysis of the relationship between socioeconomic factors and stomach cancer incidence in Slovenia"}. Neoplasma 53.2 (2006): 103-110.
+Zadnik, Vesna, and B. J. Reich. (2006) \emph{"Analysis of the relationship between socioeconomic factors and stomach cancer incidence in Slovenia"}. Neoplasma 53.2 (2006): 103-110.
 }
 \keyword{datasets}

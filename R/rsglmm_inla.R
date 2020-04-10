@@ -2,9 +2,9 @@
 #'
 #' @description Fit a Restricted Spatial Generalized Linear Mixed model using INLA
 #'
-#' @param data an data frame or list containing the variables in the model.
+#' @param data a data frame or list containing the variables in the model.
 #' @param formula an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.
-#' @param family some allowed families are: "gaussian", "poisson" and "binomial". The family availability will depend on the approach.
+#' @param family some current options are: "gaussian", "poisson" and "binomial"; the choice depending on the approach.
 #' @param E known component, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. Default = 1
 #' @param n a vector containing the number of trials for the binomial likelihood, or the number of required successes for the nbinomial2 likelihood. Default value is set to 1..
 #' @param W adjacency matrix.

@@ -4,8 +4,8 @@
 #'
 #' @param alpha_1 intercept for disease 1.
 #' @param alpha_2 intercept for disease 2.
-#' @param beta_1 regression parameters for disease 1.
-#' @param beta_2 regression parameters for disease 2.
+#' @param beta_1 regression parameter(s) for disease 1.
+#' @param beta_2 regression parameter(s) for disease 2.
 #' @param delta dependence on the shared component.
 #' @param tau_1 precision of ICAR specific to disease 1.
 #' @param tau_2 precision of ICAR specific to disease 2.

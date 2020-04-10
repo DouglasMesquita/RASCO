@@ -21,7 +21,7 @@ rsglmm_mcmc(
 )
 }
 \arguments{
-\item{data}{an data frame or list containing the variables in the model.}
+\item{data}{a data frame or list containing the variables in the model.}
 
 \item{formula}{an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.}
 

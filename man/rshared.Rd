@@ -23,9 +23,9 @@ rshared(
 
 \item{alpha_2}{intercept for disease 2.}
 
-\item{beta_1}{regression parameters for disease 1.}
+\item{beta_1}{regression parameter(s) for disease 1.}
 
-\item{beta_2}{regression parameters for disease 2.}
+\item{beta_2}{regression parameter(s) for disease 2.}
 
 \item{delta}{dependence on the shared component.}
 

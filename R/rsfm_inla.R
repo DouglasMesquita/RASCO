@@ -6,13 +6,13 @@
 #'                  proj = "none", nsamp = 1000, fast = TRUE,
 #'                  ...)
 #'
-#' @param data an data frame or list containing the variables in the model.
+#' @param data a data frame or list containing the variables in the model.
 #' @param formula a inla formula like inla.surv(time, event) ~ 1 + z + f(ind, model="iid") + f(ind2, weights, model="ar1"). This is much like the formula for a glm except that smooth or spatial terms can be added to the right hand side of the formula. See f for full details and the web site www.r-inla.org for several worked out examples. Each smooth or spatial term specified through f should correspond to separate column of the data frame data. The outcome is the output of the function inla.surv.
 #' @param family "exponential", "weibull", "weibullcure", "loglogistic", "gamma", "lognormal" or "pwe".
 #' @param W adjacency matrix.
 #' @param proj "none" or "rhz".
 #' @param nsamp number of samples. Default = 1000.
-#' @param fast TRUE to use the reduction operator.
+#' @param fast set TRUE, to use the reduction operator.
 #' @param ... other parameters used in ?INLA::inla.
 #'
 #' @return \item{$unrestricted}{A list containing

@@ -17,7 +17,7 @@ rscm(data, formula1, formula2, family = c("poisson", "poisson"),
             ...)
 }
 \arguments{
-\item{data}{an data frame or list containing the variables in the model.}
+\item{data}{a data frame or list containing the variables in the model.}
 
 \item{formula1}{an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted for disease 1.}
 

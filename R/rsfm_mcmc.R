@@ -6,13 +6,13 @@
 #'                  proj = "none", fast = TRUE, nsamp = 1000, burnin = 5000, lag = 10, ...)
 #'
 #' @param model character with the model in text format.
-#' @param data an data frame or list containing the variables in the model.
+#' @param data a data frame or list containing the variables in the model.
 #' @param inits initial values for the chain.
 #' @param parameters vector of parameters names to restore.
 #' @param covariates vector of covariates names.
 #' @param area areal variable name in \code{data}.
 #' @param proj "none" or "rhz".
-#' @param fast TRUE to use the reduction operator.
+#' @param fast set TRUE, to use the reduction operator.
 #' @param nsamp number of samples. Default = 1000.
 #' @param burnin burn-in size.
 #' @param lag lag parameter.

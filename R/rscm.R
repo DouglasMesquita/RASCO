@@ -14,7 +14,7 @@
 #'                                   specific_2 = TRUE),
 #'             ...)
 #'
-#' @param data an data frame or list containing the variables in the model.
+#' @param data a data frame or list containing the variables in the model.
 #' @param formula1 an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted for disease 1.
 #' @param formula2 an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted for disease 2.
 #' @param family a vector of size two with two families. Some allowed families are: poisson, nbinomial, zeroinflatedpoisson0, zeroinflatednbinomial0. See INLA::inla.list.models() for more information.

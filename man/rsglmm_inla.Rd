@@ -17,11 +17,11 @@ rsglmm_inla(
 )
 }
 \arguments{
-\item{data}{an data frame or list containing the variables in the model.}
+\item{data}{a data frame or list containing the variables in the model.}
 
 \item{formula}{an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.}
 
-\item{family}{some allowed families are: "gaussian", "poisson" and "binomial". The family availability will depend on the approach.}
+\item{family}{some current options are: "gaussian", "poisson" and "binomial"; the choice depending on the approach.}
 
 \item{E}{known component, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. Default = 1}
 

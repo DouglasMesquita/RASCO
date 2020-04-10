@@ -2,7 +2,7 @@
 % Please edit documentation in R/spock.R
 \name{spock}
 \alias{spock}
-\title{SPOCK nb}
+\title{SPOCK}
 \usage{
 spock(X, map)
 }
@@ -15,8 +15,8 @@ spock(X, map)
 map_new object of class \code{nb}
 }
 \description{
-SPOCK approach to transform the neighborhood structure
+SPOCK (SPatial Orthogonal Centroid "K"orrection) approach to transform the neighborhood structure
 }
 \references{
-Prates, M. O., Assunção, R. M., & Rodrigues, E. C. (2019). \emph{"Alleviating spatial confounding for areal data problems by displacing the geographical centroids"}. Bayesian Analysis, 14(2), 623-647.
+Prates, M. O., Assunção, R. M., & Rodrigues, E. C. (2019). \emph{"Alleviating Spatial Confounding for Areal Data Problems by Displacing the Geographical Centroids"}. Bayesian Analysis, 14(2), 623-647.
 }

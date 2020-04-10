@@ -2,7 +2,7 @@
 #'
 #' @description Fit a Restricted Spatial Generalized Linear Mixed model using ngspatial
 #'
-#' @param data an data frame or list containing the variables in the model.
+#' @param data a data frame or list containing the variables in the model.
 #' @param formula an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.
 #' @param family allowed families are: "gaussian", "poisson" and "binomial".
 #' @param E known component, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. Default = 1.

@@ -9,7 +9,7 @@ rsfm_inla(data, formula, family, W = NULL,
                  ...)
 }
 \arguments{
-\item{data}{an data frame or list containing the variables in the model.}
+\item{data}{a data frame or list containing the variables in the model.}
 
 \item{formula}{a inla formula like inla.surv(time, event) ~ 1 + z + f(ind, model="iid") + f(ind2, weights, model="ar1"). This is much like the formula for a glm except that smooth or spatial terms can be added to the right hand side of the formula. See f for full details and the web site www.r-inla.org for several worked out examples. Each smooth or spatial term specified through f should correspond to separate column of the data frame data. The outcome is the output of the function inla.surv.}
 
@@ -21,7 +21,7 @@ rsfm_inla(data, formula, family, W = NULL,
 
 \item{nsamp}{number of samples. Default = 1000.}
 
-\item{fast}{TRUE to use the reduction operator.}
+\item{fast}{set TRUE, to use the reduction operator.}
 
 \item{...}{other parameters used in ?INLA::inla.}
 }

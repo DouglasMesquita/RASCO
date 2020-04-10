@@ -316,7 +316,7 @@ update_inla_formula <- function(formula) {
 #'
 #' @description Get the Deviance Information Criterion (DIC) from a model
 #'
-#' @references Spiegelhalter, D. J., Best, N. G., Carlin, B. P., & Van Der Linde, A. (2002). \emph{"Bayesian measures of model complexity and fit"}. Journal of the royal statistical society: Series b (statistical methodology), 64(4), 583-639.
+#' @references Spiegelhalter, D. J., Best, N. G., Carlin, B. P., & Van Der Linde, A. (2002). \emph{"Bayesian Measures of Model Complexity and Fit"}. Journal of the royal statistical society: Series b (statistical methodology), 64(4), 583-639.
 #'
 #' @param object a object from ?rsglmm, ?rscm or ?rsfm
 #'
@@ -342,7 +342,7 @@ DIC <- function(object) {
 #'
 #' @description Get the Watanabe–Akaike information criterion (WAIC) from a model
 #'
-#' @references Watanabe, S. (2010). \emph{"Asymptotic equivalence of Bayes cross validation and widely applicable information criterion in singular learning theory"}. Journal of Machine Learning Research, 11(Dec), 3571-3594.
+#' @references Watanabe, S. (2010). \emph{"Asymptotic Equivalence of Bayes Cross Validation and Widely Applicable Information Criterion in Singular Learning Theory"}. Journal of Machine Learning Research, 11, 3571-3594.
 #'
 #' @param object a object from ?rsglmm, ?rscm or ?rsfm
 #'
