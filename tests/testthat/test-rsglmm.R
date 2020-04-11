@@ -28,6 +28,8 @@ test_that("rglmm options", {
                       proj = "rhz", nsamp = 1000)
 
   testthat::skip_on_appveyor()
+  testthat::skip_on_cran()
+
   testthat::expect_equal(object = length(sglm_mod$restricted), 0)
   testthat::expect_equal(object = length(sglmm_mod$restricted), 0)
   testthat::expect_equal(object = length(rglmm_rhz$restricted), 4)

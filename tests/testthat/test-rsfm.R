@@ -38,6 +38,8 @@ test_that("rsfm options", {
                      fast = FALSE)
 
   testthat::skip_on_appveyor()
+  testthat::skip_on_cran()
+
   testthat::expect_equal(object = length(weibull_inla$restricted), 0)
 
   # if(!is.na(findOpenBUGS())) testthat::expect_length(object =

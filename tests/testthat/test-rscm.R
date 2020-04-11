@@ -16,6 +16,7 @@ test_that("rscm options", {
   delta <- 1.5
 
   testthat::skip_on_appveyor()
+  testthat::skip_on_cran()
 
   ##-- Data
   data <- rshared(alpha_1 = alpha_1, alpha_2 = alpha_2,
