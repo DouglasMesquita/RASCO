@@ -367,6 +367,8 @@ WAIC <- function(object) {
 #' Copy from R2OpenBugs
 #'
 #' @keywords internal
+#'
+#' @importFrom utils compareVersion packageDescription
 
 findOpenBUGS <- function(){
   dir <- Sys.getenv("OpenBUGS_PATH")
@@ -391,7 +393,7 @@ findOpenBUGS <- function(){
   version.inst <- gsub("(.+)e$","\\1", ver)
 
   if(length(version.inst > 1)){
-    id <- which(apply(outer(version.inst, version.inst, Vectorize(compareVersion, c("a", "b"))), 1, function(x) all(x >= 0)))
+    id <- which(apply(outer(version.inst, version.inst, Vectorize(utils::compareVersion, c("a", "b"))), 1, function(x) all(x >= 0)))
     version.inst <- version.inst[id]
     rnames <- rnames[id]
   }
