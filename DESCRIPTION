@@ -13,7 +13,6 @@ Imports:
     ngspatial,
     R2OpenBUGS,
     remotes,
-    sn,
     sp, 
     spdep
 Suggests:
