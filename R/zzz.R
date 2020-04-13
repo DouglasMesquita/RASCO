@@ -1,4 +1,13 @@
 .onLoad <- function(libname, pkgname) {
+  ##-- Installing INLA ifnecessary
+  if(!requireNamespace("INLA", quietly = TRUE)) {
+    install.packages("INLA",
+                     repos = c(getOption("repos"),
+                               INLA = "https://inla.r-inla-download.org/R/stable"),
+                     dep = TRUE)
+  }
+
+  ##-- INLA workaround for xenial
   if(Sys.info()['sysname'] == "Linux") {
     release <- system(command = "lsb_release -a", intern = TRUE, ignore.stderr = TRUE)
     release <- paste(gsub(x = release, pattern = "\t", replacement = " "), collapse = " ")
