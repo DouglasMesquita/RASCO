@@ -14,10 +14,10 @@ Imports:
     ngspatial,
     R2OpenBUGS,
     remotes,
+    sn,
     sp, 
     spdep
 Suggests:
-    INLA,
     covr,
     testthat (>= 2.1.0)
 Additional_repositories: https://inla.r-inla-download.org/R/stable/
