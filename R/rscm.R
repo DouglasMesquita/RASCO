@@ -283,7 +283,7 @@ rscm <- function(data, formula1, formula2, family = c("poisson", "poisson"),
   args$control.inla$strategy <- "laplace"
 
   inla_aux <- function(...) INLA::inla(formula = f_s, family = family, data = inla_list, E = as.vector(E), ...)
-  mod <- do.call(what = inla_aux, args = args)
+  mod <- do.call(what = inla_aux, args = args, envir = parent.frame())
 
   model_sample <- INLA::inla.posterior.sample(result = mod, n = nsamp, use.improved.mean = TRUE)
   hyperpar_samp <- INLA::inla.hyperpar.sample(result = mod, n = nsamp, improve.marginals = TRUE)

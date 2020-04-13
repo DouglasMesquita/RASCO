@@ -65,7 +65,7 @@ rsglmm_inla <- function(data, formula, family,
   inla_aux <- function(...) INLA::inla(formula = formula, data = data, family = family,
                                        E = E_offset_inla, Ntrials = n_offset_inla, ...)
 
-  mod <- do.call(what = inla_aux, args = args)
+  mod <- do.call(what = inla_aux, args = args, envir = parent.frame())
 
   # mod <- inla(formula = formula, data = data, family = family,
   #             E = E_offset_inla, Ntrials = n_offset_inla, ...)
