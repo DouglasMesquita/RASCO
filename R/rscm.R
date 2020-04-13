@@ -74,6 +74,7 @@
 #'                 neigh = neigh_RJ)
 #'
 #' ##-- Models
+#' \dontrun{
 #' scm_inla <- rscm(data = data,
 #'                  formula1 = Y1 ~ X11 + X12,
 #'                  formula2 = Y2 ~ X21 + X12,
@@ -100,6 +101,7 @@
 #'
 #' scm_inla$summary_hyperpar
 #' rscm_inla$summary_hyperpar
+#' }
 #'
 #' @return \item{$sample}{a sample of size nsamp for all parameters in the model}
 #' \item{$summary_fixed}{summary measures for the coefficients}

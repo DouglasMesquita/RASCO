@@ -101,6 +101,7 @@ data <- rshared(alpha_1 = alpha_1, alpha_2 = alpha_2,
                 neigh = neigh_RJ)
 
 ##-- Models
+\dontrun{
 scm_inla <- rscm(data = data,
                  formula1 = Y1 ~ X11 + X12,
                  formula2 = Y2 ~ X21 + X12,
@@ -127,5 +128,6 @@ rscm_inla$summary_fixed
 
 scm_inla$summary_hyperpar
 rscm_inla$summary_hyperpar
+}
 
 }
