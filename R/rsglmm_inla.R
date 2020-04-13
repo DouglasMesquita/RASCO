@@ -67,9 +67,6 @@ rsglmm_inla <- function(data, formula, family,
 
   mod <- do.call(what = inla_aux, args = args, envir = parent.frame())
 
-  # mod <- inla(formula = formula, data = data, family = family,
-  #             E = E_offset_inla, Ntrials = n_offset_inla, ...)
-
   model_sample <- INLA::inla.posterior.sample(result = mod, n = nsamp, use.improved.mean = TRUE)
   hyperpar_samp <- INLA::inla.hyperpar.sample(result = mod, n = nsamp, improve.marginals = TRUE)
   time_end_inla <- Sys.time()
