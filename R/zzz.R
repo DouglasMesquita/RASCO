@@ -1,7 +1,7 @@
 .onLoad <- function(libname, pkgname) {
   ##-- Installing INLA ifnecessary
   if(!requireNamespace("INLA", quietly = TRUE)) {
-    install.packages("INLA",
+    utils::install.packages("INLA",
                      repos = c(getOption("repos"),
                                INLA = "https://inla.r-inla-download.org/R/stable"),
                      dep = TRUE)
