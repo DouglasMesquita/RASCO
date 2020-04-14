@@ -90,6 +90,8 @@ rshared <- function(alpha_1 = 0, alpha_2 = 0, beta_1 = c(0.1, -0.1), beta_2 = c(
 #' @param trunc TRUE: x > 0.
 #' @param method ?inla.tmarginal method.
 #'
+#' @importFrom INLA inla.tmarginal inla.rmarginal
+#'
 #' @keywords internal
 
 get_trans_samp <- function(marg, fun, n = 1000, trunc = FALSE, method = "linear") {

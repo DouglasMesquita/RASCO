@@ -8,14 +8,15 @@ Description: Tools to implement several Bayesian restricted models to tackle spa
 Depends: 
     R (>= 3.6.0)
 Imports:
+    INLA,
     coda,
     methods,
     ngspatial,
     R2OpenBUGS,
     remotes,
+    sf,
     sn,
     sp, 
-    sf,
     spdep
 Suggests:
     INLA,
