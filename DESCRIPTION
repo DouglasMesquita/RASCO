@@ -14,15 +14,14 @@ Imports:
     ngspatial,
     R2OpenBUGS,
     remotes,
-    sf,
     sn,
     sp, 
     spdep
 Suggests:
-    INLA,
     covr,
     testthat (>= 2.1.0)
 Additional_repositories: https://inla.r-inla-download.org/R/stable/
+StagedInstall: no
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
