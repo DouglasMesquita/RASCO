@@ -15,6 +15,7 @@ Imports:
     remotes,
     sn,
     sp, 
+    sf,
     spdep
 Suggests:
     INLA,
