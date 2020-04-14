@@ -32,8 +32,6 @@
 #' \item{$out}{INLA output}
 #' \item{$time}{time elapsed for fitting the model}
 #'
-#' @importFrom INLA inla inla.posterior.sample inla.hyperpar.sample
-#'
 #' @export
 
 rsglmm_inla <- function(data, formula, family,
