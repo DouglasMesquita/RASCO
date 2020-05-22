@@ -7,7 +7,7 @@
 WAIC(object)
 }
 \arguments{
-\item{object}{a object from ?rsglmm, ?rscm or ?rsfm}
+\item{object}{a object from ?rsglmm, ?rscm or ?rsfm. Do not forget to add control.compute = list(waic = TRUE, dic = TRUE) to your call.}
 }
 \value{
 WAIC
