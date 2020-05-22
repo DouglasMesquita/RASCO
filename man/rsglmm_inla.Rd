@@ -10,7 +10,6 @@ rsglmm_inla(
   family,
   E = NULL,
   n = NULL,
-  W = NULL,
   proj = "none",
   nsamp = 1000,
   ...
@@ -26,8 +25,6 @@ rsglmm_inla(
 \item{E}{known component, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. Default = 1}
 
 \item{n}{a vector containing the number of trials for the binomial likelihood, or the number of required successes for the nbinomial2 likelihood. Default value is set to 1..}
-
-\item{W}{adjacency matrix.}
 
 \item{proj}{"none", "rhz" or "spock"}
 

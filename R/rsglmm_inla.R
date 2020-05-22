@@ -7,7 +7,6 @@
 #' @param family some current options are: "gaussian", "poisson" and "binomial"; the choice depending on the approach.
 #' @param E known component, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. Default = 1
 #' @param n a vector containing the number of trials for the binomial likelihood, or the number of required successes for the nbinomial2 likelihood. Default value is set to 1..
-#' @param W adjacency matrix.
 #' @param proj "none", "rhz" or "spock"
 #' @param nsamp number of samples. Default = 1000.
 #' @param ... other parameters used in ?INLA::inla
@@ -38,7 +37,6 @@
 
 rsglmm_inla <- function(data, formula, family,
                         E = NULL, n = NULL,
-                        W = NULL,
                         proj = "none", nsamp = 1000,
                         ...) {
   ##-- Time
@@ -64,6 +62,7 @@ rsglmm_inla <- function(data, formula, family,
   args <- list(...)
   args$control.compute$config <- TRUE
 
+  W <- parent.frame()$W
   inla_aux <- function(...) INLA::inla(formula = formula, data = data, family = family,
                                        E = E_offset_inla, Ntrials = n_offset_inla, ...)
 

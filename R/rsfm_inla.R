@@ -2,14 +2,13 @@
 #'
 #' @description Fit a Restricted Spatial Frailty model using INLA
 #'
-#' @usage rsfm_inla(data, formula, family, W = NULL,
+#' @usage rsfm_inla(data, formula, family,
 #'                  proj = "none", nsamp = 1000, fast = TRUE,
 #'                  ...)
 #'
 #' @param data a data frame or list containing the variables in the model.
 #' @param formula a inla formula like inla.surv(time, event) ~ 1 + z + f(ind, model="iid") + f(ind2, weights, model="ar1"). This is much like the formula for a glm except that smooth or spatial terms can be added to the right hand side of the formula. See f for full details and the web site www.r-inla.org for several worked out examples. Each smooth or spatial term specified through f should correspond to separate column of the data frame data. The outcome is the output of the function inla.surv.
 #' @param family "exponential", "weibull", "weibullcure", "loglogistic", "gamma", "lognormal" or "pwe".
-#' @param W adjacency matrix.
 #' @param proj "none" or "rhz".
 #' @param nsamp number of samples. Default = 1000.
 #' @param fast set TRUE, to use the reduction operator.
@@ -40,7 +39,7 @@
 #'
 #' @export
 
-rsfm_inla <- function(data, formula, family, W = NULL,
+rsfm_inla <- function(data, formula, family,
                       proj = "none", nsamp = 1000, fast = TRUE,
                       ...) {
   ##-- TODO:
@@ -76,6 +75,7 @@ rsfm_inla <- function(data, formula, family, W = NULL,
   args <- list(...)
   args$control.compute$config <- TRUE
 
+  W <- parent.frame()$W
   inla_aux <- function(...) INLA::inla(formula = formula, data = data, family = family, ...)
   mod <- do.call(what = inla_aux, args = args, envir = parent.frame())
 

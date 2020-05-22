@@ -120,7 +120,7 @@ rsfm <- function(data, formula, family,
     formula <- gsub(x = f_pred, pattern = "^surv\\(", replacement = "INLA::inla.surv(")
     formula <- as.formula(formula)
 
-    out <- rsfm_inla(data = data, formula = formula, W = W, family, proj = proj, fast = fast, nsamp = nsamp, ...)
+    out <- rsfm_inla(data = data, formula = formula, family, proj = proj, fast = fast, nsamp = nsamp, ...)
   }
 
   ##-- BUGS

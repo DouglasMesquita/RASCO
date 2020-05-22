@@ -177,7 +177,7 @@ rsglmm <- function(data, formula, family,
     formula <- gsub(x = f_pred, pattern = "^surv\\(", replacement = "INLA::inla.surv(")
     formula <- as.formula(formula)
 
-    out <- rsglmm_inla(data = data, formula = formula, W = W, family, proj = proj, nsamp = nsamp, E = E, n = n, ...)
+    out <- rsglmm_inla(data = data, formula = formula, family, proj = proj, nsamp = nsamp, E = E, n = n, ...)
   }
 
   ##-- BUGS

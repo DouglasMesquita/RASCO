@@ -283,6 +283,7 @@ rscm <- function(data, formula1, formula2, family = c("poisson", "poisson"),
   args$control.compute$config <- TRUE
   args$control.inla$strategy <- "laplace"
 
+  W <- parent.frame()$W
   inla_aux <- function(...) INLA::inla(formula = f_s, family = family, data = inla_list, E = as.vector(E), ...)
   mod <- do.call(what = inla_aux, args = args, envir = parent.frame())
 
