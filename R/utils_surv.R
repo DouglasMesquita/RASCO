@@ -289,26 +289,10 @@ rsurv_left <- function(times, cens){
 #' @keywords internal
 
 rsurv_interval <- function(times, cens){
-  N <- length(times)
+  L <- ceiling(times)
+  R <- L + 1
 
-  L <- R <- times
-
-  cens_ids <- rbinom(n = N, size = 1, prob = cens) == 1
-  cens_val <- rep(x = 1, times = N)
-
-  ##-- Censure ----
-  max_time <- max(times)
-  med_times <- median(times[!cens_ids])
-
-  cens_times_L <- runif(n = N, min = 0, max = times)
-  cens_times_R <- runif(n = N, min = times, max = max_time + med_times)
-
-  censure <- cens_ids == 1
-
-  L[cens_ids] <- cens_times_L[cens_ids]
-  R[cens_ids] <- cens_times_R[cens_ids]
-
-  cens_val[censure] <- 3
+  cens_val <- 3
 
   times_status <- data.frame(L = L,
                              t = times,
