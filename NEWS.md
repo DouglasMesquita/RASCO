@@ -1,3 +1,7 @@
+# RASCO 0.0.4
+
+* Simulation of the interval censorship scheme, as observed in the SEER data set
+    
 # RASCO 0.0.3
 
 * Restricted Spatial Frailty models using formula instead of column names as before
@@ -6,4 +10,14 @@
     * RHZ can deal with multiple individuos in the same region
     * SPOCK is now available for GLMM
     * HH is now available for GLMM
+    
+# RASCO 0.0.2
 
+* Restricted Spatial Frailty models - with examples
+* Restricted Shared Component models - with examples
+    
+# RASCO 0.0.1  
+
+* Creating a pattern for outputs
+* Restricted Spatial Frailty models - first version
+* Restricted Shared Component models - first version
