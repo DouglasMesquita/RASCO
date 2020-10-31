@@ -4,7 +4,7 @@
 \alias{chain_summary}
 \title{Summary measures for a sample}
 \usage{
-chain_summary(sample, level)
+chain_summary(sample, level, bw)
 }
 \arguments{
 \item{sample}{a matrix containing parameter's chains.}

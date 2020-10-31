@@ -2,7 +2,7 @@
 #'
 #' @description Summary measures for a sample
 #'
-#' @usage chain_summary(sample, level)
+#' @usage chain_summary(sample, level, bw)
 #'
 #' @param sample a matrix containing parameter's chains.
 #' @param level credibility interval level.

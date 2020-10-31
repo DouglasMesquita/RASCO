@@ -11,6 +11,7 @@ Imports:
     INLA,
     coda,
     methods,
+    modeest,
     ngspatial,
     R2OpenBUGS,
     remotes,
@@ -19,8 +20,7 @@ Imports:
     spdep
 Suggests:
     covr,
-    testthat (>= 2.1.0),
-    modeest
+    testthat (>= 2.1.0)
 Additional_repositories: https://inla.r-inla-download.org/R/stable/
 StagedInstall: no
 License: GPL-2
