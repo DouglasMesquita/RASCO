@@ -1,6 +1,11 @@
+# RASCO 0.0.5
+
+* Adding INLA within MCMC for SCM for more than 2 diseases
+
 # RASCO 0.0.4
 
 * Simulation of the interval censorship scheme, as observed in the SEER data set
+* Making the seed fixed
     
 # RASCO 0.0.3
 

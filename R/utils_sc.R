@@ -62,8 +62,10 @@ rshared <- function(alpha_1 = 0, alpha_2 = 0, beta_1 = c(0.1, -0.1), beta_2 = c(
   s1 <- ricar(W = W, sig = 1/tau_1)
   s2 <- ricar(W = W, sig = 1/tau_2)
 
-  spatial_1 <- sc*delta + s1
-  spatial_2 <- sc/delta + s2
+  gamma <- delta^2
+
+  spatial_1 <- sc*gamma + s1
+  spatial_2 <- sc + s2
 
   ##-- SMR, expected value and counts
   srm1 <- exp(alpha_1 + X1%*%beta_1 + spatial_1)

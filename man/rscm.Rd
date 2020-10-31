@@ -7,7 +7,7 @@
 rscm(data, formula1, formula2, family = c("poisson", "poisson"),
             E1 = NULL, E2 = NULL, area = NULL, neigh = NULL,
             proj = "none", nsamp = 1000,
-            priors = list(prior_gamma = c(0, 0.1),
+            priors = list(prior_gamma = c(0, 0.35),
                           prior_prec = list(tau_s = c(0.5, 0.05),
                                             tau_1 = c(0.5, 0.05),
                                             tau_2 = c(0.5, 0.05))),

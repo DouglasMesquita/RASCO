@@ -4,3 +4,5 @@
 .Ruserdata
 .README.Rmd
 .Rbuildignore
+pkgdown/
+_pkgdown.yml

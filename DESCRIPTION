@@ -19,7 +19,8 @@ Imports:
     spdep
 Suggests:
     covr,
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0),
+    modeest
 Additional_repositories: https://inla.r-inla-download.org/R/stable/
 StagedInstall: no
 License: GPL-2

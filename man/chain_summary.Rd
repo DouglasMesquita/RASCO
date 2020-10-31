@@ -10,6 +10,8 @@ chain_summary(sample, level)
 \item{sample}{a matrix containing parameter's chains.}
 
 \item{level}{credibility interval level.}
+
+\item{bw}{binwidth for asselin function.}
 }
 \value{
 a matrix with \code{mean}, \code{median}, \code{sd}, \code{lower} and \code{upper} credibility interval measures

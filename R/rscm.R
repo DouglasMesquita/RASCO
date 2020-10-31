@@ -5,7 +5,7 @@
 #' @usage rscm(data, formula1, formula2, family = c("poisson", "poisson"),
 #'             E1 = NULL, E2 = NULL, area = NULL, neigh = NULL,
 #'             proj = "none", nsamp = 1000,
-#'             priors = list(prior_gamma = c(0, 0.1),
+#'             priors = list(prior_gamma = c(0, 0.35),
 #'                           prior_prec = list(tau_s = c(0.5, 0.05),
 #'                                             tau_1 = c(0.5, 0.05),
 #'                                             tau_2 = c(0.5, 0.05))),
@@ -116,10 +116,10 @@
 rscm <- function(data, formula1, formula2, family = c("poisson", "poisson"),
                  E1 = NULL, E2 = NULL, area = NULL, neigh = NULL,
                  proj = "none", nsamp = 1000,
-                 priors = list(prior_gamma = c(0, 0.1),
-                               prior_prec = list(tau_s = c(0.5, 0.05),
-                                                 tau_1 = c(0.5, 0.05),
-                                                 tau_2 = c(0.5, 0.05))),
+                 priors = list(prior_gamma = c(0, 0.35),
+                               prior_prec = list(tau_s = c(0.01, 0.01),
+                                                 tau_1 = c(0.01, 0.01),
+                                                 tau_2 = c(0.01, 0.01))),
                  random_effects = list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE),
                  ...) {
   ##-- Time
@@ -131,10 +131,10 @@ rscm <- function(data, formula1, formula2, family = c("poisson", "poisson"),
   if(!proj %in% c("none", "spock")) stop("proj must be 'none' or 'spock'")
 
   random_effects <- append_list(list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE), random_effects)
-  priors <- append_list(list(prior_gamma = c(0, 0.1),
-                             prior_prec = list(tau_s = c(0.5, 0.05),
-                                               tau_1 = c(0.5, 0.05),
-                                               tau_2 = c(0.5, 0.05))),
+  priors <- append_list(list(prior_gamma = c(0, 0.35),
+                             prior_prec = list(tau_s = c(0.01, 0.01),
+                                               tau_1 = c(0.01, 0.01),
+                                               tau_2 = c(0.01, 0.01))),
                         priors)
 
   shared <- random_effects$shared
@@ -219,8 +219,7 @@ rscm <- function(data, formula1, formula2, family = c("poisson", "poisson"),
   inla_list$Y <- cbind(c(Y[, 1], rep(NA, n)),
                        c(rep(NA, n), Y[, 2]))
 
-  inla_list$alpha1 <- rep(c(1, NA), each = n)          ##-- Intercept Y1
-  inla_list$alpha2 <- rep(c(NA, 1), each = n)          ##-- Intercept Y2
+  inla_list$alpha <- as.factor(rep(c(1, 2), each = n))
 
   if(!is.null(area)) {
     inla_list$psi_gamma <- c(data[[area]], rep(NA, n))   ##-- gamma*psi
@@ -237,13 +236,14 @@ rscm <- function(data, formula1, formula2, family = c("poisson", "poisson"),
   colnames(inla_list$X) <- c(paste(colnames(X1), 1, sep = "_"), paste(colnames(X2), 2, sep = "_"))
 
   ##-- Fit shared
-  f_s <- Y ~ -1 + alpha1 + alpha2 + X
+  f_s <- Y ~ -1 + alpha + X
 
   if(!is.null(area) & !is.null(neigh)) {
     if(shared) {
       f_s <- update(f_s, ~ . + f(psi,
                                  model = "besag",
                                  graph = Ws,
+                                 scale.model = TRUE,
                                  hyper = list(prec =
                                                 list(prior = "loggamma",
                                                      param = prior_tau_s))) +
@@ -261,6 +261,7 @@ rscm <- function(data, formula1, formula2, family = c("poisson", "poisson"),
       f_s <- update(f_s, ~ . + f(phi1,
                                  model = "besag",
                                  graph = W1,
+                                 scale.model = TRUE,
                                  hyper = list(prec =
                                                 list(prior = "loggamma",
                                                      param = prior_tau_1)))
@@ -271,6 +272,7 @@ rscm <- function(data, formula1, formula2, family = c("poisson", "poisson"),
       f_s <- update(f_s, ~ . + f(phi2,
                                  model = "besag",
                                  graph = W2,
+                                 scale.model = TRUE,
                                  hyper = list(prec =
                                                 list(prior = "loggamma",
                                                      param = prior_tau_2)))
@@ -287,7 +289,7 @@ rscm <- function(data, formula1, formula2, family = c("poisson", "poisson"),
   inla_aux <- function(...) INLA::inla(formula = f_s, family = family, data = inla_list, E = as.vector(E), ...)
   mod <- do.call(what = inla_aux, args = args, envir = parent.frame())
 
-  model_sample <- INLA::inla.posterior.sample(result = mod, n = nsamp, use.improved.mean = TRUE)
+  model_sample <- INLA::inla.posterior.sample(result = mod, n = nsamp, use.improved.mean = TRUE, seed = .Random.seed[1])
   hyperpar_samp <- INLA::inla.hyperpar.sample(result = mod, n = nsamp, improve.marginals = TRUE)
   time_end_inla <- Sys.time()
 
