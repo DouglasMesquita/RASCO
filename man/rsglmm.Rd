@@ -27,7 +27,7 @@ rsglmm(data, formula, family,
 
 \item{model}{spatial model adopted. Examples: "besag", "besag2" or "r_besag". See INLA::inla.list.models() for other models.}
 
-\item{neigh}{neighborhood structure. A \code{SpatialPolygonsDataFrame} object.}
+\item{neigh}{neighborhood structure. A \code{SpatialPolygonsDataFrame} or \code{sf} object}
 
 \item{proj}{"none", "rhz", "hh" or "spock"}
 

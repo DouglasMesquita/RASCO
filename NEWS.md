@@ -1,6 +1,7 @@
 # RASCO 0.0.5
 
-* Adding INLA within MCMC for SCM for more than 2 diseases
+* Adding W parameter in rsurv function (useful for simulation purposes)
+* Using zero.policy in nb2mat 
 
 # RASCO 0.0.4
 

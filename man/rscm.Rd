@@ -31,7 +31,7 @@ rscm(data, formula1, formula2, family = c("poisson", "poisson"),
 
 \item{area}{areal variable name in \code{data}.}
 
-\item{neigh}{neighborhood structure. A \code{SpatialPolygonsDataFrame} object.}
+\item{neigh}{neighborhood structure. A \code{SpatialPolygonsDataFrame} or \code{sf} object.}
 
 \item{proj}{"none" or "spock".}
 

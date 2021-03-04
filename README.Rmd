@@ -29,6 +29,26 @@ RASCO is an R package that allow the practioners to fit restricted spatial model
 
 + Spatial frailty models
 
+## Installing LSB Core
+
+You may need to install the LSB Core
+
+lsb_release is part of a software package called the LSB core, which is not necessarily installed on your system by default. To install it, run the command below that corresponds to your specific system:
+
+### Ubuntu, Debian
+sudo apt-get update && sudo apt-get install lsb-core
+
+### CentOS
+sudo yum update && sudo yum install redhat-lsb-core
+
+### Fedora
+sudo dnf update && sudo dnf install redhat-lsb-core
+
+### OpenSUSE
+sudo zypper update && sudo zypper install lsb-core
+
+### Arch
+pacman -Syu lsb-release
 
 ## Installation
 

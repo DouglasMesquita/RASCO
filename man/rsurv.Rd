@@ -13,6 +13,7 @@ rsurv(
   hazard_params = hazard_dft(),
   spatial = "ICAR",
   neigh = NULL,
+  W = NULL,
   tau = 1,
   confounding = "none",
   proj = "none",
@@ -40,6 +41,8 @@ rsurv(
 "ICAR" or "BYM" for spatial structured models.}
 
 \item{neigh}{neighborhood structure. A \code{SpatialPolygonsDataFrame} object.}
+
+\item{W}{adjacency matrix.}
 
 \item{tau}{precision for ICAR and BYM models.}
 

@@ -21,7 +21,7 @@ rsfm(data, formula, family, area = NULL,
 
 \item{model}{spatial model adopted. Examples: "besag", "besag2" or "r_besag". See INLA::inla.list.models() for other models.}
 
-\item{neigh}{neighborhood structure. A \code{SpatialPolygonsDataFrame} object.}
+\item{neigh}{neighborhood structure. A \code{SpatialPolygonsDataFrame} or \code{sf} object}
 
 \item{proj}{"none" or "rhz".}
 
@@ -71,14 +71,14 @@ data("neigh_RJ")
 ##-- Individuals and regions
 n_reg <- length(neigh_RJ)
 n_id <- sample(x = 3:5, size = n_reg, replace = TRUE)
-coefs <- c(0.3, -0.3)
-tau <- 0.75 # Scale of spatial effect
+coefs <- c(0.1, -0.3)
+tau <- 1 # Scale of spatial effect
 
 ##-- Data
 data <- rsurv(n_id = n_id,
               coefs = coefs, cens = 0.5, scale = FALSE,
               cens_type = "right", hazard = "weibull",
-              hazard_params = list(weibull = list(alpha = 1.2, variant = 0)),
+              hazard_params = list(weibull = list(alpha = 0.8, variant = 0)),
               spatial = "ICAR",
               neigh = neigh_RJ, tau = tau, confounding = "linear", proj = "none")
 
