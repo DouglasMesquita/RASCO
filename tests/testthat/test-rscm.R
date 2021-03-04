@@ -1,10 +1,9 @@
 test_that("rscm options", {
-  library(spdep)
-
   set.seed(123456)
 
   ##-- Spatial structure
   data("neigh_RJ")
+  neigh_RJ_sf <- st_as_sf(neigh_RJ)
 
   ##-- Parameters
   alpha_1 <- 0.5
@@ -46,6 +45,13 @@ test_that("rscm options", {
                      E1 = E1, E2 = E2,
                      area = "reg", neigh = neigh_RJ)
 
+  spoi_model_sf <- rscm(data = data,
+                        formula1 = Y1 ~ X11 + X12,
+                        formula2 = Y2 ~ X21 + X12,
+                        family = c("poisson", "poisson"),
+                        E1 = E1, E2 = E2,
+                        area = "reg", neigh = neigh_RJ_sf)
+
   rspoi_model <- rscm(data = data,
                       formula1 = Y1 ~ X11 + X12,
                       formula2 = Y2 ~ X21 + X12,
@@ -53,6 +59,14 @@ test_that("rscm options", {
                       E1 = E1, E2 = E2,
                       area = "reg", neigh = neigh_RJ,
                       proj = "spock")
+
+  rspoi_model_sf <- rscm(data = data,
+                         formula1 = Y1 ~ X11 + X12,
+                         formula2 = Y2 ~ X21 + X12,
+                         family = c("poisson", "poisson"),
+                         E1 = E1, E2 = E2,
+                         area = "reg", neigh = neigh_RJ_sf,
+                         proj = "spock")
 
   testthat::expect_equal(object = simple_model$summary_hyperpar, NULL)
   testthat::expect_equal(object = rownames(zip_model$summary_random), NULL)

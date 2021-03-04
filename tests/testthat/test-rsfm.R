@@ -3,18 +3,19 @@ test_that("rsfm options", {
 
   ##-- Spatial structure
   data("neigh_RJ")
+  neigh_RJ_sf <- st_as_sf(neigh_RJ)
 
   ##-- Individuals and regions
   n_reg <- length(neigh_RJ)
   n_id <- sample(x = 3:5, size = n_reg, replace = TRUE)
-  coefs <- c(0.3, -0.3)
-  tau <- 0.75 # Scale of spatial effect
+  coefs <- c(0.1, -0.3)
+  tau <- 1 # Scale of spatial effect
 
   ##-- Data
   data <- rsurv(n_id = n_id,
                 coefs = coefs, cens = 0.5, scale = FALSE,
                 cens_type = "right", hazard = "weibull",
-                hazard_params = hazard_params <- list(weibull = list(alpha = 1.2, variant = 0)),
+                hazard_params = hazard_params <- list(weibull = list(alpha = 0.8, variant = 0)),
                 spatial = "ICAR",
                 neigh = neigh_RJ, tau = tau, confounding = "linear", proj = "none")
 
@@ -30,12 +31,25 @@ test_that("rsfm options", {
                     model = "r_besag", neigh = neigh_RJ,
                     proj = "rhz", nsamp = 1000, approach = "inla")
 
+  rsfm_inla_sf <- rsfm(data = data,
+                       formula = surv(time = L, event = status) ~ X1 + X2,
+                       family = "weibull", area = "reg",
+                       model = "r_besag", neigh = neigh_RJ_sf,
+                       proj = "rhz", nsamp = 1000, approach = "inla")
+
   rsfm_inla2 <- rsfm(data = data,
                      formula = surv(time = L, event = status) ~ X1 + X2,
                      family = "weibull", area = "reg",
                      model = "r_besag", neigh = neigh_RJ,
                      proj = "rhz", nsamp = 1000, approach = "inla",
                      fast = FALSE)
+
+  rsfm_inla2_sf <- rsfm(data = data,
+                        formula = surv(time = L, event = status) ~ X1 + X2,
+                        family = "weibull", area = "reg",
+                        model = "r_besag", neigh = neigh_RJ_sf,
+                        proj = "rhz", nsamp = 1000, approach = "inla",
+                        fast = FALSE)
 
   testthat::skip_on_appveyor()
   testthat::skip_on_cran()
@@ -57,7 +71,9 @@ test_that("rsfm options", {
   #                                                         approach = "mcmc"))
 
   testthat::expect_equal(object = length(rsfm_inla$restricted), 4)
+  testthat::expect_equal(object = length(rsfm_inla_sf$restricted), 4)
   testthat::expect_equal(object = length(rsfm_inla2$restricted), 4)
+  testthat::expect_equal(object = length(rsfm_inla2_sf$restricted), 4)
 
   testthat::expect_error(
     suppressWarnings(rsfm(data = data,

@@ -3,6 +3,7 @@ test_that("rglmm options", {
 
   ##-- Spatial structure
   data("neigh_RJ")
+  neigh_RJ_sf <- st_as_sf(neigh_RJ)
 
   beta <- c(-0.5, -0.2)
   tau <- 1
@@ -22,17 +23,29 @@ test_that("rglmm options", {
                       area = "reg", model = "besag", neigh = neigh_RJ,
                       proj = "none", nsamp = 1000)
 
+  sglmm_mod_sf <- rsglmm(data = data, formula = Y ~ X1 + X2,
+                         family = family,
+                         area = "reg", model = "besag", neigh = neigh_RJ_sf,
+                         proj = "none", nsamp = 1000)
+
   rglmm_rhz <- rsglmm(data = data, formula = Y ~ X1 + X2,
                       family = family,
                       area = "reg", model = "r_besag", neigh = neigh_RJ,
                       proj = "rhz", nsamp = 1000)
+
+  rglmm_rhz_sf <- rsglmm(data = data, formula = Y ~ X1 + X2,
+                         family = family,
+                         area = "reg", model = "r_besag", neigh = neigh_RJ_sf,
+                         proj = "rhz", nsamp = 1000)
 
   testthat::skip_on_appveyor()
   testthat::skip_on_cran()
 
   testthat::expect_equal(object = length(sglm_mod$restricted), 0)
   testthat::expect_equal(object = length(sglmm_mod$restricted), 0)
+  testthat::expect_equal(object = length(sglmm_mod_sf$restricted), 0)
   testthat::expect_equal(object = length(rglmm_rhz$restricted), 4)
+  testthat::expect_equal(object = length(rglmm_rhz_sf$restricted), 4)
   testthat::expect_error(
     rsglmm(data = data,
            family = family,
