@@ -13,7 +13,7 @@
 #' @param family "exponential", "weibull", "weibullcure", "loglogistic", "gamma", "lognormal" or "pwe".
 #' @param area areal variable name in \code{data}.
 #' @param model spatial model adopted. Examples: "besag", "besag2" or "r_besag". See INLA::inla.list.models() for other models.
-#' @param neigh neighborhood structure. A \code{SpatialPolygonsDataFrame} object.
+#' @param neigh neighborhood structure. A \code{SpatialPolygonsDataFrame} or \code{sf} object
 #' @param proj "none" or "rhz".
 #' @param nsamp number of samples. Default = 1000.
 #' @param fast TRUE to use the reduction operator.
@@ -33,14 +33,14 @@
 #' ##-- Individuals and regions
 #' n_reg <- length(neigh_RJ)
 #' n_id <- sample(x = 3:5, size = n_reg, replace = TRUE)
-#' coefs <- c(0.3, -0.3)
-#' tau <- 0.75 # Scale of spatial effect
+#' coefs <- c(0.1, -0.3)
+#' tau <- 1 # Scale of spatial effect
 #'
 #' ##-- Data
 #' data <- rsurv(n_id = n_id,
 #'               coefs = coefs, cens = 0.5, scale = FALSE,
 #'               cens_type = "right", hazard = "weibull",
-#'               hazard_params = list(weibull = list(alpha = 1.2, variant = 0)),
+#'               hazard_params = list(weibull = list(alpha = 0.8, variant = 0)),
 #'               spatial = "ICAR",
 #'               neigh = neigh_RJ, tau = tau, confounding = "linear", proj = "none")
 #'
@@ -92,8 +92,11 @@ rsfm <- function(data, formula, family,
   if(is.null(formula)) stop("You must provide a formula for the fixed effects")
   if(!proj %in% c("none", "rhz")) stop("proj must be 'none' or 'rhz'")
 
+  if("sf" %in% class(neigh)) neigh <- as(neigh, "Spatial")
+  if("sf" %in% class(data)) sf::st_geometry(data) <- NULL
+
   if(!is.null(area)) {
-    W <- nb2mat(neighbours = poly2nb(neigh), style = "B")
+    W <- spdep::nb2mat(neighbours = spdep::poly2nb(neigh), style = "B", zero.policy = TRUE)
   } else {
     W <- NULL
   }

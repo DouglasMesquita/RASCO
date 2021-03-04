@@ -17,7 +17,7 @@
 #' @param n a vector containing the number of trials for the binomial likelihood, or the number of required successes for the nbinomial2 likelihood. Default value is set to 1.
 #' @param area areal variable name in \code{data}.
 #' @param model spatial model adopted. Examples: "besag", "besag2" or "r_besag". See INLA::inla.list.models() for other models.
-#' @param neigh neighborhood structure. A \code{SpatialPolygonsDataFrame} object.
+#' @param neigh neighborhood structure. A \code{SpatialPolygonsDataFrame} or \code{sf} object
 #' @param proj "none", "rhz", "hh" or "spock"
 #' @param nsamp number of samples. Default = 1000.
 #' @param burnin burn-in size (just for hh).
@@ -130,6 +130,7 @@ rsglmm <- function(data, formula, family,
   }
 
   if("sf" %in% class(neigh)) neigh <- as(neigh, "Spatial")
+  if("sf" %in% class(data)) sf::st_geometry(data) <- NULL
 
   f_fixed <- paste0(format(formula), collapse = "")
 
@@ -140,13 +141,13 @@ rsglmm <- function(data, formula, family,
       if(nrow(X) > length(neigh)) {
         message(sprintf("SPOCK still can't deal with different lengths of X and %s. Setting proj = 'rhz' instead.", area))
         proj <- 'rhz'
-        W <- nb2mat(neighbours = poly2nb(neigh), style = "B")
+        W <- spdep::nb2mat(neighbours = spdep::poly2nb(neigh), style = "B", zero.policy = TRUE)
       } else{
         neigh <- spock(X = X, map = neigh)
-        W <- nb2mat(neighbours = neigh, style = "B")
+        W <- spdep::nb2mat(neighbours = neigh, style = "B", zero.policy = TRUE)
       }
     } else {
-      W <- nb2mat(neighbours = poly2nb(neigh), style = "B", zero.policy = TRUE)
+      W <- spdep::nb2mat(neighbours = spdep::poly2nb(neigh), style = "B", zero.policy = TRUE)
     }
   } else {
     W <- NULL

@@ -56,7 +56,7 @@ rshared <- function(alpha_1 = 0, alpha_2 = 0, beta_1 = c(0.1, -0.1), beta_2 = c(
   if(scale) X2 <- scale(X2)
 
   ##-- Spatial effects
-  W <- nb2mat(neighbours = poly2nb(neigh), style = "B")
+  W <- spdep::nb2mat(neighbours = spdep::poly2nb(neigh), style = "B", zero.policy = TRUE)
 
   sc <- ricar(W = W, sig = 1/tau_s)
   s1 <- ricar(W = W, sig = 1/tau_1)

@@ -8,7 +8,6 @@
 #' @param map object of class \code{nb}.
 #'
 #' @importFrom sp coordinates
-#' @importFrom spdep poly2nb nb2mat
 #'
 #' @return map_new object of class \code{nb}
 #'

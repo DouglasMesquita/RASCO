@@ -21,7 +21,7 @@
 #' @param E1 known component, for disease 1, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. Default = 1.
 #' @param E2 known component, for disease 2, in the mean for the Poisson likelihoods defined as E = exp(\eqn{\eta}), where \eqn{\eta} is the linear predictor. Default = 1.
 #' @param area areal variable name in \code{data}.
-#' @param neigh neighborhood structure. A \code{SpatialPolygonsDataFrame} object.
+#' @param neigh neighborhood structure. A \code{SpatialPolygonsDataFrame} or \code{sf} object.
 #' @param proj "none" or "spock".
 #' @param nsamp number of samples. Default = 1000.
 #' @param priors a list containing:
@@ -130,6 +130,9 @@ rscm <- function(data, formula1, formula2, family = c("poisson", "poisson"),
   if(missing(formula2)) stop("You must provide the formula for disease 2")
   if(!proj %in% c("none", "spock")) stop("proj must be 'none' or 'spock'")
 
+  if("sf" %in% class(neigh)) neigh <- as(neigh, "Spatial")
+  if("sf" %in% class(data)) sf::st_geometry(data) <- NULL
+
   random_effects <- append_list(list(shared = TRUE, specific_1 = TRUE, specific_2 = TRUE), random_effects)
   priors <- append_list(list(prior_gamma = c(0, 0.35),
                              prior_prec = list(tau_s = c(0.01, 0.01),
@@ -171,7 +174,7 @@ rscm <- function(data, formula1, formula2, family = c("poisson", "poisson"),
   n_covss <- ncol(Xs)
 
   if(!is.null(neigh)) {
-    W <- nb2mat(neighbours = poly2nb(neigh), style = "B")
+    W <- spdep::nb2mat(neighbours = spdep::poly2nb(neigh), style = "B", zero.policy = TRUE)
     Ws <- W1 <- W2 <- W
   }
 

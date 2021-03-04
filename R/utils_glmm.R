@@ -44,7 +44,7 @@ rglmm <- function(beta = c(0.1, -0.1), tau = 1, family = "gaussian",
   if(scale) X <- scale(X)
 
   ##-- Spatial effects
-  W <- nb2mat(neighbours = poly2nb(neigh), style = "B")
+  W <- spdep::nb2mat(neighbours = spdep::poly2nb(neigh), style = "B", zero.policy = TRUE)
   eps <- ricar(W = W, sig = 1/tau)
 
   ##-- Outcome

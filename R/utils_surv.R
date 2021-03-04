@@ -13,6 +13,7 @@
 #' "lognormal" for an independent lognormal frailty,
 #' "ICAR" or "BYM" for spatial structured models.
 #' @param neigh neighborhood structure. A \code{SpatialPolygonsDataFrame} object.
+#' @param W adjacency matrix.
 #' @param tau precision for ICAR and BYM models.
 #' @param confounding "none", "linear", "quadratic" or "cubic".
 #' @param proj "none", "rhz", "hh" or "spock".
@@ -29,7 +30,7 @@ rsurv <- function(n_id, coefs = c(0.1, 0.4, -0.3),
                   cens = 0, cens_type = "interval",
                   hazard = "weibull",
                   hazard_params = hazard_dft(),
-                  spatial = "ICAR", neigh = NULL, tau = 1,
+                  spatial = "ICAR", neigh = NULL, W = NULL, tau = 1,
                   confounding = "none", proj = "none", sd_x = 0,
                   X = NULL, scale = TRUE) {
 
@@ -48,7 +49,10 @@ rsurv <- function(n_id, coefs = c(0.1, 0.4, -0.3),
 
   ##-- General objects ----
   frailty <- eps <- eps_eff <- eps_ort <- NA
-  W <- nb2mat(neighbours = poly2nb(neigh), style = "B")
+
+  if(is.null(W)) {
+    W <- spdep::nb2mat(neighbours = spdep::poly2nb(neigh), style = "B", zero.policy = TRUE)
+  }
 
   ##-- Individuals and regions ----
   n_reg <- nrow(W)
@@ -362,11 +366,11 @@ cum_hexpsurv <- function(t, rate){
 #'
 #' @keywords internal
 
-rweibullsurv <- function(N, alpha, lambda = rep(1, N), variant = 1){
+rweibullsurv <- function(N, alpha, lambda = rep(1, N), variant = 1) {
   if(variant == 1){
     times <- rweibull(n = N, shape = alpha, scale = 1/lambda)
   } else{
-    times <- rweibull(n = N, shape = alpha, scale = lambda^(-1/alpha))
+    times <- rweibull(n = N, shape = alpha, scale = (1/lambda)^(1/alpha))
   }
 
   return(times)
