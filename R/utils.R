@@ -11,19 +11,21 @@
 
 SVIF <- function(base_model, model) {
   fixed_names <- rownames(base_model$summary_fixed)
+  if(!all(fixed_names == rownames(model$summary_fixed)))
+    stop("It seems that the fixed effects differ between the models. Please check the order of the variables.")
 
   vif <- (model$summary_fixed$sd^2)/(base_model$summary_fixed$sd^2)
   vif <- data.frame(vif)
 
   res <- data.frame(fixed_names, vif, stringsAsFactors = FALSE)
-  names(res) <- c("parameter", "VIF")
+  names(res) <- c("parameter", "SVIF")
 
   return(res)
 }
 
 #' @title Spatial Variance Retraction Factor
 #'
-#' @description Calculate the spatial variance retraction factor (SVRF)
+#' @description Calculate the spatial variance retraction factor (SVRF) that lies between -1 (inflaction) and 1 (rettraction)
 #'
 #' @param base_model model to use as comparison
 #' @param model model to compare
@@ -33,10 +35,18 @@ SVIF <- function(base_model, model) {
 #' @export
 
 SVRF <- function(base_model, model) {
-  res <- SVIF(base_model = base_model, model = model)
-  res$VIF <- 1- 1/res$VIF
+  fixed_names <- rownames(base_model$summary_fixed)
+  if(!all(fixed_names == rownames(model$summary_fixed)))
+    stop("It seems that the fixed effects differ between the models. Please check the order of the variables.")
 
-  names(res) <- c(c("parameter", "VRF"))
+  var_base <- base_model$summary_fixed$sd^2
+  var_model <- model$summary_fixed$sd^2
+
+  vrf <- (var_base - var_model)/max(var_base, var_model)
+  vrf <- data.frame(vrf)
+
+  res <- data.frame(fixed_names, vrf, stringsAsFactors = FALSE)
+  names(res) <- c("parameter", "SVRF")
 
   return(res)
 }

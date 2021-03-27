@@ -15,5 +15,5 @@ SVRF(base_model, model)
 res data.frame with SVRF for fixed parameters
 }
 \description{
-Calculate the spatial variance retraction factor (SVRF)
+Calculate the spatial variance retraction factor (SVRF) that lies between -1 (inflaction) and 1 (rettraction)
 }

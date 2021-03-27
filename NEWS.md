@@ -1,7 +1,8 @@
 # RASCO 0.0.5
 
 * Adding W parameter in rsurv function (useful for simulation purposes)
-* Using zero.policy in nb2mat 
+* Using zero.policy in nb2mat
+* New formulation for SVRF that now lies between -1 and 1
 
 # RASCO 0.0.4
 
