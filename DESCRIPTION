@@ -21,6 +21,7 @@ Imports:
 Suggests:
     covr,
     sf,
+    rgeos,
     testthat (>= 2.1.0)
 Additional_repositories: https://inla.r-inla-download.org/R/stable/
 StagedInstall: no
