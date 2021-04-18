@@ -67,7 +67,7 @@ rsglmm(data, formula, family,
                                 }
                              }
 
-\item{$out}{INLA or ngspatial output}
+\item{$out}{INLA (unrestricted model) or ngspatial output}
 \item{$time}{time elapsed for fitting the model}
 }
 \description{

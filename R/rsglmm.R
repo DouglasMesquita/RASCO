@@ -109,7 +109,7 @@
 #'                                 }
 #'                              }
 #'
-#' \item{$out}{INLA or ngspatial output}
+#' \item{$out}{INLA (unrestricted model) or ngspatial output}
 #' \item{$time}{time elapsed for fitting the model}
 #'
 #' @export
@@ -118,7 +118,7 @@ rsglmm <- function(data, formula, family,
                    E = NULL, n = NULL,
                    area = NULL, model = NULL, neigh = NULL,
                    proj = "none", nsamp = 1000, burnin = 5000, lag = 1,
-                   priors = list(prior_prec = list(tau = c(0.5, 0.0005))),
+                   priors = list(prior_prec = list(prec = list(prior = "loggamma", param = c(0.5, 0.0005)))),
                    approach = "inla",
                    ...) {
 
@@ -159,17 +159,12 @@ rsglmm <- function(data, formula, family,
     approach <- 'inla'
   }
 
-  prior_tau <- priors$prior_prec
+  prior_tau <- list(priors$prior_prec)
 
   ##-- INLA
   if(approach == "inla") {
     if(!is.null(area)) {
-      f_random <- sprintf("f(%s,
-                             model = '%s',
-                             graph = %s,
-                             hyper = list(prec = list(prior = 'loggamma',
-                                                      param = c(%s, %s))))",
-                          area, model, "W", prior_tau[1], prior_tau[2])
+      f_random <- paste0("f(", area, ", model = '", model, "', graph = W, hyper = ", prior_tau, ")")
       f_pred <- paste(f_fixed, f_random, sep = " + ")
     } else{
       f_pred <- f_fixed

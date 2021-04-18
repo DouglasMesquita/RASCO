@@ -3,6 +3,7 @@
 * Adding W parameter in rsurv function (useful for simulation purposes)
 * Using zero.policy in nb2mat
 * New formulation for SVRF that now lies between -1 and 1
+* More flexibility for priors in rsglmm (I will update other models soon)
 
 # RASCO 0.0.4
 
