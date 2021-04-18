@@ -6,7 +6,7 @@
 #'               E = NULL, n = NULL,
 #'               area = NULL, model = NULL, neigh = NULL,
 #'               proj = "none", nsamp = 1000, burnin = 5000, lag = 1,
-#'               priors = list(prior_prec = list(tau = c(0.5, 0.0005))),
+#'               priors = list(prior_prec = list(prec = list(prior = "loggamma", param = c(0.5, 0.0005)))),
 #'               approach = "inla",
 #'               ...)
 #'
@@ -22,11 +22,11 @@
 #' @param nsamp number of samples. Default = 1000.
 #' @param burnin burn-in size (just for hh).
 #' @param lag lag parameter (just for hh).
-#' @param priors a list containing (for now):
+#' @param priors a list containing:
 #'     \itemize{
 #'        \item prior_prec: a list with:
 #'        \itemize{
-#'            \item tau: a vector of size two containing shape and scale for the gamma distribution applied for \eqn{\tau}
+#'            \item See ?inla.models for the list of hyparameters for each model. Example list(prec = list(prior = "loggamma", param = c(0.5, 0.0005)))
 #'        }
 #'     }
 #'
