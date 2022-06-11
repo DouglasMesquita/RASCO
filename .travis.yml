@@ -2,7 +2,7 @@ dist: bionic
 language: R
 cache: packages
 warnings_are_errors: true
-r: 4.2.0
+r: 4.1.0
 
 compiler:
   - gcc
