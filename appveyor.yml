@@ -25,10 +25,10 @@ environment:
     USE_RTOOLS: true ## to be able to use Remotes (i.e. packages from non-CRAN sources)
 
   matrix:
-    - R_VERSION: 3.6.3
+    - R_VERSION: 4.1.0
       R_ARCH: x64
 
-    - R_VERSION: 3.6.3
+    - R_VERSION: 4.1.0
       R_ARCH: i386
 
 build_script:
