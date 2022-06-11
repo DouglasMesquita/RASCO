@@ -12,6 +12,10 @@ status](https://ci.appveyor.com/api/projects/status/github/DouglasMesquita/RASCO
 coverage](https://codecov.io/gh/DouglasMesquita/RASCO/branch/master/graph/badge.svg)](https://codecov.io/gh/DouglasMesquita/RASCO?branch=master)
 <!-- badges: end -->
 
+## Acknowlodgment
+
+The authors would like to thank CAPES, CNPq and FAPEMIG for partial financial support.
+
 ## Overview
 
 RASCO is an R package that allow the practioners to fit restricted
