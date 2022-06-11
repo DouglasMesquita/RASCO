@@ -43,7 +43,7 @@ rsglmm_inla <- function(data, formula, family,
   time_start <- Sys.time()
 
   ##-- Updating formula
-  inla_formula <- update_inla_formula(formula = formula)
+  inla_formula <- update_inla_formula(formula = formula, env = parent.frame())
 
   formula <- inla_formula$formula
 
@@ -62,17 +62,17 @@ rsglmm_inla <- function(data, formula, family,
   args <- list(...)
   args$control.compute$config <- TRUE
 
-  W <- parent.frame()$W
-  inla_aux <- function(...) INLA::inla(formula = formula, data = data, family = family,
-                                       E = E_offset_inla, Ntrials = n_offset_inla, ...)
-
+  inla_aux <- function(...) INLA::inla(
+    formula = formula, data = data, family = family,
+    E = E_offset_inla, Ntrials = n_offset_inla,
+    ...
+  )
   mod <- do.call(what = inla_aux, args = args, envir = parent.frame())
 
   model_sample <- INLA::inla.posterior.sample(result = mod, n = nsamp, use.improved.mean = TRUE)
   hyperpar_samp <- INLA::inla.hyperpar.sample(result = mod, n = nsamp, improve.marginals = TRUE)
   time_end_inla <- Sys.time()
 
-  # X <- as.matrix(mod$model.matrix)
   X <- model.matrix(object = inla_formula$formula_fixed[-2], data = data)
   fixed_vars <- mod$names.fixed
   id_fixed <- paste0(fixed_vars, ":", 1)
