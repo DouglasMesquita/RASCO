@@ -3,7 +3,7 @@ test_that("rscm options", {
 
   ##-- Spatial structure
   data("neigh_RJ")
-  neigh_RJ_sf <- st_as_sf(neigh_RJ)
+  neigh_RJ_sf <- sf::st_as_sf(neigh_RJ)
 
   ##-- Parameters
   alpha_1 <- 0.5

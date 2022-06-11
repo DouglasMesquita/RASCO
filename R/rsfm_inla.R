@@ -60,7 +60,7 @@ rsfm_inla <- function(data, formula, family,
                    stop(family, "family is not implemented."))
 
   ##-- Updating formula
-  inla_formula <- update_inla_formula(formula = formula)
+  inla_formula <- update_inla_formula(formula = formula, env = parent.frame())
 
   formula <- inla_formula$formula
 
@@ -75,7 +75,6 @@ rsfm_inla <- function(data, formula, family,
   args <- list(...)
   args$control.compute$config <- TRUE
 
-  W <- parent.frame()$W
   inla_aux <- function(...) INLA::inla(formula = formula, data = data, family = family, ...)
   mod <- do.call(what = inla_aux, args = args, envir = parent.frame())
 

@@ -219,7 +219,7 @@ meang <- function(x, g, weighted = FALSE) {
 
 `%e%` <- function(x, g_index) {
 
-  if(!(class(x) %in% c("numeric", "matrix"))) stop("x must be a vector or a matrix")
+  if(!any(class(x) %in% c("numeric", "matrix"))) stop("x must be a vector or a matrix")
 
   if(is.matrix(x)) if(is.null(colnames(x)) & is.null(row.names(x))) stop("x must be a named matrix")
   if(!is.matrix(x)) if(is.null(names(x))) stop("x must be a named vector.")
@@ -262,12 +262,13 @@ meang <- function(x, g, weighted = FALSE) {
 #' @description Updating INLA formula
 #'
 #' @param formula a formula to be updated to INLA format
+#' @param env environment to evaluate this formula
 #'
 #' @importFrom stats terms.formula
 #'
 #' @keywords internal
 
-update_inla_formula <- function(formula) {
+update_inla_formula <- function(formula, env = parent.frame()) {
   ##-- Checking formula
   terms_formula <- terms.formula(formula, specials = c("f"), data = NULL)
   terms_labels <- paste(attr(terms_formula, "variables"))
@@ -282,7 +283,7 @@ update_inla_formula <- function(formula) {
   if(length(pos_restricted) > 0) {
     formula_char <- format(formula)
     formula_char <- gsub(pattern = "restricted_besag|r_besag", replacement = "besag", x = formula_char)
-    formula_new <- as.formula(paste0(formula_char, collapse = " "))
+    formula_new <- as.formula(paste0(formula_char, collapse = " "), env = env)
 
     terms_formula <- terms.formula(formula_new, specials = c("f"), data = NULL)
     terms_labels <- paste(attr(terms_formula, "variables"))
@@ -298,7 +299,7 @@ update_inla_formula <- function(formula) {
                     replacement = "INLA::f(",
                     x = terms_labels[terms_f[i]])
       ),
-      envir = parent.frame(n = 2))
+      envir = env)
     }
 
     ##-- Restricted and unrestricted components
@@ -318,7 +319,7 @@ update_inla_formula <- function(formula) {
     size_unrestricted <- NULL
   }
 
-  formula_fixed <- as.formula(paste(formula[2], "~", paste(terms_fixed, collapse = " + ")))
+  formula_fixed <- as.formula(paste(formula[2], "~", paste(terms_fixed, collapse = " + ")), env = env)
 
   return(list(formula = formula_new,
               formula_fixed = formula_fixed,

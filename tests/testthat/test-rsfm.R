@@ -3,7 +3,7 @@ test_that("rsfm options", {
 
   ##-- Spatial structure
   data("neigh_RJ")
-  neigh_RJ_sf <- st_as_sf(neigh_RJ)
+  neigh_RJ_sf <- sf::st_as_sf(neigh_RJ)
 
   ##-- Individuals and regions
   n_reg <- length(neigh_RJ)
@@ -76,10 +76,10 @@ test_that("rsfm options", {
   testthat::expect_equal(object = length(rsfm_inla2_sf$restricted), 4)
 
   testthat::expect_error(
-    suppressWarnings(rsfm(data = data,
-                          formula = L ~ X1 + X2,
-                          family = "weibull", model = "none",
-                          proj = "rhz", nsamp = 1000, approach = "inla"))
+    rsfm(data = data,
+         formula = L ~ X1 + X2,
+         family = "weibull", model = "none",
+         proj = "rhz", nsamp = 1000, approach = "inla")
   )
   testthat::expect_error(
     rsfm(data = data,

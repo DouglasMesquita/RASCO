@@ -3,7 +3,7 @@ test_that("rglmm options", {
 
   ##-- Spatial structure
   data("neigh_RJ")
-  neigh_RJ_sf <- st_as_sf(neigh_RJ)
+  neigh_RJ_sf <- sf::st_as_sf(neigh_RJ)
 
   beta <- c(-0.5, -0.2)
   tau <- 1

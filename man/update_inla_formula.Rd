@@ -4,10 +4,12 @@
 \alias{update_inla_formula}
 \title{Updating INLA formula}
 \usage{
-update_inla_formula(formula)
+update_inla_formula(formula, env = parent.frame())
 }
 \arguments{
 \item{formula}{a formula to be updated to INLA format}
+
+\item{env}{environment to evaluate this formula}
 }
 \description{
 Updating INLA formula
