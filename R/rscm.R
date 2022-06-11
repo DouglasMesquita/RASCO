@@ -292,7 +292,7 @@ rscm <- function(data, formula1, formula2, family = c("poisson", "poisson"),
   inla_aux <- function(...) INLA::inla(formula = f_s, family = family, data = inla_list, E = as.vector(E), ...)
   mod <- do.call(what = inla_aux, args = args, envir = parent.frame())
 
-  model_sample <- INLA::inla.posterior.sample(result = mod, n = nsamp, use.improved.mean = TRUE, seed = .Random.seed[1])
+  model_sample <- INLA::inla.posterior.sample(result = mod, n = nsamp, use.improved.mean = TRUE)
   hyperpar_samp <- INLA::inla.hyperpar.sample(result = mod, n = nsamp, improve.marginals = TRUE)
   time_end_inla <- Sys.time()
 

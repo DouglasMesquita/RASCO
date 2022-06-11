@@ -4,7 +4,9 @@
 \name{slovenia}
 \alias{slovenia}
 \title{Slovenia Stomach Cancer Dataset}
-\format{An object of class \code{"sf"}.}
+\format{
+An object of class \code{"sf"}.
+}
 \usage{
 data(slovenia)
 }

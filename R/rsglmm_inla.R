@@ -72,7 +72,8 @@ rsglmm_inla <- function(data, formula, family,
   hyperpar_samp <- INLA::inla.hyperpar.sample(result = mod, n = nsamp, improve.marginals = TRUE)
   time_end_inla <- Sys.time()
 
-  X <- as.matrix(mod$model.matrix)
+  # X <- as.matrix(mod$model.matrix)
+  X <- model.matrix(object = inla_formula$formula_fixed[-2], data = data)
   fixed_vars <- mod$names.fixed
   id_fixed <- paste0(fixed_vars, ":", 1)
 

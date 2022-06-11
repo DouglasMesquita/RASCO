@@ -4,7 +4,9 @@
 \name{neigh_RJ}
 \alias{neigh_RJ}
 \title{Rio de Janeiro's shapefile}
-\format{An object of class \code{"SpatialPolygonsDataFrame"}.}
+\format{
+An object of class \code{"SpatialPolygonsDataFrame"}.
+}
 \usage{
 data(neigh_RJ)
 }

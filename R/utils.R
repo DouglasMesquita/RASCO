@@ -189,7 +189,7 @@ meang <- function(x, g, weighted = FALSE) {
 
 `%r%` <- function(x, g_index) {
 
-  if(!(class(x) %in% c("numeric", "matrix"))) stop("x must be a vector or a matrix")
+  if(!any(class(x) %in% c("numeric", "matrix"))) stop("x must be a vector or a matrix")
 
   if(is.matrix(x)){
     n <- nrow(x)
@@ -272,16 +272,17 @@ update_inla_formula <- function(formula) {
   terms_formula <- terms.formula(formula, specials = c("f"), data = NULL)
   terms_labels <- paste(attr(terms_formula, "variables"))
   terms_f <- attr(terms_formula, "specials")$f + 1 ##-- + 1 for the list parameter
+  terms_fixed <- terms_labels[-c(1, 2, terms_f)]
+  if(attr(terms_formula, "intercept") == 0) terms_fixed <- c(-1, terms_fixed)
 
   pos_restricted <- grep(x = terms_labels, pattern = "restricted|r_")
-  pos_unrestricted <- grep(x = terms_labels,
-                           pattern = "\"(iid|besag|besag2|besagproper|besagproper2)")
+  pos_unrestricted <- grep(x = terms_labels, pattern = "\"(iid|besag|besag2|besagproper|besagproper2)")
 
   ##-- Updating formula
-  if(length(pos_restricted) > 0){
+  if(length(pos_restricted) > 0) {
     formula_char <- format(formula)
     formula_char <- gsub(pattern = "restricted_besag|r_besag", replacement = "besag", x = formula_char)
-    formula_new <- as.formula(formula_char)
+    formula_new <- as.formula(paste0(formula_char, collapse = " "))
 
     terms_formula <- terms.formula(formula_new, specials = c("f"), data = NULL)
     terms_labels <- paste(attr(terms_formula, "variables"))
@@ -289,13 +290,15 @@ update_inla_formula <- function(formula) {
     formula_new <- formula
   }
 
-  if(length(terms_f) > 0){
+  if(length(terms_f) > 0) {
     var_f <- list()
     for(i in seq_along(terms_f)){
-      var_f[[i]] = eval(expr = parse(text = gsub(pattern = "^f\\(",
-                                                 replacement = "INLA::f(",
-                                                 x = terms_labels[terms_f[i]])),
-                        envir = parent.frame(n = 2))
+      var_f[[i]] = eval(expr = parse(
+        text = gsub(pattern = "^f\\(",
+                    replacement = "INLA::f(",
+                    x = terms_labels[terms_f[i]])
+      ),
+      envir = parent.frame(n = 2))
     }
 
     ##-- Restricted and unrestricted components
@@ -315,7 +318,10 @@ update_inla_formula <- function(formula) {
     size_unrestricted <- NULL
   }
 
+  formula_fixed <- as.formula(paste(formula[2], "~", paste(terms_fixed, collapse = " + ")))
+
   return(list(formula = formula_new,
+              formula_fixed = formula_fixed,
               var_restricted = var_restricted,
               vars_unrestricted = var_unrestricted,
               size_restricted = size_restricted,
