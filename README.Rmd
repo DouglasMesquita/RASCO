@@ -9,6 +9,9 @@ knitr::opts_chunk$set(
   fig.path = "README-"
 )
 ```
+# Acknowlodgment
+
+The authors would like to thank CAPES, CNPq and FAPEMIG for partial financial support.
 
 # RASCO: An R package to Alleviate the Spatial Confounding
 
