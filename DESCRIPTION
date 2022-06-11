@@ -6,7 +6,7 @@ Author: Douglas R. M. Azevedo, Marcos O. Prates, Dipankar Bandyopadhyay
 Maintainer: Douglas R. M. Azevedo <douglasrm.azevedo@gmail.com>
 Description: Tools to implement several Bayesian restricted models to tackle spatial confounding in a variety of generalized linear mixed modeling, and survival analysis settings. 
 Depends: 
-    R (>= 4.2.0)
+    R (>= 4.1.0)
 Imports:
     INLA,
     coda,
