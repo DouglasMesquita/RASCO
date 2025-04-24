@@ -56,15 +56,14 @@ rsglmm_inla <- function(data, formula, family,
   ##-- Model
   time_start_inla <- Sys.time()
 
-  E_offset_inla <- E
-  n_offset_inla <- n
-
   args <- list(...)
   args$control.compute$config <- TRUE
 
+  if (!is.null(E)) args$E <- E
+  if (!is.null(n)) args$Ntrials <- n
+
   inla_aux <- function(...) INLA::inla(
     formula = formula, data = data, family = family,
-    E = E_offset_inla, Ntrials = n_offset_inla,
     ...
   )
   mod <- do.call(what = inla_aux, args = args, envir = parent.frame())

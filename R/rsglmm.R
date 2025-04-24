@@ -132,7 +132,7 @@ rsglmm <- function(data, formula, family,
   if("sf" %in% class(neigh)) neigh <- as(neigh, "Spatial")
   if("sf" %in% class(data)) sf::st_geometry(data) <- NULL
 
-  f_fixed <- paste0(format(formula), collapse = "")
+  f_fixed <- paste(deparse(formula), collapse = "")
 
   if(!is.null(area)) {
     if(proj == "spock" & grepl(x = model, pattern = "restricted_|r_")) {

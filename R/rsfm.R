@@ -104,7 +104,7 @@ rsfm <- function(data, formula, family,
   priors <- append_list(list(prior_prec = c(0.5, 0.05)), priors)
   prior_prec <- priors$prior_prec
 
-  f_fixed <- format(formula)
+  f_fixed <- paste(deparse(formula), collapse = "")
 
   ##-- INLA
   if(approach == "inla") {
