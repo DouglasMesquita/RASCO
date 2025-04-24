@@ -288,8 +288,10 @@ rscm <- function(data, formula1, formula2, family = c("poisson", "poisson"),
   args$control.compute$config <- TRUE
   args$control.inla$strategy <- "laplace"
 
+  if (!is.null(E)) args$E <- as.vector(E)
+
   W <- parent.frame()$W
-  inla_aux <- function(...) INLA::inla(formula = f_s, family = family, data = inla_list, E = as.vector(E), ...)
+  inla_aux <- function(...) INLA::inla(formula = f_s, family = family, data = inla_list, ...)
   mod <- do.call(what = inla_aux, args = args, envir = parent.frame())
 
   model_sample <- INLA::inla.posterior.sample(result = mod, n = nsamp, use.improved.mean = TRUE)
